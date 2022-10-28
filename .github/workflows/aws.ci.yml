@@ -14,5 +14,7 @@ jobs:
           node-version: '14'
       - name: yarn install dependencies
         run: yarn
+      - name: npm install antd
+        run: npm install antd
       - name: yarn build project
         run: yarn build
