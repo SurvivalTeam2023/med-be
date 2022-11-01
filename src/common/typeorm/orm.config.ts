@@ -24,3 +24,4 @@ export class OrmConfig implements TypeOrmOptionsFactory {
     return baseOptions;
   }
 }
+

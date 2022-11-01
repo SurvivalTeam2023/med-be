@@ -1,9 +1,15 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmConfigModule } from './common/typeorm/typeorm.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AudioModule } from './audio/audio.module';
+import { DataSource } from 'typeorm';
+import { OrmConfig } from './common/typeorm/orm.config';
 
-@Module({
   // imports: [TypeOrmConfigModule],
-  controllers: [],
-  providers: [],
-})
-export class AppModule {}
+  @Module({
+    imports: [
+      AudioModule, TypeOrmModule.forRoot()
+    ],
+  })
+export class AppModule {
+constructor(private dataSource: DataSource) {}
+}
