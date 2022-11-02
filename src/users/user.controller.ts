@@ -5,9 +5,12 @@ import { UsersService } from './user.services';
 export class UsersController {
     constructor(private usersService: UsersService) { }
   @Get()
-  
   findAll() {
-   
       return this.usersService.findAll();
-  }
+    }
+    
+//     @Post()
+//     create(@Body() createUserDto: CreateUserDto) {
+//     return this.usersService.create(createUserDto);
+//   }
 }
