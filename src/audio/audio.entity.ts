@@ -5,29 +5,37 @@ import { AudioStatus } from "./audioStatus.enum";
 @Entity()
 export class Audio{
 @PrimaryGeneratedColumn("increment")
- private id:number;
+ public id:number;
 
 @Column()
-private name:string;
+public name:string;
 
 @Column()
-private image_url:string;
+public image_url:string;
 
 @Column()
-private audio_status:AudioStatus;
+public audio_status:AudioStatus;
 
 @Column()
-private length:string;
+public length:string;
 
 @Column()
-private playlist_id:number
+public playlist_id:number
 
 @CreateDateColumn({ type: 'timestamp' })
-private created_at: Date;
+public created_at: Date;
 
 
 @UpdateDateColumn({type:'timestamp'})
-private last_update_at:Date;
+public last_update_at:Date;
 
+
+public get getName() : string {
+    return this.name
+}
 
 }
+
+
+
+

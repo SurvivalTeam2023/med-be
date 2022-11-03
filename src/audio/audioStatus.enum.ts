@@ -1,4 +1,5 @@
  export enum AudioStatus{
-    INACTIVE='Inactive',
     ACTIVE='Active',
+    INACTIVE='Inactive',
+    
 }
