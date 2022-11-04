@@ -33,4 +33,35 @@ export class FilesService {
     // await this.publicFilesRepository.save(newFile);
     return { key: uploadResult.Key, url: uploadResult.Location };
   }
+
+  public async generatePresignedUrl(key: string) {
+    const s3 = new S3();
+
+    const result = s3.getObject(
+      {
+        Bucket: this.configService.get('BUCKET_NAME'),
+        Key: '904f8e3f-27d9-45e5-9ebe-0fcd7f9baec0-Berocca_Goolden boot_ 300x250.jpg',
+      },
+      (err, data) => {
+        if (err) {
+          return err;
+        }
+        return data.Body;
+      },
+    );
+
+    // return result;
+    // console.log('result', result);
+
+    // s3.getObject(
+    //   {
+    //     Bucket: this.configService.get('BUCKET_NAME'),
+    //     Key: '904f8e3f-27d9-45e5-9ebe-0fcd7f9baec0-Berocca_Goolden boot_ 300x250.jpg',
+    //   },
+    //   function (err, data) {
+    //     console.log('dat', data);
+    //     return data;
+    //   },
+    // );
+  }
 }
