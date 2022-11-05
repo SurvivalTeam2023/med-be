@@ -10,21 +10,24 @@ import {
   DB_USERNAME,
 } from 'src/environments';
 import { Audio } from './audio/audio.entity';
+import { Playlist } from './playlist/playlist.entity';
+import AudioPlaylist from './audioPlaylist/audioPlaylist.entity';
+import { PlaylistModule } from './playlist/playlist.module';
 
 
   // imports: [TypeOrmConfigModule],
   @Module({
     imports: [
-      AudioModule, TypeOrmModule.forRoot({ 
+      AudioModule,PlaylistModule, TypeOrmModule.forRoot({ 
       type: 'postgres',
       host: DB_HOST,
       port: +DB_PORT,
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB_DATABASE,
-      entities: [Audio],
-      migrations: ['src/migration/*{.ts,.js}'],
-      synchronize: true})
+      entities: [Audio,Playlist,AudioPlaylist],
+      synchronize: true,
+      logging:true})
     ],
   })
 export class AppModule {

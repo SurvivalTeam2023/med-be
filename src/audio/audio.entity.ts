@@ -1,11 +1,14 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import AudioPlaylist from "src/audioPlaylist/audioPlaylist.entity";
+import { Playlist } from "src/playlist/playlist.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { AudioStatus } from "./audioStatus.enum";
 
 
-@Entity()
+@Entity('audio')
 export class Audio{
+
 @PrimaryGeneratedColumn("increment")
- public id:number;
+public id:number;
 
 @Column()
 public name:string;
@@ -19,20 +22,16 @@ public audio_status:AudioStatus;
 @Column()
 public length:string;
 
-@Column()
-public playlist_id:number
+@OneToMany(() => AudioPlaylist, audio_playlist => audio_playlist.playlist)
+@JoinColumn({ referencedColumnName: 'audioId' })
+public audio_playlist:AudioPlaylist[];
 
 @CreateDateColumn({ type: 'timestamp' })
 public created_at: Date;
 
 
 @UpdateDateColumn({type:'timestamp'})
-public last_update_at:Date;
-
-
-public get getName() : string {
-    return this.name
-}
+public last_updated_at:Date;
 
 }
 

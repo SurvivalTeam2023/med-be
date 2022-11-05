@@ -1,35 +1,30 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {  IsNotEmpty, IsOptional, IsString } from "class-validator";
+import {  IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { AudioStatus } from "../audioStatus.enum";
 
 
 export class CreateAudioDto{
     @ApiProperty()
     @IsNotEmpty()
-    @IsString()
-    @IsOptional()
     name:string;
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsString()
-    @IsOptional()
+
     image_url:string;
 
     @ApiProperty({enum:AudioStatus})
-    @IsOptional()
     audio_status:AudioStatus;
 
     @IsNotEmpty()
-    @IsString()
     @ApiProperty()
-    @IsOptional()
     length:string;
 
 
-    @ApiProperty()
+    @ApiProperty({ type: [Number] })
     @IsOptional()
-    playlist_id:number;
+    @IsArray()
+    playlist_id:number[];
 
 
 }
