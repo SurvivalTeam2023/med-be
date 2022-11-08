@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { User } from "./interfaces/user.interface";
 import { map } from "rxjs/operators";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { Mail } from "./interfaces/mail.interface";
 
 @Injectable()
 export class UsersService {
@@ -41,7 +42,9 @@ export class UsersService {
                         temporary: false
                     }
                 ],
-                requiredActions: [],
+                requiredActions: [
+                    {}
+                ],
                 notBefore: 0,
                 access: {
                     manageGroupMembership: true,
@@ -66,6 +69,19 @@ export class UsersService {
         );
     }
 
+    verifyEmail(): Observable<AxiosResponse<Mail[]>> {
+        return this.httpService
+            .put('http://localhost:8080/auth/admin/realms/med-app/users/1ca2b3eb-7463-461b-8243-c9da75351660/send-verify-email?client_id=med-app&redirect_uri=http://localhost:8080/auth/realms/med-app/account/', {},
+                {
+                    headers: {
+                        Content_type: 'application/json',
+                        Accept: 'application/json',
+                        Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJzU3JaNndtZWxUMzlYdV8wWnBjOFpia2hfZHRLMzF0WFlBdnhTNDJWTDU0In0.eyJleHAiOjE2Njc5NTMxMjYsImlhdCI6MTY2NzkxNzEyNiwianRpIjoiY2M0M2E2NTYtYzdjZC00MWM2LTk0ZjktYzdlYTdjNmUzYzFkIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL21lZC1hcHAiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFkbWluLWNsaSIsImFjY291bnQiXSwic3ViIjoiMGQ5MmNhMjEtZDFlMi00ZWQ4LWE1ZmUtMDE0ZTU0ZmJhMzhjIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoibWVkLWFwcCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsibWVkLWFwcC5lZHUiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1tZWQiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7InJlYWxtLW1hbmFnZW1lbnQiOnsicm9sZXMiOlsidmlldy1yZWFsbSIsInZpZXctaWRlbnRpdHktcHJvdmlkZXJzIiwibWFuYWdlLWlkZW50aXR5LXByb3ZpZGVycyIsImltcGVyc29uYXRpb24iLCJyZWFsbS1hZG1pbiIsImNyZWF0ZS1jbGllbnQiLCJtYW5hZ2UtdXNlcnMiLCJxdWVyeS1yZWFsbXMiLCJ2aWV3LWF1dGhvcml6YXRpb24iLCJxdWVyeS1jbGllbnRzIiwicXVlcnktdXNlcnMiLCJtYW5hZ2UtZXZlbnRzIiwibWFuYWdlLXJlYWxtIiwidmlldy1ldmVudHMiLCJ2aWV3LXVzZXJzIiwidmlldy1jbGllbnRzIiwibWFuYWdlLWF1dGhvcml6YXRpb24iLCJtYW5hZ2UtY2xpZW50cyIsInF1ZXJ5LWdyb3VwcyJdfSwibWVkLWFwcCI6eyJyb2xlcyI6WyJ1bWFfcHJvdGVjdGlvbiJdfSwiYWRtaW4tY2xpIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImNsaWVudF9yb2xlcy1tZWQtYXBwIHByb2ZpbGUgZW1haWwiLCJjbGllbnRIb3N0IjoiMTcyLjE4LjAuMSIsImNsaWVudElkIjoibWVkLWFwcCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicm9sZXMiOlsidmlldy1yZWFsbSIsInZpZXctaWRlbnRpdHktcHJvdmlkZXJzIiwibWFuYWdlLWlkZW50aXR5LXByb3ZpZGVycyIsImltcGVyc29uYXRpb24iLCJyZWFsbS1hZG1pbiIsImNyZWF0ZS1jbGllbnQiLCJtYW5hZ2UtdXNlcnMiLCJxdWVyeS1yZWFsbXMiLCJ2aWV3LWF1dGhvcml6YXRpb24iLCJxdWVyeS1jbGllbnRzIiwicXVlcnktdXNlcnMiLCJtYW5hZ2UtZXZlbnRzIiwibWFuYWdlLXJlYWxtIiwidmlldy1ldmVudHMiLCJ2aWV3LXVzZXJzIiwidmlldy1jbGllbnRzIiwibWFuYWdlLWF1dGhvcml6YXRpb24iLCJtYW5hZ2UtY2xpZW50cyIsInF1ZXJ5LWdyb3VwcyIsInVtYV9wcm90ZWN0aW9uIiwidW1hX3Byb3RlY3Rpb24iLCJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl0sInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1tZWQtYXBwIiwiY2xpZW50QWRkcmVzcyI6IjE3Mi4xOC4wLjEifQ.Tv2FdHb5zCZ0g3nzL1NpTmNOwdTU_bGEia3DGw_Q3GKYo__LipR-fjlmj15OYzB54_7DlY8Pqg7cexFuFtaxQqUOCWIVjGxXLDmgsC9xmWetiSREdOqcgjlfyOkQORQXTiM2DtHVxLD5RPzLQ6c2Be1tTGcoIbNoQVYLdn4KlqP5-AncG_bcdfaKYH_l3VvUh7TY-ZtsDJSklomSApM094rMwin9qkbe1QAix64rPCbuCToP2FwLGJ-KD5wkhP3n_pjMt326eiiybGHCwW6FVJEcRDHnnXwfkBognq7Hc73UWEMll04kdUe9qBEteKWzHjueQy-DBuBBvI4zYNi3rA`,
+                    },
+                },
+            )
+            .pipe(map((response) => response.data));
+    }
 
 
 }
