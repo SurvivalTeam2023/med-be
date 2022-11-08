@@ -32,7 +32,6 @@ export default class AudioController {
   @Post()
   async createAudio(@Body() createAudioDto: CreateAudioDto): Promise<AudioDto> {
     const audio = await this.audioService.createAudio(createAudioDto);
-    console.log(audio, "controller")
     return audio
   }
 

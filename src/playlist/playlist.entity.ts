@@ -25,7 +25,6 @@ public description:string;
 public user_id?:number
 
 @OneToMany(() => AudioPlaylist, audio_playlist => audio_playlist.playlist)
-@JoinColumn({ referencedColumnName: 'playlistId' })
 audio_playlist:AudioPlaylist[];
 
 @CreateDateColumn({ type: 'timestamp' })

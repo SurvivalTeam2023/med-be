@@ -30,7 +30,7 @@ export default class AudioService {
       .audioRepository
       .createQueryBuilder('audio')
       .select(['audio', 'audio_playlist.playlist_id'])
-      .leftJoin("audio_playlist", "audio_playlist", "audio_playlist.audio_id=audio.id")
+      .leftJoin("audio.audio_playlist", "audio_playlist")
       .where('audio.id = :audioId', { audioId })
       .printSql()
       .getOne()
@@ -44,7 +44,7 @@ export default class AudioService {
     const entity = await this
       .audioRepository
       .createQueryBuilder("audio")
-      .leftJoin("audio_playlist", "audio_playlist", "audio_playlist.audio_id=audio.id")
+      .leftJoin("audio.audio_playlist", "audio_playlist")
       .select(['audio.name', 'audio_playlist'])
       .where("audio.name like :name", { name: `%${dto.name}%` })
       .orWhere("audio.audio_status = :audioStatus", { audioStatus: dto.audio_status })

@@ -22,7 +22,7 @@ public audio_status:AudioStatus;
 @Column()
 public length:string;
 
-@OneToMany(() => AudioPlaylist, audio_playlist => audio_playlist.playlist)
+@OneToMany(() => AudioPlaylist, audio_playlist => audio_playlist.audio)
 @JoinColumn({ referencedColumnName: 'audioId' })
 public audio_playlist:AudioPlaylist[];
 
