@@ -21,30 +21,26 @@ export class UsersService {
         );
 
     }
-    // findUserById(): Observable<AxiosResponse<User>> {
-    //     return this.httpService.get('http://localhost:8080/auth/admin/realms/med-app/users/6dda9ebd-d8cf-4845-b6e7-93e12374b161', {
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Authorization': `Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJGUzR0S1hLLUpYWjd1TGlzTmVsUHFFOFZSaHNsNnB0UGNPd3ktOGRLX1QwIn0.eyJleHAiOjE2Njc1MzAxOTIsImlhdCI6MTY2NzUzMDEzMiwianRpIjoiMjdlZGJhMzYtZWYwMi00YTY0LWE1YjMtNjhiZjY2NGZiY2JjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL21hc3RlciIsImF1ZCI6WyJhcGktZ3ciLCJtYXN0ZXItcmVhbG0iXSwic3ViIjoiOGIwOGViZmUtNDcwOS00MGVkLTg1MWQtZTc5YTIwYWI3OWNkIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYWRtaW4tY2xpIiwic2Vzc2lvbl9zdGF0ZSI6IjUzZjllMDIwLWFlNWQtNDBkOS1hOTZiLTQzM2IwMmUyNTI3ZSIsImFjciI6IjEiLCJyZXNvdXJjZV9hY2Nlc3MiOnsibWFzdGVyLXJlYWxtIjp7InJvbGVzIjpbIm1hbmFnZS11c2VycyIsInZpZXctdXNlcnMiLCJxdWVyeS1ncm91cHMiLCJxdWVyeS11c2VycyJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJzaWQiOiI1M2Y5ZTAyMC1hZTVkLTQwZDktYTk2Yi00MzNiMDJlMjUyN2UiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIn0.VrCwWqQdWpkcCkt_1izL_SiR9rCNqRThga7bf_haUgGysqfxhTTbE6mUY1hmTsymDnWIFqAzlQlcfteOeWKxOPklVQo89LFTXs_ni4bjYQk3rz8ngYK1AcDM9nTJH2qyhb_pU1EY2UmhqZrwZOjvSbheDOUhU4py3gL-OIBZJ3E3ZKK33kRrtSfCdCZKcf-Wb8NIQckM9h1F9ytbiiIIAOT2WuvupzI5iTPYHvdyglhQXb6DjBasKhK--v8W7xQhcwi4G0Ed1mDc5jv8Kv83D-42b7xkx0XLhTJP-HxQiq1e8aEbRaZgQ3tMjVGFtCwX4mwFR-MkrE3A_VK8PEyBuw`
-    //         }
-    //     }).pipe(
-    //         map(response => response.data),
-    //     );
 
-    // }
 
     create(createUserDto: CreateUserDto): Observable<AxiosResponse<User>> {
         return this.httpService.post('http://localhost:8080/auth/admin/realms/med-app/users',
             {
                 createdTimestamp: 1588880747548,
-                username: "tamkaisa",
+                username: "tamdemo2",
                 enabled: true,
                 totp: false,
                 emailVerified: true,
-                firstName: "Nghia",
-                lastName: "Nguyen",
-                email: "done5@gmail.com",
-                disableableCredentialTypes: [],
+                firstName: "tam",
+                lastName: "pham",
+                email: "demo3@gmail.com",
+                credentials: [
+                    {
+                        type: "password",
+                        value: "abc@123",
+                        temporary: false
+                    }
+                ],
                 requiredActions: [],
                 notBefore: 0,
                 access: {
@@ -62,7 +58,7 @@ export class UsersService {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'Authorization': `Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJGUzR0S1hLLUpYWjd1TGlzTmVsUHFFOFZSaHNsNnB0UGNPd3ktOGRLX1QwIn0.eyJleHAiOjE2Njc1NzIxNjMsImlhdCI6MTY2NzU3MjEwMywianRpIjoiZDMwNjY5ZDYtMGNjNC00MmFiLTgyOWYtN2MyNTYwNmVkOWYwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL21hc3RlciIsImF1ZCI6WyJhcGktZ3ciLCJtYXN0ZXItcmVhbG0iXSwic3ViIjoiOGIwOGViZmUtNDcwOS00MGVkLTg1MWQtZTc5YTIwYWI3OWNkIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYWRtaW4tY2xpIiwic2Vzc2lvbl9zdGF0ZSI6ImM0OTgwZDI1LTcyZjMtNGVhMy05NzM0LWE2ZmZkOWE0ZDM3YSIsImFjciI6IjEiLCJyZXNvdXJjZV9hY2Nlc3MiOnsibWFzdGVyLXJlYWxtIjp7InJvbGVzIjpbIm1hbmFnZS11c2VycyIsInZpZXctdXNlcnMiLCJxdWVyeS1ncm91cHMiLCJxdWVyeS11c2VycyJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJzaWQiOiJjNDk4MGQyNS03MmYzLTRlYTMtOTczNC1hNmZmZDlhNGQzN2EiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIn0.NDUg-4qc-Qkz8580k5kQKml1VUEmmEJUqWzZfhdrQbdORcZKflG6gBL0vfRy7enyy4c6eo2ZOJN1fgLJTOmndb4Bs8OMcETWIL4L0kJuqPLOoydwImTxtcSc-AlZdi-DeNEHS1xpy3C2aztqtJqzvPp2FgTvq-urwWmiF6Ab68YuxSAJxzcdgUL_SsOxMSP3B5Ol6Zq8VEnb56E5kLZeWX5NlOu7baZCPoe8Iheg_AgIfL4jYZu_yRega2PRfR0A4SGPnIis4XbZKak6e5FfY-pQnuS_xMzaDY0xzv4NaeRsbbas9amdgGH7P5m7JPnZGb2ggzbeQk102nejMZFLKg`
+                    'Authorization': `Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJzU3JaNndtZWxUMzlYdV8wWnBjOFpia2hfZHRLMzF0WFlBdnhTNDJWTDU0In0.eyJleHAiOjE2Njc4NzAwNTMsImlhdCI6MTY2NzgzNDA1MywianRpIjoiNWNlZTZmNGItYzJhZC00ZDk0LWFjYjYtM2M3ZmMwZmVmZDM2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL21lZC1hcHAiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFkbWluLWNsaSIsImFjY291bnQiXSwic3ViIjoiMGQ5MmNhMjEtZDFlMi00ZWQ4LWE1ZmUtMDE0ZTU0ZmJhMzhjIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoibWVkLWFwcCIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLW1lZCIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsicmVhbG0tbWFuYWdlbWVudCI6eyJyb2xlcyI6WyJ2aWV3LXJlYWxtIiwidmlldy1pZGVudGl0eS1wcm92aWRlcnMiLCJtYW5hZ2UtaWRlbnRpdHktcHJvdmlkZXJzIiwiaW1wZXJzb25hdGlvbiIsInJlYWxtLWFkbWluIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJhZG1pbi1jbGkiOnsicm9sZXMiOlsidW1hX3Byb3RlY3Rpb24iXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoiY2xpZW50X3JvbGVzLW1lZC1hcHAgcHJvZmlsZSBlbWFpbCIsImNsaWVudEhvc3QiOiIxNzIuMTguMC4xIiwiY2xpZW50SWQiOiJtZWQtYXBwIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJyb2xlcyI6WyJ2aWV3LXJlYWxtIiwidmlldy1pZGVudGl0eS1wcm92aWRlcnMiLCJtYW5hZ2UtaWRlbnRpdHktcHJvdmlkZXJzIiwiaW1wZXJzb25hdGlvbiIsInJlYWxtLWFkbWluIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIiwidW1hX3Byb3RlY3Rpb24iLCJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl0sInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1tZWQtYXBwIiwiY2xpZW50QWRkcmVzcyI6IjE3Mi4xOC4wLjEifQ.fIj2Bnk7NA7KXIG6abGU_3Xix_0tNjqjBKPxnP9ZRBtfIv-6Gb_WXnrCg6g3y-HQ1tWRzVRdfCzkmO3uUkH03z_8eISWY0utYJ2Bxw_vKeu7-Z2caNxxWMil51f3PcTEdt6g46FskDGLlgI-5xHRALNelfAt6TkTxP7ycVRCauEYeSQmd5KAVxda8DBD3-icsLJZrg9bh2DN96kmHpK8Idce1w0vyRG9-x5djKtdSrJweiU0NVyoVu0WoHjeFohnMuNpOs1vpbr5Zs8LgC4EflNjRbEdTKeHsZaadB7L-zBoa1nEnAOCZ4n2NYlLn-I5DTvMUXK2UgWbT3erDYYBXg`
                 },
             }
         ).pipe(
