@@ -6,11 +6,12 @@ import { AudioStatus } from "../audioStatus.enum";
 export class CreateAudioDto{
     @ApiProperty()
     @IsNotEmpty()
+    @IsString()
     name:string;
 
     @ApiProperty()
     @IsNotEmpty()
-
+    @IsString()
     image_url:string;
 
     @ApiProperty({enum:AudioStatus})
@@ -18,6 +19,7 @@ export class CreateAudioDto{
 
     @IsNotEmpty()
     @ApiProperty()
+    @IsString()
     length:string;
 
 

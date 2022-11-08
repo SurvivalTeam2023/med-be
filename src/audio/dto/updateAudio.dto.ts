@@ -26,11 +26,5 @@ export class UpdateAudioDto{
     length:string;
 
 
-    @ApiProperty()
-    @IsOptional()
-    @IsNumber()
-    playlist_id:number;
-
-
 }
 export default UpdateAudioDto;

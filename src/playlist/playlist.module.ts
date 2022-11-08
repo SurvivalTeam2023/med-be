@@ -9,6 +9,7 @@ import PlaylistService from './playlist.service';
     imports: [TypeOrmModule.forFeature([Playlist])],
     controllers: [PlaylistController],
     providers: [PlaylistService],
+    exports:[PlaylistService]
 
   
 })
