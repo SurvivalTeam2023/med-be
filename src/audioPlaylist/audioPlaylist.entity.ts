@@ -11,10 +11,10 @@ export class AudioPlaylist{
 public id:number;
 
 @Column()
-public audio_id:number;
+public audio_id!:number;
 
 @Column()
-public playlist_id:number;
+public playlist_id!:number;
 
 
 @ManyToOne((type) => Audio, (audio) => audio.audio_playlist)

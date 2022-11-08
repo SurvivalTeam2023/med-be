@@ -56,23 +56,22 @@ export default class AudioService {
   }
   async createAudio(dto: CreateAudioDto): Promise<AudioDto> {
     const p: AudioPlaylist[] = []
-
+    if (dto.playlist_id) {
+      for (let playlistId of dto.playlist_id) {
+        const audioPlaylist = new AudioPlaylist()
+        audioPlaylist.playlist_id = playlistId
+        p.push(audioPlaylist)
+      };
+    }
     const entity = new Audio()
     entity.name = dto.name;
     entity.image_url = dto.image_url;
     entity.length = dto.length;
     entity.audio_status = dto.audio_status;
+    entity.audio_playlist=p
     await this.audioRepository.save(entity);
 
-    if (dto.playlist_id) {
-      for (let playlistId of dto.playlist_id) {
-        const audioPlaylist = new AudioPlaylist()
-        audioPlaylist.audio_id = entity.id;
-        audioPlaylist.playlist_id = playlistId
-        await this.audioPlaylistRepository.save(audioPlaylist)
-        p.push(audioPlaylist)
-      };
-    }
+
     return entity;
   }
   async updateAudio(audioId: number,  dto: UpdateAudioDto): Promise<Audio> {
