@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmConfigModule } from './common/typeorm/typeorm.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   // imports: [TypeOrmConfigModule],
+  imports: [MailModule],
   controllers: [],
   providers: [],
 })

@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
-const SERVER_PORT: number = +process.env.SERVER_PORT || 8080;
+const SERVER_PORT: number = +process.env.SERVER_PORT || 8081;
 const SWAGGER_URL: string = process.env.SWAGGER_URL || 'docs';
 const DB_HOST: string = process.env.DB_HOST || 'localhost';
 const DB_PORT: string = process.env.DB_PORT || '5432';
