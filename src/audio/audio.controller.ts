@@ -35,7 +35,7 @@ export default class AudioController {
     return audio
   }
 
-  @Put(':id/audio_playlist')
+  @Put(':id')
   async updateAudio(@Param('id') id: number,  @Body() updateAudioDto: UpdateAudioDto): Promise<Audio> {
     return await this.audioService.updateAudio(id, updateAudioDto);
   }
