@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {  IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import AudioPlaylist from "src/audioPlaylist/audioPlaylist.entity";
-import { PlaylistStatus } from "../playlistStatus.enum";
+import AudioPlaylist from "src/audioPlaylist/entities/audioPlaylist.entity";
+import { PlaylistStatus } from "../enum/playlistStatus.enum";
 
 
 export class PlaylistDto{

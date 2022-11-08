@@ -1,6 +1,7 @@
-import AudioPlaylist from "src/audioPlaylist/audioPlaylist.entity";
+import AudioPlaylist from "src/audioPlaylist/entities/audioPlaylist.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { PlaylistStatus } from "./playlistStatus.enum";
+import { PlaylistStatus } from "../enum/playlistStatus.enum";
+
 
 
 @Entity('playlist')

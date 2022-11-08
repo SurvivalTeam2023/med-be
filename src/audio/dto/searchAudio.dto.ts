@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {  IsNumber, IsOptional, IsString } from "class-validator";
-import { AudioStatus } from "../audioStatus.enum";
+import { AudioStatus } from "../enum/audioStatus.enum";
 
 
 export class SearchAudioDto{
@@ -11,7 +11,7 @@ export class SearchAudioDto{
     name:string;
 
 
-    @ApiProperty({enum:AudioStatus, required: false})
+    @ApiProperty({enum:AudioStatus, required: false, default:AudioStatus.ACTIVE})
     @IsOptional()
     audio_status:AudioStatus;
 

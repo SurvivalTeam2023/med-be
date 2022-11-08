@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {  IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
-import { PlaylistStatus } from "../playlistStatus.enum";
+import { PlaylistStatus } from "../enum/playlistStatus.enum";
 
 
 

@@ -4,7 +4,7 @@ import CreatePlaylistDto from "./dto/createPlaylist.dto";
 import PlaylistDto from "./dto/playlist.dto";
 import SearchPlaylistDto from "./dto/searchPlaylistDto";
 import UpdatePlaylistDto from "./dto/updatePlaylist.dto";
-import { Playlist } from "./playlist.entity";
+import { Playlist } from "./entities/playlist.entity";
 import PlaylistService from "./playlist.service";
 
 

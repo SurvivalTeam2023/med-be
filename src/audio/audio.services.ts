@@ -1,14 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import AudioPlaylistDto from "src/audioPlaylist/dto/audioPlaylist.dto";
-import AudioPlaylist from "src/audioPlaylist/audioPlaylist.entity";
-import { Playlist } from "src/playlist/playlist.entity";
-import PlaylistService from "src/playlist/playlist.service";
+import AudioPlaylist from "src/audioPlaylist/entities/audioPlaylist.entity";
 import { Repository } from 'typeorm';
-import { Audio } from "./audio.entity"
-import { AudioStatus } from "./audioStatus.enum";
+import { Audio } from "./entities/audio.entity"
+import { AudioStatus } from "./enum/audioStatus.enum";
 import AudioDto from "./dto/audio.dto";
-import { CreateAudioDto } from "./dto/createAudio.dto";
+import { CreateAudioDTO } from "./dto/createAudio.dto";
 import SearchAudioDto from "./dto/searchAudio.dto";
 import UpdateAudioDto from "./dto/updateAudio.dto";
 
@@ -54,7 +52,7 @@ export default class AudioService {
     // console.log(name,audioStatus,playlistId)
     return entity;
   }
-  async createAudio(dto: CreateAudioDto): Promise<AudioDto> {
+  async createAudio(dto: CreateAudioDTO): Promise<AudioDto> {
     const p: AudioPlaylist[] = []
     if (dto.playlist_id) {
       for (let playlistId of dto.playlist_id) {

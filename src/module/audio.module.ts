@@ -1,12 +1,11 @@
 import { Module, Global } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import AudioPlaylist from 'src/audioPlaylist/audioPlaylist.entity';
-import { PlaylistModule } from 'src/playlist/playlist.module';
-import AudioController from './audio.controller';
-import { Audio } from './audio.entity';
-import AudioService from './audio.services';
+import AudioController from 'src/audio/audio.controller';
+import AudioService from 'src/audio/audio.services';
+import AudioPlaylist from 'src/audioPlaylist/entities/audioPlaylist.entity';
+import { PlaylistModule } from 'src/module/playlist.module';
 
-@Global()
+
 @Module({
     imports: [TypeOrmModule.forFeature([Audio,AudioPlaylist]), PlaylistModule],
     controllers: [AudioController],

@@ -1,5 +1,5 @@
-import { Audio } from "src/audio/audio.entity";
-import { Playlist } from "src/playlist/playlist.entity";
+import { Audio } from "src/audio/entities/audio.entity";
+import { Playlist } from "src/playlist/entities/playlist.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 
