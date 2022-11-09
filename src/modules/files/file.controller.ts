@@ -29,7 +29,6 @@ export class FilesController {
     @Body() body: FileDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    // console.log('file', file);
     return this.fileService.uploadPublicFile(file.buffer, file.originalname);
   }
 

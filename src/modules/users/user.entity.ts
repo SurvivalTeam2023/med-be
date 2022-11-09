@@ -5,10 +5,11 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import PublicFile from '../files/publicFile.entity';
+import PublicFile from 'src/modules/files/publicFile.entity';
+import { IUser } from './interface/user.interface';
 
-@Entity()
-class User {
+@Entity({ name: 'users' })
+class User implements IUser {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,9 +19,9 @@ class User {
   @Column()
   lastName: string;
 
-  @Column({ default: true })
+  @Column()
   isActive: boolean;
-  public avatar?: PublicFile;
+  public avatar: string;
 }
 
 export default User;

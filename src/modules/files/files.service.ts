@@ -17,7 +17,7 @@ export class FilesService {
   async uploadPublicFile(dataBuffer: Buffer, filename: string) {
     const s3 = new S3();
     const uploadResult = await s3
-      .upload({
+      .upload({ 
         Bucket: this.configService.get('BUCKET_NAME'),
         Body: dataBuffer,
         Key: `${uuid()}-${filename}`,

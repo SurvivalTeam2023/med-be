@@ -6,7 +6,7 @@ const DB_HOST: string = process.env.DB_HOST || 'localhost';
 const DB_PORT: string = process.env.DB_PORT || '5432';
 const DB_USERNAME: string = process.env.DB_USERNAME || 'admin';
 const DB_PASSWORD: string = process.env.DB_PASSWORD || '123123';
-const DB_DATABASE: string = process.env.DB_DATABASE || 'db';
+const DB_DATABASE: string = process.env.DB_DATABASE || 'med-be';
 const APP_BASE_URL_PREFIX: string = process.env.APP_BASE_URL_PREFIX || 'api';
 export {
   APP_BASE_URL_PREFIX,

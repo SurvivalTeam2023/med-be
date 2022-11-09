@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmConfigModule } from './common/typeorm/typeorm.module';
 
-import { FilesModules } from './files/file.module';
+import { FilesModules } from './modules/files/file.module';
 @Module({
   // imports: [TypeOrmConfigModule],
   imports: [TypeOrmConfigModule, FilesModules],
