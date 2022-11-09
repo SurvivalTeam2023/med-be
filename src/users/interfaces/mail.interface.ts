@@ -1,3 +1,3 @@
-export class Mail {
+export interface Mail {
     username: string;
 }
