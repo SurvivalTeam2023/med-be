@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { PlaylistModule } from './playlist.module';
-import { OrmConfig } from '../common/typeorm/orm.config';
-import { AudioModule } from './audio.module';
+import { PlaylistModule } from './modules/playlist/playlist.module';
+import { OrmConfig } from './common/typeorm/orm.config';
+import { AudioModule } from './modules/audio/audio.module';
 
 @Module({
   imports: [

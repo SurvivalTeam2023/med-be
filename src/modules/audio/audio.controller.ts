@@ -1,35 +1,40 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from "@nestjs/common";
 import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import { Audio } from "./entities/audio.entity";
 import AudioService from "./audio.services";
-import { AudioStatus } from "./enum/audioStatus.enum";
 import AudioDto from "./dto/audio.dto";
-
 import { CreateAudioDTO } from "./dto/createAudio.dto";
 import SearchAudioDto from "./dto/searchAudio.dto";
 import UpdateAudioDto from "./dto/updateAudio.dto";
+import { IPaginationOptions, Pagination, paginate } from "nestjs-typeorm-paginate";
 
 @ApiTags('audio')
 @Controller('audio')
-
 export default class AudioController {
   constructor(private readonly audioService: AudioService) { }
   @Get(':id')
-  async getAudioById(@Param('id') id: number): Promise<AudioDto> {
+
+  async getAudioById(@Param('id') id: number): Promise<Audio> {
     return this.audioService.findAudioById(id);
+
   }
   @Get()
   async getAudios(
     @Query() audio: SearchAudioDto,
-  ): Promise<AudioDto[]> {
-    return this.audioService.findAudios(audio);
-     
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+  ): Promise<Pagination<Audio>> {
+    limit = limit > 100 ? 100 : limit
+    return this.audioService.findAudios({
+      page,
+      limit,
+    },
+      audio);
   }
 
   @Post()
-  async createAudio(@Body() createAudioDto: CreateAudioDTO): Promise<AudioDto> {
+  async createAudio(@Body() createAudioDto: CreateAudioDTO): Promise<Audio> {
     return this.audioService.createAudio(createAudioDto);
-    
   }
 
   @Put(':id')

@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {  IsOptional } from "class-validator";
-import AudioDto from "src/audio/dto/searchAudio.dto";
-import PlaylistDto from "src/playlist/dto/playlist.dto";
+import PlaylistDto from "src/modules/playlist/dto/playlist.dto";
+
 
 
 

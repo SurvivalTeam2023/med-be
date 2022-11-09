@@ -4,7 +4,7 @@ import {  IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { AudioStatus } from "../enum/audioStatus.enum";
 
 
-export class UpdateAudioDto{
+export class UpdateAudioDTO{
     
 
     @ApiProperty()
@@ -18,7 +18,7 @@ export class UpdateAudioDto{
     image_url:string;
 
     @ApiProperty({enum:AudioStatus, default:AudioStatus.ACTIVE})
-    audio_status:AudioStatus;
+    status:AudioStatus;
 
     @IsNotEmpty()
     @IsString()
@@ -27,4 +27,4 @@ export class UpdateAudioDto{
 
 
 }
-export default UpdateAudioDto;
+export default UpdateAudioDTO;

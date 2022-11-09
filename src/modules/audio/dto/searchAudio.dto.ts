@@ -3,7 +3,7 @@ import {  IsNumber, IsOptional, IsString } from "class-validator";
 import { AudioStatus } from "../enum/audioStatus.enum";
 
 
-export class SearchAudioDto{
+export class SearchAudioDTO{
 
     @ApiProperty({ required: false})
     @IsOptional()
@@ -22,4 +22,4 @@ export class SearchAudioDto{
 
 
 }
-export default SearchAudioDto;
+export default SearchAudioDTO;

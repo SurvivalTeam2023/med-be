@@ -26,7 +26,7 @@ export class CreateAudioDTO{
     @ApiProperty({ type: [Number] })
     @IsOptional()
     @IsArray()
-    playlist_id:number[];
+    playlist_id?:number[];
 
 
 }

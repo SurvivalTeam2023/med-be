@@ -1,32 +1,32 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {  IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { PlaylistStatus } from "../enum/playlistStatus.enum";
 
 
 
-export class UpdatePlaylistDto{
+export class UpdatePlaylistDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
     @IsOptional()
-    name:string;
+    name: string;
 
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
     @IsOptional()
-    image_url:string;
+    image_url: string;
 
-    @ApiProperty({enum:PlaylistStatus})
+    @ApiProperty({ enum: PlaylistStatus })
     @IsOptional()
     @IsEnum(PlaylistStatus)
-    playlist_status:PlaylistStatus;
+    status: PlaylistStatus;
 
     @IsNotEmpty()
     @IsString()
     @ApiProperty()
     @IsOptional()
-    description:string;
+    description: string;
 
 
 }

@@ -1,8 +1,9 @@
 import { Module, Global } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import PlaylistController from '../playlist/playlist.controller';
-import { Playlist } from '../playlist/entities/playlist.entity';
-import PlaylistService from '../playlist/playlist.service';
+import { Playlist } from 'src/modules/playlist/entities/playlist.entity';
+import PlaylistController from 'src/modules/playlist/playlist.controller';
+import PlaylistService from 'src/modules/playlist/playlist.service';
+
 
 @Module({
     imports: [TypeOrmModule.forFeature([Playlist])],
