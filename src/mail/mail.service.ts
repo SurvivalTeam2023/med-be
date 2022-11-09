@@ -6,12 +6,13 @@ import { map, Observable } from 'rxjs';
 
 @Injectable()
 export class MailService {
+  forgetPass = process.env.FORGOTPASS_URL;
   constructor(private readonly httpService: HttpService) {}
 
   forgetPassword(): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(
-        'http://localhost:8080/auth/admin/realms/med-app/users/4f75554e-8e7d-4bde-8ffb-02ee98a5cb64/reset-password-email?client_id=med-app',
+        this.forgetPass,
         {},
         {
           headers: {
