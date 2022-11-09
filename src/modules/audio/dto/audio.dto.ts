@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {  IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import AudioPlaylistDto from "src/modules/audioPlaylist/dto/audioPlaylist.dto";
 import { AudioStatus } from "../enum/audioStatus.enum";
 
@@ -20,10 +19,7 @@ export class AudioDTO{
     @ApiProperty()
     length:string;
 
-
     @ApiProperty()
     audio_playlist:AudioPlaylistDto[];
-
-
 }
 export default AudioDTO;

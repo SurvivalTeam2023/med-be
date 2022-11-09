@@ -10,16 +10,13 @@ export class SearchAudioDTO{
     @IsString()
     name:string;
 
-
     @ApiProperty({enum:AudioStatus, required: false, default:AudioStatus.ACTIVE})
     @IsOptional()
     audio_status:AudioStatus;
 
-
     @ApiProperty({ required: false})
     @IsOptional()
     playlist_id:number;
-
 
 }
 export default SearchAudioDTO;

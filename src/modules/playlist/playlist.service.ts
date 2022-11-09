@@ -4,7 +4,6 @@ import { ERROR_MESSAGE } from "src/common/constants/messages.constant";
 import { ErrorHelper } from "src/helpers/error.helper";
 import { DeepPartial, Repository } from "typeorm";
 import CreatePlaylistDto from "./dto/createPlaylist.dto";
-import PlaylistDto from "./dto/playlist.dto";
 import SearchPlaylistDto from "./dto/searchPlaylistDto";
 import UpdatePlaylistDto from "./dto/updatePlaylist.dto";
 import { Playlist } from "./entities/playlist.entity";

@@ -22,12 +22,10 @@ export class CreateAudioDTO{
     @IsString()
     length:string;
 
-
     @ApiProperty({ type: [Number] })
     @IsOptional()
     @IsArray()
     playlist_id?:number[];
-
 
 }
 export default CreateAudioDTO;

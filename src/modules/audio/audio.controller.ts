@@ -1,23 +1,22 @@
 import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from "@nestjs/common";
-import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import { Audio } from "./entities/audio.entity";
 import AudioService from "./audio.services";
-import AudioDto from "./dto/audio.dto";
 import { CreateAudioDTO } from "./dto/createAudio.dto";
 import SearchAudioDto from "./dto/searchAudio.dto";
 import UpdateAudioDto from "./dto/updateAudio.dto";
-import { IPaginationOptions, Pagination, paginate } from "nestjs-typeorm-paginate";
+import { Pagination } from "nestjs-typeorm-paginate";
+import { ApiTags } from "@nestjs/swagger";
 
 @ApiTags('audio')
 @Controller('audio')
 export default class AudioController {
   constructor(private readonly audioService: AudioService) { }
-  @Get(':id')
 
+  @Get(':id')
   async getAudioById(@Param('id') id: number): Promise<Audio> {
     return this.audioService.findAudioById(id);
-
   }
+
   @Get()
   async getAudios(
     @Query() audio: SearchAudioDto,

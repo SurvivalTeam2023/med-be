@@ -14,11 +14,11 @@ import PlaylistService from "./playlist.service";
 
 export default class PlaylistController {
   constructor(private readonly PlaylistService: PlaylistService) { }
+
   @Get(':id')
   async getPlaylistById(@Param('id') id: number): Promise<Playlist> {
     return await this.PlaylistService.findPlaylistById(id);
   }
-
 
   @Get()
   async getPlaylists(

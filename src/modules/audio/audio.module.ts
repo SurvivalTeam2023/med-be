@@ -11,7 +11,5 @@ import { PlaylistModule } from 'src/modules/playlist/playlist.module';
     imports: [TypeOrmModule.forFeature([Audio,AudioPlaylist]), PlaylistModule],
     controllers: [AudioController],
     providers: [AudioService],
-
-  
 })
 export class AudioModule {}

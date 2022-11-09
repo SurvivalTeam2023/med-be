@@ -3,8 +3,6 @@ import AudioPlaylist from "src/modules/audioPlaylist/entities/audioPlaylist.enti
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { PlaylistStatus } from "../enum/playlistStatus.enum";
 
-
-
 @Entity('playlist')
 export class Playlist extends BaseEntity {
     @Column()

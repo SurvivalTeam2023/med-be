@@ -1,24 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {  IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import AudioPlaylist from "src/modules/audioPlaylist/entities/audioPlaylist.entity";
+import { IsOptional, IsString } from "class-validator";
 import { PlaylistStatus } from "../enum/playlistStatus.enum";
 
 
-export class SearchPlaylistDto{
+export class SearchPlaylistDto {
 
-
-    @ApiProperty({required:false})
+    @ApiProperty({ required: false })
     @IsOptional()
     @IsString()
-    name:string;
+    name: string;
 
-
-    @ApiProperty({enum:PlaylistStatus, required:false})
+    @ApiProperty({ enum: PlaylistStatus, required: false })
     @IsOptional()
-    playlist_status:PlaylistStatus;
-
-
-
+    playlist_status: PlaylistStatus;
 
 }
 export default SearchPlaylistDto;

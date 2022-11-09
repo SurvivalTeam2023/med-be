@@ -1,12 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Exclude } from "class-transformer";
 import {  IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { AudioStatus } from "../enum/audioStatus.enum";
 
 
 export class UpdateAudioDTO{
     
-
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
@@ -24,7 +22,6 @@ export class UpdateAudioDTO{
     @IsString()
     @ApiProperty()
     length:string;
-
 
 }
 export default UpdateAudioDTO;
