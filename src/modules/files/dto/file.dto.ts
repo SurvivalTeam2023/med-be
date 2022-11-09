@@ -1,9 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
-import { Express } from 'express';
-export class FileDto {
-  @ApiProperty({ type: 'string', format: 'binary' })
-  file: any;
-  // @ApiProperty({ type: 'string', format: 'binary', required: true })
-  // file: Express.Multer.File;
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class FileDTO {
+  @PrimaryGeneratedColumn()
+  public id: number;
+
+  @Column()
+  public url: string;
+
+  @Column()
+  public key: string;
 }

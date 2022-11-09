@@ -2,15 +2,15 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
-  Request,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { FileDto } from './dto/file.dto';
+import { FileDTO } from './dto/file.dto';
 import { FilesService } from './files.service';
 
 @ApiTags('upload')
@@ -23,17 +23,17 @@ export class FilesController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Upload image to with file extension jpg or png',
-    type: FileDto,
+    type: FileDTO,
   })
   async uploadFile(
-    @Body() body: FileDto,
+    @Body() body: FileDTO,
     @UploadedFile() file: Express.Multer.File,
   ) {
     return this.fileService.uploadPublicFile(file.buffer, file.originalname);
   }
 
   @Get('files')
-  async getAllFiles(@Request() request: any) {
-    return this.fileService.generatePresignedUrl(request);
+  async getAllFiles(@Param('id') id: number, @Param('key') key: string) {
+    return this.fileService.getFile(id, key);
   }
 }

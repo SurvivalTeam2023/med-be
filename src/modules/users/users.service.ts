@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FilesService } from '../files/files.service';
+import PublicFile from '../files/publicFile.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import User from './user.entity';
 
@@ -10,21 +11,18 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    @InjectRepository(PublicFile)
     private readonly filesService: FilesService,
   ) {}
 
-  async create(
-    createUserDto: CreateUserDto,
-    fileBuffer: Buffer,
-    fileName: string,
-  ): Promise<User> {
-    const base64Image = await this.addAvatar(fileBuffer, fileName);
-    console.log(base64Image);
-    const user = {
-      ...createUserDto,
-      base64Image,
-    };
-    return this.usersRepository.save(user);
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const file_result = await this.filesService.getFile(
+      createUserDto.avarta.id,
+      createUserDto.avarta.key,
+    );
+    const user = { ...createUserDto };
+    user.avarta = file_result.file;
+    return this.usersRepository.create(user);
   }
 
   async findAll(): Promise<User[]> {
@@ -39,16 +37,16 @@ export class UsersService {
     await this.usersRepository.delete(id);
   }
 
-  async addAvatar(imageBuffer: Buffer, filename: string) {
-    const avatar = await this.filesService.uploadPublicFile(
-      imageBuffer,
-      filename,
-    );
-    // const user = await this.findOne(userId);
-    // await this.usersRepository.update(userId, {
-    //   //   ...user,
-    //   avatar,
-    // });
-    return avatar;
-  }
+  // async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
+  //   const avatar = await this.filesService.uploadPublicFile(
+  //     imageBuffer,
+  //     filename,
+  //   );
+  //   const user = await this.findOne(userId);
+  //   await this.usersRepository.update(userId, {
+  //     //   ...user,
+  //     avatar,
+  //   });
+  //   return avatar;
+  // }
 }

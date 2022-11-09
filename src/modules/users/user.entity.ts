@@ -21,7 +21,13 @@ class User implements IUser {
 
   @Column()
   isActive: boolean;
-  public avatar: string;
+
+  @JoinColumn()
+  @OneToOne(() => PublicFile, {
+    eager: true,
+    nullable: true,
+  })
+  public avatar?: PublicFile;
 }
 
 export default User;

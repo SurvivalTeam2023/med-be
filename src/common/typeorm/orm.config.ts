@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import {
   DB_DATABASE,
@@ -21,6 +21,7 @@ export class OrmConfig implements TypeOrmOptionsFactory {
       synchronize: true,
       autoLoadEntities: true,
       entities,
+      logger: Logger,
     };
     return baseOptions;
   }

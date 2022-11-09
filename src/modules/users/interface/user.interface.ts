@@ -1,3 +1,5 @@
+import { FileDTO } from "src/modules/files/dto/file.dto";
+
 export interface IUser {
   id: number;
 
@@ -7,5 +9,5 @@ export interface IUser {
 
   isActive: boolean;
 
-  avatar?: string;
+  avatar?: FileDTO;
 }
