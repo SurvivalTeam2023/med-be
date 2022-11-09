@@ -16,8 +16,6 @@ export class FilesService {
 
   async uploadPublicFile(dataBuffer: Buffer, filename: string) {
     const s3 = new S3();
-    console.log('bucket', this.configService.get('BUCKET_NAME'));
-    console.log('dataBuffer', dataBuffer);
     const uploadResult = await s3
       .upload({
         Bucket: this.configService.get('BUCKET_NAME'),
@@ -40,12 +38,13 @@ export class FilesService {
     const result = s3.getObject(
       {
         Bucket: this.configService.get('BUCKET_NAME'),
-        Key: '904f8e3f-27d9-45e5-9ebe-0fcd7f9baec0-Berocca_Goolden boot_ 300x250.jpg',
+        Key: 'df2659ad-6d1d-418f-a756-41006e978b24-DSC08242.JPG',
       },
       (err, data) => {
         if (err) {
           return err;
         }
+        console.log('data', data.Body);
         return data.Body;
       },
     );

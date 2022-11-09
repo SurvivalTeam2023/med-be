@@ -1,15 +1,25 @@
-import { Entity, JoinColumn, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import PublicFile from '../files/publicFile.entity';
 
 @Entity()
 class User {
-  // ...
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  //   @JoinColumn()
-  //   @OneToOne(() => PublicFile, {
-  //     eager: true,
-  //     nullable: true,
-  //   })
+  @Column()
+  firstName: string;
+
+  @Column()
+  lastName: string;
+
+  @Column({ default: true })
+  isActive: boolean;
   public avatar?: PublicFile;
 }
 
