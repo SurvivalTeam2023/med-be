@@ -15,7 +15,7 @@ export class CreateAudioDTO{
     image_url:string;
 
     @ApiProperty({enum:AudioStatus,default:AudioStatus.ACTIVE})
-    audio_status:AudioStatus;
+    status:AudioStatus;
 
     @IsNotEmpty()
     @ApiProperty()

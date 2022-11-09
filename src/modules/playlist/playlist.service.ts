@@ -8,6 +8,7 @@ import SearchPlaylistDto from "./dto/searchPlaylistDto";
 import UpdatePlaylistDto from "./dto/updatePlaylist.dto";
 import { Playlist } from "./entities/playlist.entity";
 import { PlaylistStatus } from "./enum/playlistStatus.enum";
+import { IPaginationOptions, Pagination, paginate } from "nestjs-typeorm-paginate";
 
 @Injectable()
 export default class PlaylistService {
@@ -22,35 +23,30 @@ export default class PlaylistService {
     if (!playList) ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAY_LIST.NOT_FOUND)
     return playList
   }
-  async findPlaylist(dto: SearchPlaylistDto): Promise<Playlist[]> {
-    const entity = await this
+  async findPlaylist(option: IPaginationOptions, dto: SearchPlaylistDto,): Promise<Pagination<Playlist>> {
+    const querybuilder = await this
       .playlistRepository
       .createQueryBuilder("playlist")
       .where("LOWER(playlist.name) like :name", { name: `%${dto.name}%` })
-      .orWhere("playlist.playlist_status = :playlistStatus", { playlistStatus: dto.playlist_status })
+      .orWhere("playlist.status = :playlistStatus", { playlistStatus: dto.status })
       .orderBy("playlist.created_at", "DESC")
-      .getMany()
-    return entity;
+    return paginate<Playlist>(querybuilder, option);
   }
 
   async createPlaylist(dto: CreatePlaylistDto): Promise<Playlist> {
-    const entity = this.playlistRepository.create({ ...dto })
+    const entity = await this.playlistRepository.save({ ...dto })
     return entity;
   }
 
   async updatePlaylist(playlistId: number, dto: UpdatePlaylistDto): Promise<Playlist> {
     const playlist = await this.playlistRepository.findOneBy({ id: playlistId })
     if (!playlist) ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAY_LIST.NOT_FOUND)
-    const playListDL: DeepPartial<Playlist> = {
-      image_url: dto.image_url,
-      name: dto.name,
-      description: dto.description,
-      status: dto.status
-    }
-    await this.playlistRepository.save({
-      ...dto, playListDL
-    })
-    return playlist
+
+   const updatedPlaylist= await this.playlistRepository.save(
+      {id:playlist.id,
+        ...dto,
+      })
+    return updatedPlaylist
   }
 
   async deletePlaylist(PlaylistId: number): Promise<Playlist> {

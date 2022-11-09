@@ -12,7 +12,7 @@ export class SearchAudioDTO{
 
     @ApiProperty({enum:AudioStatus, required: false, default:AudioStatus.ACTIVE})
     @IsOptional()
-    audio_status:AudioStatus;
+    status:AudioStatus;
 
     @ApiProperty({ required: false})
     @IsOptional()

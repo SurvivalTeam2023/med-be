@@ -1,13 +1,12 @@
-import { Body, Controller, Delete, ForbiddenException, Get, HttpException, HttpStatus, Param, Post, Put, Query, UseFilters } from "@nestjs/common";
+import { Body, Controller, DefaultValuePipe, Delete, ForbiddenException, Get, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put, Query, UseFilters } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { HttpExceptionFilter } from "src/common/filters/http-exception.filter";
 import CreatePlaylistDto from "./dto/createPlaylist.dto";
 import PlaylistDto from "./dto/playlist.dto";
 import SearchPlaylistDto from "./dto/searchPlaylistDto";
 import UpdatePlaylistDto from "./dto/updatePlaylist.dto";
 import { Playlist } from "./entities/playlist.entity";
 import PlaylistService from "./playlist.service";
-
+import { Pagination } from "nestjs-typeorm-paginate";
 
 @ApiTags('playlist')
 @Controller('playlist')
@@ -22,10 +21,15 @@ export default class PlaylistController {
 
   @Get()
   async getPlaylists(
-    @Query() Playlist: SearchPlaylistDto,
-  ): Promise<Playlist[]> {
-    const Playlists = await this.PlaylistService.findPlaylist(Playlist);
-    return Playlists;
+    @Query() playlist: SearchPlaylistDto,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+  ): Promise<Pagination<Playlist>> {
+    limit = limit > 100 ? 100 : limit
+    return this.PlaylistService.findPlaylist({
+      page,
+      limit
+    },playlist)
   }
 
   @Post()

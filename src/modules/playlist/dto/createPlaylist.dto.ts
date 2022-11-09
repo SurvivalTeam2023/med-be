@@ -15,7 +15,7 @@ export class CreatePlaylistDto {
 
     @ApiProperty({ enum: PlaylistStatus })
     @IsEnum(PlaylistStatus)
-    playlist_status: PlaylistStatus;
+    status: PlaylistStatus;
 
     @IsNotEmpty()
     @IsString()

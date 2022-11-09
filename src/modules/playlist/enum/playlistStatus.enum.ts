@@ -1,4 +1,4 @@
 export enum PlaylistStatus{
-    ACTIVE='Active',
-    INACTIVE='Inactive',
+    ACTIVE='ACTIVE',
+    INACTIVE='INACTIVE',
 }

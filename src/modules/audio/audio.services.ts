@@ -41,7 +41,7 @@ export default class AudioService {
       .createQueryBuilder("audio")
       .leftJoinAndSelect("audio.audio_playlist", "audio_playlist")
     if (dto.name) querybuilder.orWhere("LOWER(audio.name) like :name", { name: `%${dto.name}%` })
-      .orWhere("audio.audio_status = :audioStatus", { audioStatus: dto.audio_status })
+      .orWhere("audio.status = :audioStatus", { audioStatus: dto.status })
       .orWhere("audio_playlist.playlist_id = :playlistId", { playlistId: dto.playlist_id })
       .orderBy("audio.created_at", "DESC")
     if (dto.name) querybuilder.orWhere("LOWER(audio.name) like :name", { name: `%${dto.name}%` })
@@ -53,7 +53,7 @@ export default class AudioService {
       audioPlaylist.playlist_id = playlistId
       return audioPlaylist
     })
-    const entity = this.audioRepository.create({
+    const entity = this.audioRepository.save({
       ...dto,
       audio_playlist: audioPlaylists
     });
@@ -64,14 +64,10 @@ export default class AudioService {
       id: audioId,
     })
     if (!audio) ErrorHelper.NotFoundExeption(ERROR_MESSAGE.AUDIO.NOT_FOUND)
-    const audioDL: DeepPartial<Audio> = {
-      name: dto.name,
-      image_url: dto.image_url,
-      length: dto.length,
-      status: dto.status
-    }
+ 
     const updatedAUdio = await this.audioRepository.save({
-      ...dto, audioDL
+      id:audio.id,
+      ...dto
     })
     return updatedAUdio;
   }

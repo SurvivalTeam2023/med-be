@@ -3,6 +3,12 @@ import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { PlaylistStatus } from "../enum/playlistStatus.enum";
 
 export class UpdatePlaylistDto {
+    
+    @IsNotEmpty()
+    @IsString()
+    @IsOptional()
+    id?: number;
+
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
@@ -25,6 +31,8 @@ export class UpdatePlaylistDto {
     @ApiProperty()
     @IsOptional()
     description: string;
+
+    user_id?: number;
 
 
 }
