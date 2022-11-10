@@ -32,22 +32,22 @@ export class FilesService {
     return newFile;
   }
 
-  async getFile(id: number, key: string) {
+  async getFile(id: any, key: string) {
+    console.log('id', typeof id);
     const s3 = new S3();
-    const result = s3.getObject(
-      {
-        Bucket: this.configService.get('BUCKET_NAME'),
-        Key: key,
-      },
-      (err, data) => {
-        if (err) {
-          throw new BadRequestException('Bad Request ');
-        }
-        console.log('data', data.Body);
-        return data.Body;
-      },
-    );
-    const file = await this.publicFilesRepository.findOneBy({ id: id });
-    return { file: file, base64: result };
+    const url = await s3.getSignedUrlPromise('putObject', {
+      Bucket: this.configService.get('BUCKET_NAME'),
+      Key: key,
+    });
+    const file = await this.publicFilesRepository.findOneBy({
+      id: parseInt(id),
+    });
+    console.log('url', url);
+    return { file: file, url: url };
+  }
+
+  async getAllFiles() {
+    const file = await this.publicFilesRepository.find({});
+    return { file: file };
   }
 }

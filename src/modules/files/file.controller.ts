@@ -4,12 +4,14 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FileQuery } from './dto/file-query.dto';
 import { FileDTO } from './dto/file.dto';
 import { FilesService } from './files.service';
 import { PublicFile } from './publicFile.entity';
@@ -33,8 +35,14 @@ export class FilesController {
     return this.fileService.uploadPublicFile(file.buffer, file.originalname);
   }
 
+  @Get('file')
+  async getFiles(@Query() query: FileQuery) {
+    console.log('queyr', query);
+    return this.fileService.getFile(query.id, query.key);
+  }
+
   @Get('files')
-  async getAllFiles(@Param('id') id: number, @Param('key') key: string) {
-    return this.fileService.getFile(id, key);
+  async getAllFiles() {
+    return this.fileService.getAllFiles();
   }
 }
