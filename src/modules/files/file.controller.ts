@@ -12,6 +12,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileDTO } from './dto/file.dto';
 import { FilesService } from './files.service';
+import { PublicFile } from './publicFile.entity';
 
 @ApiTags('upload')
 @Controller('upload')
@@ -23,7 +24,7 @@ export class FilesController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Upload image to with file extension jpg or png',
-    type: FileDTO,
+    type: PublicFile,
   })
   async uploadFile(
     @Body() body: FileDTO,

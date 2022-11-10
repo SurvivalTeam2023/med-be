@@ -1,21 +1,16 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import PublicFile from './publicFile.entity';
-import { S3 } from 'aws-sdk';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { S3 } from 'aws-sdk';
+import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { FileDTO } from './dto/file.dto';
 
 @Injectable()
 export class FilesService {
   constructor(
-    @InjectRepository(PublicFile)
-    private publicFilesRepository: Repository<PublicFile>,
+    @InjectRepository(FileDTO)
+    private publicFilesRepository: Repository<FileDTO>,
     private readonly configService: ConfigService,
   ) {}
 

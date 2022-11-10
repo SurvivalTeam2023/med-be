@@ -5,7 +5,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import PublicFile from 'src/modules/files/publicFile.entity';
+import { FileDTO } from '../files/dto/file.dto';
 import { IUser } from './interface/user.interface';
 
 @Entity({ name: 'users' })
@@ -23,11 +23,11 @@ class User implements IUser {
   isActive: boolean;
 
   @JoinColumn()
-  @OneToOne(() => PublicFile, {
+  @OneToOne(() => FileDTO, {
     eager: true,
     nullable: true,
   })
-  public avatar?: PublicFile;
+  public avatar?: FileDTO;
 }
 
 export default User;
