@@ -2,12 +2,12 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateAccessToken {
     @ApiProperty()
-    id: string;
+    client_id: string;
 
     @ApiProperty()
     grand_type: string
 
     @ApiProperty()
-    secrect: string
+    client_secret: string
 
 }

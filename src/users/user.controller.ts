@@ -23,10 +23,10 @@ export class UsersController {
     return this.usersService.create(createUserDTO);
   }
 
-  // @Post('token')
-  // getAccessToken(@Body() createAccessToken: CreateAccessToken) {
-  //   return this.usersService.getAcessToken(createAccessToken);
-  // }
+  @Post('token')
+  getAccessToken(@Body() createAccessToken: CreateAccessToken) {
+    return this.usersService.getAcessToken(createAccessToken);
+  }
 
   @Put()
   verifyEmail() {

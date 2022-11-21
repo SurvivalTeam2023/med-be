@@ -33,7 +33,6 @@ export class HttpExceptionFilter extends BaseExceptionFilter {
         error,
       });
     }
-    
     return response.status(HttpStatus.INTERNAL_SERVER_ERROR).join({
       isSuccuss: false,
       code: response.INTERNAL_SERVER_ERROR,

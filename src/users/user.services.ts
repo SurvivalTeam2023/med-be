@@ -71,24 +71,27 @@ export class UsersService {
         );
     }
 
-    // getAcessToken(createAccessToken: CreateAccessToken): Observable<AxiosResponse<Token>> {
-    //     return this.httpService.post(`http://${this.configService.get("KEYCLOAK_HOST")}:8080/auth/realms/${this.configService.get("KEYCLOAK_REALM_CLIENT")}/protocol/openid-connect/token`,
-    //         {
-    //             client_id: `${this.configService.get("KEYCLOAK_CLIENT_ID")}`,
-    //             grant_type: 'client_credentials',
-    //             client_secret: `${this.configService.get("KEYCLOAK_CLIENT_SECRECT")}`
-    //         },
-    //         {
-    //             headers: {
-    //                 'Content-Type': 'application/x-www-form-urlencoded'
-    //             }
+    getAcessToken(createAccessToken: CreateAccessToken): Observable<AxiosResponse<Token[]>> {
+        const url = `http://${this.configService.get("KEYCLOAK_HOST")}:8080/auth/realms/${this.configService.get("KEYCLOAK_REALM_CLIENT")}/protocol/openid-connect/token`
+        console.log('url', url)
+        return this.httpService.post(`http://${this.configService.get("KEYCLOAK_HOST")}:8080/auth/realms/${this.configService.get("KEYCLOAK_REALM_CLIENT")}/protocol/openid-connect/token`,
+            {
+                client_id: `${this.configService.get("KEYCLOAK_CLIENT_ID")}`,
+                grant_type: 'client_credentials',
+                client_secret: `${this.configService.get("KEYCLOAK_CLIENT_SECRECT")}`
 
-    //         }
+            },
 
-    //     ).pipe(
-    //         map(response => response.data),
-    //     );
-    // }
+            {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+
+            }
+        ).pipe(
+            map(response => response.data),
+        );
+    }
 
     verifyEmail(): Observable<AxiosResponse<Mail[]>> {
         return this.httpService
@@ -99,10 +102,8 @@ export class UsersService {
                         Accept: 'application/json',
                         Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJzU3JaNndtZWxUMzlYdV8wWnBjOFpia2hfZHRLMzF0WFlBdnhTNDJWTDU0In0.eyJleHAiOjE2NjgxMTE4OTgsImlhdCI6MTY2ODA3NTg5OCwianRpIjoiMTAwZWEyNjEtOTE5Yi00NTgwLWFiYjMtYjBmZWZkNWI4OWQyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL21lZC1hcHAiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFkbWluLWNsaSIsImFjY291bnQiXSwic3ViIjoiMGQ5MmNhMjEtZDFlMi00ZWQ4LWE1ZmUtMDE0ZTU0ZmJhMzhjIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoibWVkLWFwcCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsibWVkLWFwcC5lZHUiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1tZWQiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7InJlYWxtLW1hbmFnZW1lbnQiOnsicm9sZXMiOlsidmlldy1yZWFsbSIsInZpZXctaWRlbnRpdHktcHJvdmlkZXJzIiwibWFuYWdlLWlkZW50aXR5LXByb3ZpZGVycyIsImltcGVyc29uYXRpb24iLCJyZWFsbS1hZG1pbiIsImNyZWF0ZS1jbGllbnQiLCJtYW5hZ2UtdXNlcnMiLCJxdWVyeS1yZWFsbXMiLCJ2aWV3LWF1dGhvcml6YXRpb24iLCJxdWVyeS1jbGllbnRzIiwicXVlcnktdXNlcnMiLCJtYW5hZ2UtZXZlbnRzIiwibWFuYWdlLXJlYWxtIiwidmlldy1ldmVudHMiLCJ2aWV3LXVzZXJzIiwidmlldy1jbGllbnRzIiwibWFuYWdlLWF1dGhvcml6YXRpb24iLCJtYW5hZ2UtY2xpZW50cyIsInF1ZXJ5LWdyb3VwcyJdfSwibWVkLWFwcCI6eyJyb2xlcyI6WyJ1bWFfcHJvdGVjdGlvbiJdfSwiYWRtaW4tY2xpIjp7InJvbGVzIjpbInVtYV9wcm90ZWN0aW9uIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImNsaWVudF9yb2xlcy1tZWQtYXBwIHByb2ZpbGUgZW1haWwiLCJjbGllbnRIb3N0IjoiMTcyLjE4LjAuMSIsImNsaWVudElkIjoibWVkLWFwcCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicm9sZXMiOlsidmlldy1yZWFsbSIsInZpZXctaWRlbnRpdHktcHJvdmlkZXJzIiwibWFuYWdlLWlkZW50aXR5LXByb3ZpZGVycyIsImltcGVyc29uYXRpb24iLCJyZWFsbS1hZG1pbiIsImNyZWF0ZS1jbGllbnQiLCJtYW5hZ2UtdXNlcnMiLCJxdWVyeS1yZWFsbXMiLCJ2aWV3LWF1dGhvcml6YXRpb24iLCJxdWVyeS1jbGllbnRzIiwicXVlcnktdXNlcnMiLCJtYW5hZ2UtZXZlbnRzIiwibWFuYWdlLXJlYWxtIiwidmlldy1ldmVudHMiLCJ2aWV3LXVzZXJzIiwidmlldy1jbGllbnRzIiwibWFuYWdlLWF1dGhvcml6YXRpb24iLCJtYW5hZ2UtY2xpZW50cyIsInF1ZXJ5LWdyb3VwcyIsInVtYV9wcm90ZWN0aW9uIiwidW1hX3Byb3RlY3Rpb24iLCJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl0sInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1tZWQtYXBwIiwiY2xpZW50QWRkcmVzcyI6IjE3Mi4xOC4wLjEifQ.Hqt63db3YHmiBXUbiiDQDRqEgF2UaxVONnFcbDVR4fnoSlNpUwjUXBrTTOk31UHgyj8odVQ2l04NZbUqpONKmoAhvKwXELu7Ms-A_U0nc-vPig6TcvlI8wVC6Gweiw1MFwPorRMVY-O7UhzcHb4FRjWf-NgY3bE6FFECxTBUd1shmXCuryAnBC9qCEpxwQwbT7-SFff7JGcKsH3mgOHIxoH60lCuof_9gnzNa8XsLAydqUQjx6n-taeSBtJQYUSl-Zb_CqwrAfzuqoU_7s8Rs_IaomZpJ40PdwhVYrMgxeCUE6kzNfVVrF-HrBAEWF4lsWAuBkkcgFIgtk6k75_OFg`,
                     },
-                },
-            )
-            .pipe(map((response) => response.data));
+
+                }
+            );
     }
-
-
 }
