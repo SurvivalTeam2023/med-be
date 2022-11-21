@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { MailController } from './mail.controller';
 import { HttpModule } from '@nestjs/axios';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, ConfigModule.forRoot()],
   controllers: [MailController],
   providers: [MailService],
 })

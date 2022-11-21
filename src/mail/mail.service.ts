@@ -1,18 +1,26 @@
 /* eslint-disable prettier/prettier */
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AxiosResponse } from 'axios';
 import { map, Observable } from 'rxjs';
 
 @Injectable()
 export class MailService {
   forgetPass = process.env.FORGOTPASS_URL;
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {}
 
   forgetPassword(): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(
-        this.forgetPass,
+        `http://${this.configService.get(
+          'KEYCLOAK_HOST',
+        )}:8080/auth/admin/realms/${this.configService.get(
+          'REALM_PRODUCTION',
+        )}/users/4f75554e-8e7d-4bde-8ffb-02ee98a5cb64/reset-password-email`,
         {},
         {
           headers: {
