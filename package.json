@@ -22,7 +22,7 @@
     "typeorm": "typeorm-ts-node-commonjs"
   },
   "dependencies": {
-    "@nestjs/common": "^9.1.6",
+    "@nestjs/common": "^9.2.0",
     "@nestjs/core": "^9.1.6",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.1.2",
