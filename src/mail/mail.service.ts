@@ -7,7 +7,6 @@ import { map, Observable } from 'rxjs';
 
 @Injectable()
 export class MailService {
-  forgetPass = process.env.FORGOTPASS_URL;
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
