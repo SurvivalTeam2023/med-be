@@ -33,6 +33,11 @@ export class UsersController {
 
   }
 
+  @Post('logout')
+  logout() {
+    return this.usersService.logout();
+  }
+
 
   @Put('email')
   @Roles({
