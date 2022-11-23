@@ -20,6 +20,12 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  // @Get('user')
+  // @Roles({ roles: ['admin'] })
+  // findUserById() {
+  //   return this.usersService.findUserById();
+  // }
+
   @Post()
   @ApiBody({ type: CreateUserDTO })
   create(@Body() createUserDTO: CreateUserDTO) {
@@ -31,6 +37,12 @@ export class UsersController {
   async login(@Body() loginDTO: LoginDTO) {
     return await this.usersService.getAcessToken(loginDTO)
 
+  }
+
+  @Put('password')
+  @Unprotected()
+  changePassword() {
+    return this.usersService.changePassword();
   }
 
   @Post('logout')
