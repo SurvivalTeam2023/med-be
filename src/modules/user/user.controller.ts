@@ -1,21 +1,16 @@
 
-import { Body, Controller, Post, Put } from '@nestjs/common';
+import {  Controller, Get, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import {  UserService } from './user.services';
-import { LoginDTO } from './dto/login.dto';
+import { UserService } from './user.services';
 
 @ApiTags('user')
 @Controller('user')
 @ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) { }
-  @Put('password')
+  @Get('password')
   async changePassword() {
     return this.userService.changePassword();
   }
-  @Post('getToken')
-  async login(@Body() loginDTO: LoginDTO) {
-    return this.userService.getAcessToken(loginDTO)
 
-  }
 }
