@@ -1,5 +1,5 @@
 
-import {  Controller, Get, Put } from '@nestjs/common';
+import {  Controller, Get, Param } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.services';
 
@@ -8,9 +8,9 @@ import { UserService } from './user.services';
 @ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) { }
-  @Get('password')
-  async changePassword() {
-    return this.userService.changePassword();
+  @Get(':id')
+  async changePassword(@Param('id') id: string) {
+    return this.userService.changePassword(id);
   }
 
 }

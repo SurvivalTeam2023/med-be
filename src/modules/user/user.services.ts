@@ -13,10 +13,10 @@ export class UserService {
     private readonly httpService: HttpService,
   ) { }
 
-  changePassword(): Observable<AxiosResponse<[]>> {
+  changePassword(id:string): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(
-        `http://localhost:8080/auth/admin/realms/med-app/users/0a987625-86e6-4920-b9a9-07a7502ac436/execute-actions-email`,
+        `http://localhost:8080/auth/admin/realms/med-app/users/${id}/execute-actions-email`,
         '["UPDATE_PASSWORD"]',
         {
           headers: {
