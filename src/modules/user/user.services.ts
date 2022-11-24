@@ -1,8 +1,6 @@
-
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
-import { } from 'Keycloak'
 import { map, Observable } from 'rxjs';
 import { KEYCLOAK_HOST, KEYCLOAK_REALM_ClIENT } from 'src/environments';
 
@@ -16,7 +14,7 @@ export class UserService {
   changePassword(id:string): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(
-        `http://localhost:8080/auth/admin/realms/med-app/users/${id}/execute-actions-email`,
+        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${id}/execute-actions-email`,
         '["UPDATE_PASSWORD"]',
         {
           headers: {
