@@ -10,7 +10,7 @@ import {
   DB_USERNAME,
 } from 'src/environments';
 import { Playlist } from 'src/modules/playlist/entities/playlist.entity';
-const entities = [Audio,Playlist,AudioPlaylist];
+const entities = [Audio, Playlist, AudioPlaylist];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
@@ -22,11 +22,9 @@ export class OrmConfig implements TypeOrmOptionsFactory {
       password: DB_PASSWORD,
       database: DB_DATABASE,
       synchronize: true,
+      autoLoadEntities: true,
       entities,
-      logging:true
     };
     return baseOptions;
   }
 }
-
-

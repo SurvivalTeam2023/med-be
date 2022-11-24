@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
-import { PlaylistModule } from './modules/playlist/playlist.module';
-import { OrmConfig } from './common/typeorm/orm.config';
+import { FilesModules } from './modules/files/file.module';
+import { UsersModule } from './modules/users/users.module';
+import { TypeOrmConfigModule } from './common/typeorm/typeorm.module';
 import { AudioModule } from './modules/audio/audio.module';
-import { UserModule } from './modules/user/user.module';
-
+import { PlaylistModule } from './modules/playlist/playlist.module';
 @Module({
   imports: [
-    AudioModule, PlaylistModule,UserModule, TypeOrmModule.forRootAsync({
-      useClass: OrmConfig,
-    })
+    TypeOrmConfigModule,
+    UsersModule,
+    AudioModule,
+    PlaylistModule,
+    FilesModules,
   ],
+  controllers: [],
+  providers: [],
 })
-export class AppModule {
-  constructor(private dataSource: DataSource) { }
-}
+export class AppModule {}
