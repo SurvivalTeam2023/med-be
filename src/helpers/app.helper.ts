@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 export class AppHelper {
   static checkArrString = (errMess: any) => {
     if (
