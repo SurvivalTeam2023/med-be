@@ -15,7 +15,7 @@ const entities = [Audio, Playlist, AudioPlaylist];
 export class OrmConfig implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     const baseOptions: TypeOrmModuleOptions = {
-      type: 'postgres',
+      type: 'mysql',
       host: DB_HOST,
       port: +DB_PORT,
       username: DB_USERNAME,
