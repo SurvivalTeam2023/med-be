@@ -7,13 +7,12 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-
+import { File } from './entities/file.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileQuery } from './dto/file-query.dto';
-import { FileDTO } from './dto/file.dto';
 import { FilesService } from './files.service';
-import { PublicFile } from './publicFile.entity';
+import { PublicFile } from './dto/publicFile.dto';
 
 @ApiTags('upload')
 @Controller('upload')
@@ -28,7 +27,7 @@ export class FilesController {
     type: PublicFile,
   })
   async uploadFile(
-    @Body() body: FileDTO,
+    @Body() body: File,
     @UploadedFile() file: Express.Multer.File,
   ) {
     return this.fileService.uploadPublicFile(file.buffer, file.originalname);

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { Audio } from 'src/modules/audio/entities/audio.entity';
-import AudioPlaylist from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
+import AudioPlaylist from 'src/modules/audio/entities/audioPlaylist.entity';
 import {
   DB_DATABASE,
   DB_HOST,
@@ -22,7 +22,7 @@ export class OrmConfig implements TypeOrmOptionsFactory {
       password: DB_PASSWORD,
       database: DB_DATABASE,
       synchronize: true,
-      autoLoadEntities: true,
+      logging: true,
       entities,
     };
     return baseOptions;

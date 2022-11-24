@@ -1,5 +1,5 @@
-import { BaseEntity } from 'src/modules/audio/entities/base.entity';
-import AudioPlaylist from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
+import { BaseEntity } from 'src/common/base/base.entity';
+import AudioPlaylist from 'src/modules/audio/entities/audioPlaylist.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { PlaylistStatus } from '../enum/playlistStatus.enum';
 

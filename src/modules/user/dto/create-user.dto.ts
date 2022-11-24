@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsEmail, IsNotEmpty } from 'class-validator';
-import { FileDTO } from 'src/modules/files/dto/file.dto';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -22,5 +21,5 @@ export class CreateUserDto {
   isActive: boolean;
 
   @ApiProperty({ type: 'image/png', format: 'binary' })
-  avarta: FileDTO;
+  avarta: string;
 }
