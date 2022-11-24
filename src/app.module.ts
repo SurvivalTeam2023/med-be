@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { FilesModules } from './modules/files/file.module';
 import { UsersModule } from './modules/users/users.module';
