@@ -6,10 +6,9 @@ import { Audio } from 'src/modules/audio/entities/audio.entity';
 import AudioPlaylist from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
 import { PlaylistModule } from 'src/modules/playlist/playlist.module';
 
-
 @Module({
-    imports: [TypeOrmModule.forFeature([Audio,AudioPlaylist]), PlaylistModule],
-    controllers: [AudioController],
-    providers: [AudioService],
+  imports: [TypeOrmModule.forFeature([Audio, AudioPlaylist]), PlaylistModule],
+  controllers: [AudioController],
+  providers: [AudioService],
 })
 export class AudioModule {}

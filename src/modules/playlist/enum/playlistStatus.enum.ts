@@ -1,4 +1,4 @@
-export enum PlaylistStatus{
-    ACTIVE='ACTIVE',
-    INACTIVE='INACTIVE',
+export enum PlaylistStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
 }

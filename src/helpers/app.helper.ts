@@ -1,4 +1,3 @@
-
 export class AppHelper {
   static checkArrString = (errMess: any) => {
     if (
