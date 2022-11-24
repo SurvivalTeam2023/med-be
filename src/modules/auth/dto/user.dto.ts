@@ -1,5 +1,4 @@
-export interface User {
+export class UserDTO {
   username: string;
-
   password: string;
 }

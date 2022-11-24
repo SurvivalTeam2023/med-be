@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import AudioPlaylist from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
+import AudioPlaylist from 'src/modules/audio/entities/audioPlaylist.entity';
 import { Repository } from 'typeorm';
 import { Audio } from './entities/audio.entity';
 import { AudioStatus } from './enum/audioStatus.enum';

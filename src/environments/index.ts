@@ -22,7 +22,9 @@ const AWS_ACCESS_KEY_ID: string = process.env.AWS_ACCESS_KEY_ID || 'null';
 const AWS_SECRET_ACCESS_KEY: string =
   process.env.AWS_SECRET_ACCESS_KEY || 'null';
 const AWS_REGION: string = process.env.AWS_REGION || 'null';
+const BUCKET_NAME: string = process.env.BUCKET_NAME || 'null';
 export {
+  BUCKET_NAME,
   REALM_PRODUCTION,
   AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY,

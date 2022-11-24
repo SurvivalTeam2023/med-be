@@ -1,24 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { S3 } from 'aws-sdk';
+import { BUCKET_NAME } from 'src/environments';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
-import { FileDTO } from './dto/file.dto';
-
+import { File } from './entities/file.entity';
 @Injectable()
 export class FilesService {
   constructor(
-    @InjectRepository(FileDTO)
-    private publicFilesRepository: Repository<FileDTO>,
-    private readonly configService: ConfigService,
+    @InjectRepository(File)
+    private publicFilesRepository: Repository<File>,
   ) {}
 
   async uploadPublicFile(dataBuffer: Buffer, filename: string) {
     const s3 = new S3();
     const uploadResult = await s3
       .upload({
-        Bucket: this.configService.get('BUCKET_NAME'),
+        Bucket: BUCKET_NAME,
         Body: dataBuffer,
         Key: `${uuid()}-${filename}`,
       })
@@ -36,7 +34,7 @@ export class FilesService {
     console.log('id', typeof id);
     const s3 = new S3();
     const url = await s3.getSignedUrlPromise('putObject', {
-      Bucket: this.configService.get('BUCKET_NAME'),
+      Bucket: BUCKET_NAME,
       Key: key,
     });
     const file = await this.publicFilesRepository.findOneBy({

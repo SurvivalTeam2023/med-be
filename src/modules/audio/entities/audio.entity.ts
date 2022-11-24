@@ -1,7 +1,7 @@
-import AudioPlaylist from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
+import AudioPlaylist from 'src/modules/audio/entities/audioPlaylist.entity';
 import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 import { AudioStatus } from '../enum/audioStatus.enum';
-import { BaseEntity } from './base.entity';
+import { BaseEntity } from '../../../common/base/base.entity';
 
 @Entity('audio')
 export class Audio extends BaseEntity {
