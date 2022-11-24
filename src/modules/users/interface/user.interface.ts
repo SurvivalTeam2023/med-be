@@ -1,4 +1,4 @@
-import { FileDTO } from "src/modules/files/dto/file.dto";
+import { FileDTO } from 'src/modules/files/dto/file.dto';
 
 export interface IUser {
   id: number;

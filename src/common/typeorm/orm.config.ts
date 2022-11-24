@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { Audio } from 'src/modules/audio/entities/audio.entity';
 import AudioPlaylist from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
@@ -10,7 +10,7 @@ import {
   DB_USERNAME,
 } from 'src/environments';
 import { Playlist } from 'src/modules/playlist/entities/playlist.entity';
-const entities = [Audio,Playlist,AudioPlaylist];
+const entities = [Audio, Playlist, AudioPlaylist];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
@@ -24,10 +24,7 @@ export class OrmConfig implements TypeOrmOptionsFactory {
       synchronize: true,
       autoLoadEntities: true,
       entities,
-      logger: Logger,
     };
     return baseOptions;
   }
 }
-
-

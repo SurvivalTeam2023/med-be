@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
-  Delete, Get, Param, ParseIntPipe,
-  Post
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 
