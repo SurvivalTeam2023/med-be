@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await appConfig(app);
   await swaggerConfig(app);
-  await awsConfig(app);
+  await awsConfig();
   await app.listen(SERVER_PORT, () => {
     console.log(`Application is running at port: ${SERVER_PORT}`);
   });

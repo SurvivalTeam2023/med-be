@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 
@@ -65,4 +66,9 @@ export class UsersController {
   //     file.originalname,
   //   );
   // }
+
+  @Put()
+  async forgetPassword() {
+    return this.usersService.forgetPassword();
+  }
 }

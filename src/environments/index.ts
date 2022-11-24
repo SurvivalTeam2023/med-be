@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
-const SERVER_PORT: number = +process.env.SERVER_PORT || 8080;
+const SERVER_PORT: number = +process.env.SERVER_PORT || 8081;
 const SWAGGER_URL: string = process.env.SWAGGER_URL || 'docs';
 const DB_HOST: string = process.env.DB_HOST || 'localhost';
 const DB_PORT: string = process.env.DB_PORT || '5432';
@@ -12,7 +12,11 @@ const AWS_ACCESS_KEY_ID: string = process.env.AWS_ACCESS_KEY_ID || 'null';
 const AWS_SECRET_ACCESS_KEY: string =
   process.env.AWS_SECRET_ACCESS_KEY || 'null';
 const AWS_REGION: string = process.env.AWS_REGION || 'null';
+const REALM_PRODUCTION = process.env.REALM_PRODUCTION || 'null';
+const KEYCLOAK_HOST = process.env.KEYCLOAK_HOST || 'null';
 export {
+  REALM_PRODUCTION,
+  KEYCLOAK_HOST,
   AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY,
   AWS_REGION,
