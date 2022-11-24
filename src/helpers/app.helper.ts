@@ -1,5 +1,3 @@
-import { message } from 'antd';
-
 export class AppHelper {
   static checkArrString = (errMess: any) => {
     if (
