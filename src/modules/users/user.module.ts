@@ -10,4 +10,4 @@ import { AuthModule } from '../authKeycloak/auth.module';
   controllers: [UsersController],
   providers: [UsersService],
 })
-export class UsersModule { }
+export class UsersModule {}

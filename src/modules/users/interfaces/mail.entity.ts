@@ -1,3 +1,3 @@
 export interface Mail {
-    username: string;
+  username: string;
 }

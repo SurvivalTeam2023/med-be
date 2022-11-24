@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsEmail, IsString, IsDate, Equals } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsEmail, IsString, IsDate } from 'class-validator';
 
 export class CreateUserDTO {
   @IsString()
@@ -19,7 +19,7 @@ export class CreateUserDTO {
   @IsString()
   @ApiProperty()
   // @Equals(`${this.password}`)
-  repassword: String;
+  repassword: string;
 
   @IsString()
   @ApiProperty()
@@ -32,5 +32,5 @@ export class CreateUserDTO {
   // @IsNumber()
   @ApiProperty()
   @IsDate()
-  dob: Date
+  dob: Date;
 }

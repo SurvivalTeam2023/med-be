@@ -1,18 +1,15 @@
-import { Body, Controller, Get, Param, Post, Req, Put, Query } from '@nestjs/common';
-import { Unprotected, Roles, Public } from 'nest-keycloak-connect';
-import { ApiBearerAuth, ApiBody, ApiTags, SwaggerModule } from '@nestjs/swagger';
-// import { CreateAccessToken } from './dto/create-access-token.dto';
+import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { Unprotected, Roles } from 'nest-keycloak-connect';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { CreateUserDTO } from './dto/createUser.dto';
 import { UsersService } from './user.services';
 import { LoginDTO } from './dto/login.dto';
-import { AccessToken } from './dto/createAccessToken.dto';
-
 
 @ApiTags('Users')
 @Controller('user')
 @ApiBearerAuth()
 export class UsersController {
-  constructor(private usersService: UsersService) { }
+  constructor(private usersService: UsersService) {}
 
   @Get('userList')
   @Roles({ roles: ['admin'] })
@@ -35,8 +32,7 @@ export class UsersController {
   @Post('getToken')
   @Unprotected()
   async login(@Body() loginDTO: LoginDTO) {
-    return await this.usersService.getAcessToken(loginDTO)
-
+    return await this.usersService.getAcessToken(loginDTO);
   }
 
   @Put('password')
@@ -49,7 +45,6 @@ export class UsersController {
   logout() {
     return this.usersService.logout();
   }
-
 
   @Put('email')
   @Roles({
