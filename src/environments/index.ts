@@ -17,6 +17,10 @@ const REALM_PRODUCTION = process.env.REALM_PRODUCTION || 'null';
 const KEYCLOAK_CLIENT_ID: string = process.env.KEYCLOAK_CLIENT_ID || 'med-app';
 const KEYCLOAK_CLIENT_SECRECT: string =
   process.env.KEYCLOAK_CLIENT_SECRECT || 'EwfsGCeuMDHS2At96ftlzZtN6Mz9aY09';
+const KEYCLOAK_ADMIN_ID: string =
+  process.env.KEYCLOAK_ADMIN_ID || 'tam';
+const KEYCLOAK_ADMIN_PASSWORD: string =
+  process.env.KEYCLOAK_ADMIN_ID || 'abc@123';
 //aws config
 const AWS_ACCESS_KEY_ID: string = process.env.AWS_ACCESS_KEY_ID || 'null';
 const AWS_SECRET_ACCESS_KEY: string =
@@ -24,6 +28,8 @@ const AWS_SECRET_ACCESS_KEY: string =
 const AWS_REGION: string = process.env.AWS_REGION || 'null';
 const BUCKET_NAME: string = process.env.BUCKET_NAME || 'null';
 export {
+  KEYCLOAK_ADMIN_ID,
+  KEYCLOAK_ADMIN_PASSWORD,
   BUCKET_NAME,
   REALM_PRODUCTION,
   AWS_ACCESS_KEY_ID,

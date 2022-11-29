@@ -7,5 +7,6 @@ import { HttpModule } from '@nestjs/axios';
   imports: [KeycloakModule, HttpModule],
   controllers: [AuthController],
   providers: [AuthService],
+  exports: [AuthService]
 })
-export class AuthModule {}
+export class AuthModule { }

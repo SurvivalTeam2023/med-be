@@ -20,6 +20,6 @@ export class Audio extends BaseEntity {
   @OneToMany(() => AudioPlaylist, (audio_playlist) => audio_playlist.audio, {
     cascade: true,
   })
-  @JoinColumn({ referencedColumnName: 'audioId' })
+  // @JoinColumn({ referencedColumnName: 'audioId' })
   public audio_playlist: AudioPlaylist[];
 }
