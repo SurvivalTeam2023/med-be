@@ -17,7 +17,7 @@ import { MailDTO } from './dto/mail.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService) { }
 
   logout(): Observable<AxiosResponse<UserDTO[]>> {
     return this.httpService
@@ -67,13 +67,11 @@ export class AuthService {
       )
       .pipe(map((response) => response.data));
   }
-  changePassword(id:string): Observable<AxiosResponse<[]>> {
+  changePassword(id: string): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(
         `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${id}/execute-actions-email`,
-        {
-          actions: ['UPDATE_PASSWORD'],
-        },
+        ['UPDATE_PASSWORD'],
         {
           headers: {
             'Content-Type': 'application/json',
