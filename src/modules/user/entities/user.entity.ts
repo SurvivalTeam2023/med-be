@@ -1,21 +1,29 @@
 import {
+  BaseEntity,
   Column,
   Entity,
   JoinColumn,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { File } from '../../files/entities/file.entity';
 @Entity({ name: 'users' })
-class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class User extends BaseEntity {
+  @PrimaryColumn()  
+  id: string;
+
+  @Column()
+  username: string;
 
   @Column()
   firstName: string;
 
   @Column()
   lastName: string;
+
+  @Column()
+  dob: Date;
 
   @Column()
   isActive: boolean;
