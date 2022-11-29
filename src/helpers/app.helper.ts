@@ -17,5 +17,6 @@ export class AppHelper {
         message: (splitedErr.slice(1, splitedErr.length) || []).join(' '),
       });
     });
+    return result
   };
 }
