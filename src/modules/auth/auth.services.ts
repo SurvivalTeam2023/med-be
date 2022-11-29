@@ -67,10 +67,10 @@ export class AuthService {
       )
       .pipe(map((response) => response.data));
   }
-  changePassword(): Observable<AxiosResponse<[]>> {
+  changePassword(id:string): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/28972a06-e764-447f-8cba-7f5ee15ea99d/execute-actions-email`,
+        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${id}/execute-actions-email`,
         {
           actions: ['UPDATE_PASSWORD'],
         },

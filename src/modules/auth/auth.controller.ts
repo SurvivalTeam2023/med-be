@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put } from '@nestjs/common';
+import { Body, Controller, Post, Put, Param } from '@nestjs/common';
 import { Unprotected, Roles } from 'nest-keycloak-connect';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { LoginDTO } from './dto/login.dto';
@@ -16,10 +16,10 @@ export class AuthController {
     return this.authService.getAcessToken(loginDTO);
   }
 
-  @Put('password')
+  @Put('password/:id')
   @Unprotected()
-  changePassword() {
-    return this.authService.changePassword();
+  changePassword(@Param('id')id:string) {
+    return this.authService.changePassword(id);
   }
 
   @Post('logout')
