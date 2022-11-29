@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import {
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_CLIENT_SECRECT,
@@ -14,6 +14,7 @@ import { LoginDTO } from './dto/login.dto';
 import { UserDTO } from './dto/user.dto';
 import { TokenDTO } from './dto/token.dto';
 import { MailDTO } from './dto/mail.dto';
+import { ErrorHelper } from 'src/helpers/error.helper';
 
 @Injectable()
 export class AuthService {
@@ -50,7 +51,10 @@ export class AuthService {
           },
         },
       )
-      .pipe(map((response) => response.data.access_token));
+      .pipe(map((response) => response.data))
+      .pipe(catchError(err =>
+        of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
+      ));
   }
   verifyEmail(): Observable<AxiosResponse<MailDTO[]>> {
     return this.httpService

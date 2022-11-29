@@ -17,13 +17,14 @@ export class HttpExceptionFilter extends BaseExceptionFilter {
       stack: unknown;
     };
     new Logger('HttpExceptionFilter').error({ message, stack });
+    new Logger('Raw-Exception').error(exception)
     if (exception instanceof HttpException) {
       const status =
         exception instanceof HttpException
           ? exception.getStatus()
           : HttpStatus.INTERNAL_SERVER_ERROR;
       const exceptionResponse = exception.getResponse() as any;
-      const error = AppHelper.checkArrString(exceptionResponse.message)
+      const error = AppHelper.checkArrString(exceptionResponse?.message)
         ? AppHelper.messageErrPasser(exceptionResponse.message)
         : [exceptionResponse];
       return response.status(status).json({

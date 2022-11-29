@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Put, Param } from '@nestjs/common';
 import { Unprotected, Roles } from 'nest-keycloak-connect';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags, } from '@nestjs/swagger';
 import { LoginDTO } from './dto/login.dto';
 import { AuthService } from './auth.services';
 
@@ -8,9 +8,10 @@ import { AuthService } from './auth.services';
 @Controller('auth')
 @ApiBearerAuth()
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Post('getToken')
+  @ApiOperation({ summary: 'api login to med-app' })
   @Unprotected()
   async login(@Body() loginDTO: LoginDTO) {
     return this.authService.getAcessToken(loginDTO);

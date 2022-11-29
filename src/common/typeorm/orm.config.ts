@@ -24,7 +24,7 @@ export class OrmConfig implements TypeOrmOptionsFactory {
       password: DB_PASSWORD,
       database: DB_DATABASE,
       synchronize: true,
-      logging: true,
+      logging: false,
       entities,
     };
     return baseOptions;
