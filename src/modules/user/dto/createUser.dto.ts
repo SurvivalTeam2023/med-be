@@ -1,24 +1,32 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsEmail, IsString, IsDate } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsString, IsDate, IsDateString, Min, Matches, Length, MinLength } from 'class-validator';
+import { MatchPassword } from 'src/decorator/validate.decorator';
 
 export class CreateUserDTO {
   @IsString()
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: 'Username can not be empty!',
+  })
   username: string;
 
   @ApiProperty()
-  @IsEmail()
+  @IsEmail({
+    message: 'Incorrect email!',
+  })
   email: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: 'Password can not be empty!',
+  })
   @IsString()
+  @Length(6)
   password: string;
 
   @IsString()
   @ApiProperty()
-  // @Equals(`${this.password}`)
+  @MatchPassword(CreateUserDTO, (s) => s.password)
   repassword: string;
 
   @IsString()
@@ -29,8 +37,7 @@ export class CreateUserDTO {
   @ApiProperty()
   lastName: string;
 
-  // @IsNumber()
   @ApiProperty()
-  @IsDate()
+  @IsDateString()
   dob: Date;
 }
