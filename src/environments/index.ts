@@ -19,7 +19,7 @@ const KEYCLOAK_CLIENT_SECRECT: string =
   process.env.KEYCLOAK_CLIENT_SECRECT || 'EwfsGCeuMDHS2At96ftlzZtN6Mz9aY09';
 const KEYCLOAK_ADMIN_ID: string =
   process.env.KEYCLOAK_ADMIN_ID || 'tam';
-const KEYCLOAK_ADMIN_PASSWORD: string =
+const  KEYCLOAK_ADMIN_PASSWORD: string =
   process.env.KEYCLOAK_ADMIN_ID || 'abc@123';
 //aws config
 const AWS_ACCESS_KEY_ID: string = process.env.AWS_ACCESS_KEY_ID || 'null';

@@ -18,7 +18,8 @@ import { ErrorHelper } from 'src/helpers/error.helper';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly httpService: HttpService) { }
+  constructor(
+    private readonly httpService: HttpService) { }
 
   logout(): Observable<AxiosResponse<UserDTO[]>> {
     return this.httpService
@@ -33,6 +34,7 @@ export class AuthService {
       )
       .pipe(map((response) => response.data));
   }
+
   getAcessToken(loginDTO: LoginDTO): Observable<AxiosResponse<TokenDTO[]>> {
     const form = new URLSearchParams();
     form.append('username', loginDTO.username);
@@ -52,6 +54,30 @@ export class AuthService {
         },
       )
       .pipe(map((response) => response.data))
+      .pipe(catchError(err =>
+        of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
+      ));
+  }
+
+  getRefreshToken(loginDTO: LoginDTO): Observable<AxiosResponse<TokenDTO[]>> {
+    const form = new URLSearchParams();
+    form.append('username', loginDTO.username);
+    form.append('password', loginDTO.password);
+    form.append('grant_type', 'password');
+    form.append('client_id', `${KEYCLOAK_CLIENT_ID}`);
+    form.append('client_secret', `${KEYCLOAK_CLIENT_SECRECT}`);
+    form.append('scope', 'openid');
+    return this.httpService
+      .post(
+        `http://${KEYCLOAK_HOST}:8080/auth/realms/${KEYCLOAK_REALM_ClIENT}/protocol/openid-connect/token`,
+        form,
+        {
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded',
+          },
+        },
+      )
+      .pipe(map((response) => response.data.refresh_token))
       .pipe(catchError(err =>
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
       ));

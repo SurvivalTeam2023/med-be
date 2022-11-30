@@ -17,6 +17,13 @@ export class AuthController {
     return this.authService.getAcessToken(loginDTO);
   }
 
+  @Post('getToken')
+  @ApiOperation({ summary: 'api login to med-app' })
+  @Unprotected()
+  async getRefreshToken(@Body() loginDTO: LoginDTO) {
+    return this.authService.getRefreshToken(loginDTO);
+  }
+
   @Put('password')
   @Unprotected()
   changePassword() {
