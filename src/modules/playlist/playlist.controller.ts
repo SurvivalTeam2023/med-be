@@ -36,8 +36,8 @@ export default class PlaylistController {
   @Unprotected()
   async getPlaylists(
     @Query() playlist: SearchPlaylistDto,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page:number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit:number = 10,
   ): Promise<Pagination<Playlist>> {
     limit = limit > 100 ? 100 : limit;
     return this.playlistService.findPlaylist(
@@ -58,7 +58,7 @@ export default class PlaylistController {
   }
 
   @Put(':id')
-  @Roles({ roles: [USER_ROLE.ARTIST] })
+  @Roles({ roles: [USER_ROLE.ARTIST] }) 
   async updatePlaylist(
     @Param('id') id: number,
     @Body() updatePlaylistDto: UpdatePlaylistDto,

@@ -3,6 +3,8 @@ import { Unprotected, Roles } from 'nest-keycloak-connect';
 import { ApiBearerAuth, ApiOperation, ApiTags, } from '@nestjs/swagger';
 import { LoginDTO } from './dto/login.dto';
 import { AuthService } from './auth.services';
+import { RequestPayload } from 'src/decorator/request-payload.decorator';
+import { USER_ROLE } from 'src/common/enums/user-role.enum';
 
 @ApiTags('Auth Apis')
 @Controller('auth')
@@ -18,9 +20,9 @@ export class AuthController {
   }
 
   @Put('password/:id')
-  @Unprotected()
-  changePassword(@Param('id')id:string) {
-    return this.authService.changePassword(id);
+  @Roles({roles: [USER_ROLE.ADMIN],})
+  changePassword(@Param('id')id:string, @RequestPayload() token: string) {
+    return this.authService.changePassword(id,token);
   }
 
   @Post('logout')

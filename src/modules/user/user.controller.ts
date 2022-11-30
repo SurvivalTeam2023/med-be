@@ -24,7 +24,7 @@ export class UserController {
     return this.userService.findUserByName(username, token);
   }
 
-  @Unprotected()
+  @Roles({ roles: [USER_ROLE.ADMIN] })
   @ApiBody({ type: CreateUserDTO })
   @Post()
   create(@Body() createUserDTO: CreateUserDTO) {
