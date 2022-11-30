@@ -22,7 +22,7 @@ export default class AudioService {
     private audioRepository: Repository<Audio>,
     @InjectRepository(AudioPlaylist)
     private audioPlaylistRepository: Repository<AudioPlaylist>,
-  ) {}
+  ) { }
 
   async findAudioById(audioId: number): Promise<Audio> {
     const entity = await this.audioRepository
@@ -38,8 +38,8 @@ export default class AudioService {
     return entity;
   }
   async findAudios(
-    option: IPaginationOptions,
     dto: SearchAudioDTO,
+    option: IPaginationOptions,
   ): Promise<Pagination<Audio>> {
     const querybuilder = await this.audioRepository
       .createQueryBuilder('audio')

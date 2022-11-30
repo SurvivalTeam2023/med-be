@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Param } from '@nestjs/common';
+import { Body, Controller, Post, Put, Param,Get} from '@nestjs/common';
 import { Unprotected, Roles } from 'nest-keycloak-connect';
 import { ApiBearerAuth, ApiOperation, ApiTags, } from '@nestjs/swagger';
 import { LoginDTO } from './dto/login.dto';
@@ -19,7 +19,7 @@ export class AuthController {
     return this.authService.getAcessToken(loginDTO);
   }
 
-  @Put('password/:id')
+  @Get('password/:id')
   @Roles({roles: [USER_ROLE.ADMIN],})
   changePassword(@Param('id')id:string, @RequestPayload() token: string) {
     return this.authService.changePassword(id,token);
@@ -31,15 +31,14 @@ export class AuthController {
   }
 
   @Put('email')
-  @Roles({
-    roles: ['admin'],
-  })
+  @Roles({roles: [USER_ROLE.ADMIN],})
   verifyEmail() {
     return this.authService.verifyEmail();
   }
 
-  @Put()
-  async forgetPassword() {
-    return this.authService.forgetPassword();
+  @Put('forget-password/:id')
+  @Roles({roles: [USER_ROLE.ADMIN]})
+  async forgetPassword(@Param('id')id:string, @RequestPayload() token: string) {
+    return this.authService.forgetPassword(id,token);
   }
 }
