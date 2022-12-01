@@ -98,7 +98,7 @@ export class UserService {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: `${token}`,
+            Authorization: token,
           },
         },
       )
