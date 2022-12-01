@@ -4,8 +4,6 @@ import { AxiosResponse } from 'axios';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
-  KEYCLOAK_ADMIN_ID,
-  KEYCLOAK_ADMIN_PASSWORD,
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_CLIENT_SECRECT,
   KEYCLOAK_HOST,
@@ -23,7 +21,6 @@ import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 export class AuthService {
   constructor(
     private readonly httpService: HttpService,
-
   ) { }
 
   logout(userId: string, token: string | null): Observable<AxiosResponse<[UserDTO]>> {
@@ -40,7 +37,6 @@ export class AuthService {
       .pipe(catchError(err =>
         of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.KEY_CLOAK.UNAUTHORIZED))
       ));
-
   }
 
   getAcessToken(loginDTO: LoginDTO): Observable<AxiosResponse<TokenDTO[]>> {
@@ -94,7 +90,7 @@ export class AuthService {
     return this.httpService
       .put(
         `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${id}/execute-actions-email`,
-        ['UPDATE_PASSWORD'],
+        [RequiredAction.UPDATE_PASSWORD],
         {
           headers: {
             'Content-Type': 'application/json',

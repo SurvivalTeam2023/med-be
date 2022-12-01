@@ -31,7 +31,6 @@ export class CreateUserDTO {
   @ApiProperty()
   lastName: string;
 
-  // @IsNumber()
   @ApiProperty()
   @IsDateString()
   dob: Date;

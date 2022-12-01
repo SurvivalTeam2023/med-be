@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
@@ -25,7 +25,6 @@ export class UserService {
     private readonly authService: AuthService
   ) { }
 
-
   findAll(token?: string | null): Observable<AxiosResponse<UserDTO[]>> {
     return this.httpService
       .get(
@@ -39,7 +38,6 @@ export class UserService {
       )
       .pipe(map((response) => response.data))
       .pipe(catchError(err => of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))));
-
   }
 
   findUserByName(username: string, token?: string | null): Promise<User> {
@@ -48,7 +46,6 @@ export class UserService {
         'Accept': 'application/json',
         'Authorization': token
       }
-
     }).pipe(
       map(response => response.data),
     ).pipe(
@@ -57,7 +54,6 @@ export class UserService {
         ))
     ));
   }
-
 
   async create(createUserDTO: CreateUserDTO): Promise<User> {
     this.validateAge(createUserDTO.dob)

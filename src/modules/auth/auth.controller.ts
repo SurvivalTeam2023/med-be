@@ -21,15 +21,16 @@ export class AuthController {
   }
 
   @Get('password/:id')
-  @Roles({roles: [USER_ROLE.ADMIN],})
-  changePassword(@Param('id')id:string, @RequestPayload() token: string) {
-    return this.authService.changePassword(id,token);
+  @ApiOperation({ summary: 'change password for user' })
+  @Roles({ roles: [USER_ROLE.ADMIN], })
+  changePassword(@Param('id') id: string, @RequestPayload() token: string) {
+    return this.authService.changePassword(id, token);
+  }
   @Post('getRefreshToken')
   @ApiOperation({ summary: 'get refresh token' })
   @Unprotected()
-  async getRefreshToken(@Body() loginDTO: LoginDTO) {
+  getRefreshToken(@Body() loginDTO: LoginDTO) {
     return this.authService.getRefreshToken(loginDTO);
-  }
   }
 
   @Post(':userId')
@@ -39,18 +40,16 @@ export class AuthController {
     return this.authService.logout(userId, token);
   }
 
-
   @Put('forget-password/:id')
-  @Roles({roles: [USER_ROLE.ADMIN]})
-  async forgetPassword(@Param('id')id:string, @RequestPayload() token: string) {
-    return this.authService.forgetPassword(id,token);
+  @Roles({ roles: [USER_ROLE.ADMIN] })
+  async forgetPassword(@Param('id') id: string, @RequestPayload() token: string) {
+    return this.authService.forgetPassword(id, token);
+  }
+
   @Put(':userId')
   @ApiOperation({ summary: 'verify email' })
-  @Roles({
-    roles: [USER_ROLE.ADMIN]
-  })
+  @Roles({ roles: [USER_ROLE.ADMIN] })
   verifyEmail(@Param('userId') userId: string, @RequestPayload() token: string) {
     return this.authService.verifyEmail(userId, token);
-  }
   }
 }
