@@ -28,8 +28,10 @@ export class AuthController {
   }
   @Post('getRefreshToken')
   @ApiOperation({ summary: 'get refresh token' })
+  @Post('getRefreshToken')
+  @ApiOperation({ summary: 'get refresh token' })
   @Unprotected()
-  getRefreshToken(@Body() loginDTO: LoginDTO) {
+  async getRefreshToken(@Body() loginDTO: LoginDTO) {
     return this.authService.getRefreshToken(loginDTO);
   }
 
@@ -40,16 +42,21 @@ export class AuthController {
     return this.authService.logout(userId, token);
   }
 
-  @Put('forget-password/:id')
-  @Roles({ roles: [USER_ROLE.ADMIN] })
-  async forgetPassword(@Param('id') id: string, @RequestPayload() token: string) {
-    return this.authService.forgetPassword(id, token);
-  }
-
   @Put(':userId')
   @ApiOperation({ summary: 'verify email' })
-  @Roles({ roles: [USER_ROLE.ADMIN] })
+  @Roles({
+    roles: [USER_ROLE.ADMIN]
+  })
   verifyEmail(@Param('userId') userId: string, @RequestPayload() token: string) {
     return this.authService.verifyEmail(userId, token);
+  }
+
+  @Put()
+  @ApiOperation({ summary: 'forgot password' })
+  @Roles({
+    roles: [USER_ROLE.ADMIN]
+  })
+  async forgetPassword(@Param('userId') userId: string, @RequestPayload() token: string) {
+    return this.authService.forgetPassword(userId, token);
   }
 }

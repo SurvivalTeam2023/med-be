@@ -124,7 +124,9 @@ export class AuthService {
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
       ));;
   }
-
+//1. login bang admin
+//2.Find username (bang token cua admin) 
+//3.Neu username co ton tai thi input user id roi gui mail reset password
   forgetPassword(userId: string, token: string): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(

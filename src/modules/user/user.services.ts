@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
@@ -54,6 +54,7 @@ export class UserService {
         ))
     ));
   }
+
 
   async create(createUserDTO: CreateUserDTO): Promise<User> {
     this.validateAge(createUserDTO.dob)
