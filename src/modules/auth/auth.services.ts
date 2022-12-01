@@ -111,9 +111,7 @@ export class AuthService {
     return this.httpService
       .put(
         `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/execute-actions-email`,
-        {
-          actions: [RequiredAction.VERIFY_EMAIL],
-        },
+        [RequiredAction.VERIFY_EMAIL],
         {
           headers: {
             'Content-Type': 'application/json',
