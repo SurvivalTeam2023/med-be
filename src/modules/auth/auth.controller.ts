@@ -10,6 +10,7 @@ import { USER_ROLE } from 'src/common/enums/user-role.enum';
 @Controller('auth')
 @ApiBearerAuth()
 export class AuthController {
+  userService: any;
   constructor(private authService: AuthService) { }
 
   @Post('login')
@@ -33,8 +34,8 @@ export class AuthController {
   }
 
   @Post(':userId')
+  @ApiOperation({ summary: 'api log out' })
   @Unprotected()
-  @ApiOperation({ summary: 'api logut of med-app' })
   logout(@Param('userId') userId: string, @RequestPayload() token: string) {
     return this.authService.logout(userId, token);
   }
