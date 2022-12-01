@@ -58,7 +58,7 @@ export default class PlaylistController {
   }
 
   @Put(':id')
-  @Roles({ roles: [USER_ROLE.ARTIST] }) 
+  @Roles({ roles: [USER_ROLE.ARTIST] })
   async updatePlaylist(
     @Param('id') id: number,
     @Body() updatePlaylistDto: UpdatePlaylistDto,

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
@@ -14,6 +14,7 @@ import { ErrorHelper } from 'src/helpers/error.helper';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { LoginDTO } from '../auth/dto/login.dto';
 import { AuthService } from '../auth/auth.services';
+import { RequiredAction } from 'src/common/enums/user-action.enum';
 
 @Injectable()
 export class UserService {
@@ -36,7 +37,8 @@ export class UserService {
           },
         },
       )
-      .pipe(map((response) => response.data));
+      .pipe(map((response) => response.data))
+      .pipe(catchError(err => of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))));
 
   }
 
@@ -52,9 +54,10 @@ export class UserService {
     ).pipe(
       catchError(err =>
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)
-      ))
+        ))
     ));
   }
+
 
   async create(createUserDTO: CreateUserDTO): Promise<User> {
     this.validateAge(createUserDTO.dob)
@@ -62,8 +65,8 @@ export class UserService {
       username: KEYCLOAK_ADMIN_ID,
       password: KEYCLOAK_ADMIN_PASSWORD
     }
-    const access_token = await firstValueFrom(this.authService.getAcessToken(adminAccount))
-    let token = `Bearer ${access_token}`
+    const response = await firstValueFrom(this.authService.getAcessToken(adminAccount))
+    let token = `Bearer ${response['access_token']}`
     await firstValueFrom(this.httpService
       .post(
         `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users`,
@@ -72,7 +75,7 @@ export class UserService {
           username: createUserDTO.username,
           enabled: true,
           totp: false,
-          emailVerified: true,
+          emailVerified: false,
           firstName: createUserDTO.firstName,
           lastName: createUserDTO.lastName,
           email: createUserDTO.email,
@@ -83,7 +86,8 @@ export class UserService {
               temporary: false,
             },
           ],
-          requiredActions: [],
+          requiredActions: [RequiredAction.VERIFY_EMAIL]
+          ,
           notBefore: 0,
           access: {
             manageGroupMembership: true,
@@ -98,15 +102,16 @@ export class UserService {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: token,
+            Authorization: `${token}`,
           },
         },
       )
       .pipe(map((response) => response.data))
     ).catch(err => {
-      ErrorHelper.BadGatewayException(err.response.data.errorMessage)
+      ErrorHelper.BadRequestException(err.response.data.errorMessage)
     })
     const user = await this.findUserByName(createUserDTO.username, token)
+    await this.authService.verifyEmail(user[0].id, token)
     const userInfor = await this.userRepository.save({
       id: user[0].id,
       username: createUserDTO.username,
@@ -125,6 +130,4 @@ export class UserService {
       return null;
     }
   }
-
-
 }

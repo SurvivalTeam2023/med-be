@@ -1,6 +1,6 @@
 export enum USER_ROLE {
     USER = 'user',
     ADMIN = 'admin',
-    SUBSCRIBER = 'subscriber',
+    SUBSCRIBER = 'subcriber',
     ARTIST = 'artist'
 }

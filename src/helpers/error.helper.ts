@@ -15,4 +15,5 @@ export class ErrorHelper {
   static InternalServerException(msg: string | string[]) {
     throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
   }
+  
 }

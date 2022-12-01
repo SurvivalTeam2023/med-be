@@ -5,21 +5,15 @@ import { MatchPassword } from 'src/decorator/validate.decorator';
 export class CreateUserDTO {
   @IsString()
   @ApiProperty()
-  @IsNotEmpty({
-    message: 'Username can not be empty!',
-  })
+  @IsNotEmpty()
   username: string;
 
   @ApiProperty()
-  @IsEmail({
-    message: 'Incorrect email!',
-  })
+  @IsEmail()
   email: string;
 
   @ApiProperty()
-  @IsNotEmpty({
-    message: 'Password can not be empty!',
-  })
+  @IsNotEmpty()
   @IsString()
   @Length(6)
   password: string;
@@ -37,6 +31,7 @@ export class CreateUserDTO {
   @ApiProperty()
   lastName: string;
 
+  // @IsNumber()
   @ApiProperty()
   @IsDateString()
   dob: Date;
