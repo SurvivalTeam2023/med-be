@@ -3,8 +3,9 @@ import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateUserDTO } from './dto/createUser.dto';
 import { UserService } from './user.services';
-import { RequestPayload } from 'src/decorator/request-payload.decorator';
 import { USER_ROLE } from 'src/common/enums/user-role.enum';
+import { RequestPayload } from 'src/decorator/request-payload.decorator';
+
 
 @ApiTags('Users')
 @Controller('user')

@@ -27,6 +27,5 @@ export class MatchConstraint implements ValidatorConstraintInterface {
   defaultMessage(args: ValidationArguments) {
     const [constraintProperty]: (() => any)[] = args.constraints;
     return `${constraintProperty} and ${args.property} does not match`;
-
   }
 }

@@ -10,10 +10,9 @@ import { USER_ROLE } from 'src/common/enums/user-role.enum';
 @Controller('auth')
 @ApiBearerAuth()
 export class AuthController {
-  userService: any;
   constructor(private authService: AuthService) { }
 
-  @Post('login')
+  @Post('getToken')
   @ApiOperation({ summary: 'api login to med-app' })
   @Unprotected()
   async login(@Body() loginDTO: LoginDTO) {
