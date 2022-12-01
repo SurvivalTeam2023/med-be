@@ -24,10 +24,10 @@ export class AuthService {
 
   ) { }
 
-  logout(userId: string, token?: string | null): Observable<AxiosResponse<[]>> {
+  logout(userId: string, token: string | null): Observable<AxiosResponse<[UserDTO]>> {
     return this.httpService
       .post(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/logout`,
+        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/logout`, {},
         {
           headers: {
             Accept: 'application/json',
@@ -94,9 +94,9 @@ export class AuthService {
     return this.httpService
       .put(
         `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/28972a06-e764-447f-8cba-7f5ee15ea99d/execute-actions-email`,
-        {
-          actions: [RequiredAction.UPDATE_PASSWORD],
-        },
+
+        [RequiredAction.UPDATE_PASSWORD],
+
         {
           headers: {
             'Content-Type': 'application/json',
@@ -111,9 +111,9 @@ export class AuthService {
     return this.httpService
       .put(
         `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/execute-actions-email`,
-        {
-          actions: [RequiredAction.VERIFY_EMAIL],
-        },
+
+        [RequiredAction.VERIFY_EMAIL],
+
         {
           headers: {
             'Content-Type': 'application/json',
