@@ -2,6 +2,7 @@ import AudioPlaylist from 'src/modules/audio/entities/audioPlaylist.entity';
 import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 import { AudioStatus } from '../enum/audioStatus.enum';
 import { BaseEntity } from '../../../common/base/base.entity';
+import { File } from 'src/modules/files/entities/file.entity';
 
 @Entity('audio')
 export class Audio extends BaseEntity {
@@ -20,6 +21,10 @@ export class Audio extends BaseEntity {
   @OneToMany(() => AudioPlaylist, (audio_playlist) => audio_playlist.audio, {
     cascade: true,
   })
-  // @JoinColumn({ referencedColumnName: 'audioId' })
   public audio_playlist: AudioPlaylist[];
+
+  @OneToMany(() => File, (file) => file.audio, {
+    cascade: true,
+  })
+  public files: File[];
 }
