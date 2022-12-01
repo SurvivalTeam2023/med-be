@@ -11,6 +11,8 @@ export const ERROR_MESSAGE = {
     UNDER_AGES: 'User must over 12 year old!'
   },
   KEY_CLOAK: {
-    SERVER_DEAD: 'Something went wrong, Keycloaks server'
+    SERVER_DEAD: 'Something went wrong, Keycloaks server',
+    NOT_VERIFY_EMAIL: 'Email is not verified',
+    UNAUTHORIZED: 'Unauthorized'
   }
 };

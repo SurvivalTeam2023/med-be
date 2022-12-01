@@ -1,8 +1,10 @@
-import { Body, Controller, Post, Put } from '@nestjs/common';
-import { Unprotected, Roles } from 'nest-keycloak-connect';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Unprotected, Roles, RoleGuard } from 'nest-keycloak-connect';
 import { ApiBearerAuth, ApiOperation, ApiTags, } from '@nestjs/swagger';
 import { LoginDTO } from './dto/login.dto';
 import { AuthService } from './auth.services';
+import { RequestPayload } from 'src/decorator/request-payload.decorator';
+import { USER_ROLE } from 'src/common/enums/user-role.enum';
 
 @ApiTags('Auth Apis')
 @Controller('auth')
@@ -17,27 +19,41 @@ export class AuthController {
     return this.authService.getAcessToken(loginDTO);
   }
 
+  @Post('getRefreshToken')
+  @ApiOperation({ summary: 'get refresh token' })
+  @Unprotected()
+  async getRefreshToken(@Body() loginDTO: LoginDTO) {
+    return this.authService.getRefreshToken(loginDTO);
+  }
+
   @Put('password')
   @Unprotected()
   changePassword() {
     return this.authService.changePassword();
   }
 
-  @Post('logout')
-  logout() {
-    return this.authService.logout();
+  @Post(':userId')
+  @ApiOperation({ summary: 'api log out' })
+  @Unprotected()
+  logout(@Param('userId') userId: string, @RequestPayload() token: string) {
+    return this.authService.logout(userId, token);
   }
 
-  @Put('email')
+  @Put(':userId')
+  @ApiOperation({ summary: 'verify email' })
   @Roles({
-    roles: ['admin'],
+    roles: [USER_ROLE.ADMIN]
   })
-  verifyEmail() {
-    return this.authService.verifyEmail();
+  verifyEmail(@Param('userId') userId: string, @RequestPayload() token: string) {
+    return this.authService.verifyEmail(userId, token);
   }
 
   @Put()
-  async forgetPassword() {
-    return this.authService.forgetPassword();
+  @ApiOperation({ summary: 'forgot password' })
+  @Roles({
+    roles: [USER_ROLE.ADMIN]
+  })
+  async forgetPassword(@Param('userId') userId: string, @RequestPayload() token: string) {
+    return this.authService.forgetPassword(userId, token);
   }
 }

@@ -1,3 +1,3 @@
 export class MailDTO {
-  username: string;
+  email: string;
 }
