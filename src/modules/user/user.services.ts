@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
@@ -22,9 +22,18 @@ export class UserService {
     private readonly httpService: HttpService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService
   ) { }
 
+
+  getAdminAccount = () => {
+    let adminAccount: LoginDTO = {
+      username: KEYCLOAK_ADMIN_ID,
+      password: KEYCLOAK_ADMIN_PASSWORD
+    }
+    return adminAccount
+  }
 
   findAll(token?: string | null): Observable<AxiosResponse<UserDTO[]>> {
     return this.httpService
@@ -59,13 +68,10 @@ export class UserService {
   }
 
 
+
   async create(createUserDTO: CreateUserDTO): Promise<User> {
     this.validateAge(createUserDTO.dob)
-    let adminAccount: LoginDTO = {
-      username: KEYCLOAK_ADMIN_ID,
-      password: KEYCLOAK_ADMIN_PASSWORD
-    }
-    const response = await firstValueFrom(this.authService.getAcessToken(adminAccount))
+    const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
     await firstValueFrom(this.httpService
       .post(
@@ -96,13 +102,13 @@ export class UserService {
             impersonate: true,
             manage: true,
           },
-          realmRoles: ['user'],
+          realmRoles: ['app-user'],
         },
         {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: `${token}`,
+            Authorization: token,
           },
         },
       )
@@ -111,7 +117,7 @@ export class UserService {
       ErrorHelper.BadRequestException(err.response.data.errorMessage)
     })
     const user = await this.findUserByName(createUserDTO.username, token)
-    await this.authService.verifyEmail(user[0].id, token)
+    await firstValueFrom(await this.authService.verifyEmail(createUserDTO.username))
     const userInfor = await this.userRepository.save({
       id: user[0].id,
       username: createUserDTO.username,

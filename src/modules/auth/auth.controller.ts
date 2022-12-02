@@ -32,20 +32,18 @@ export class AuthController {
     return this.authService.changePassword();
   }
 
-  @Post(':userId')
+  @Post(':username')
   @ApiOperation({ summary: 'api log out' })
   @Unprotected()
-  logout(@Param('userId') userId: string, @RequestPayload() token: string) {
-    return this.authService.logout(userId, token);
+  logout(@Param('username') username: string, @RequestPayload() token: string) {
+    return this.authService.logout(username, token);
   }
 
-  @Put(':userId')
+  @Put(':username')
   @ApiOperation({ summary: 'verify email' })
-  @Roles({
-    roles: [USER_ROLE.ADMIN]
-  })
-  verifyEmail(@Param('userId') userId: string, @RequestPayload() token: string) {
-    return this.authService.verifyEmail(userId, token);
+  @Unprotected()
+  verifyEmail(@Param('username') username: string) {
+    return this.authService.verifyEmail(username);
   }
 
   @Put()
@@ -53,7 +51,7 @@ export class AuthController {
   @Roles({
     roles: [USER_ROLE.ADMIN]
   })
-  async forgetPassword(@Param('userId') userId: string, @RequestPayload() token: string) {
-    return this.authService.forgetPassword(userId, token);
+  async forgetPassword(@Param('username') username: string, @RequestPayload() token: string) {
+    return this.authService.forgetPassword(username, token);
   }
 }
