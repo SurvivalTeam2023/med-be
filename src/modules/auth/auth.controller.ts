@@ -4,7 +4,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags, } from '@nestjs/swagger';
 import { LoginDTO } from './dto/login.dto';
 import { AuthService } from './auth.services';
 import { RequestPayload } from 'src/decorator/request-payload.decorator';
-import { USER_ROLE } from 'src/common/enums/user-role.enum';
+import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
 
 @ApiTags('Auth Apis')
 @Controller('auth')
@@ -49,7 +49,7 @@ export class AuthController {
   @Put()
   @ApiOperation({ summary: 'forgot password' })
   @Roles({
-    roles: [USER_ROLE.ADMIN]
+    roles: [USER_CLIENT_ROLE.ADMIN]
   })
   async forgetPassword(@Param('username') username: string, @RequestPayload() token: string) {
     return this.authService.forgetPassword(username, token);

@@ -18,7 +18,7 @@ import { Playlist } from './entities/playlist.entity';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import PlaylistService from './playlist.service';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
-import { USER_ROLE } from 'src/common/enums/user-role.enum';
+import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
 
 @ApiTags('playlist')
 @Controller('playlist')
@@ -50,7 +50,7 @@ export default class PlaylistController {
   }
 
   @Post()
-  @Roles({ roles: [USER_ROLE.ARTIST] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   async createPlaylist(
     @Body() createPlaylistDto: CreatePlaylistDto,
   ): Promise<Playlist> {
@@ -58,7 +58,7 @@ export default class PlaylistController {
   }
 
   @Put(':id')
-  @Roles({ roles: [USER_ROLE.ARTIST] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   async updatePlaylist(
     @Param('id') id: number,
     @Body() updatePlaylistDto: UpdatePlaylistDto,
@@ -67,7 +67,7 @@ export default class PlaylistController {
   }
 
   @Delete(':id')
-  @Roles({ roles: [USER_ROLE.ARTIST] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   async deletePlaylist(@Param('id') id: number) {
     return await this.playlistService.deletePlaylist(id);
   }
