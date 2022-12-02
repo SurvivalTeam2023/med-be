@@ -22,7 +22,7 @@ export class AuthController {
 
   @Get('change-password/:username')
   @ApiOperation({ summary: 'change password for user' })
-  @Roles({ roles: [USER_ROLE.ADMIN], })
+  @Unprotected()
   changePassword(@Param('username') username: string,) {
     return this.authService.changePassword(username);
   }

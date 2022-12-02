@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom, Observable, of } from 'rxjs';
@@ -18,16 +18,13 @@ import { TokenDTO } from './dto/token.dto';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { RequiredAction } from 'src/common/enums/user-action.enum';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
-import { InjectRepository } from '@nestjs/typeorm';
-import User from '../user/entities/user.entity';
-import { Repository } from 'typeorm';
 import { UserService } from '../user/user.services';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly httpService: HttpService,
-    @InjectRepository(User)
+    @Inject(forwardRef(() => UserService))
     private readonly userService:UserService
   ) { }
 
@@ -94,17 +91,18 @@ export class AuthService {
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
       ));
   }
-  changePassword(username: string): Observable<AxiosResponse<[]>> {
+  async changePassword(name: string): Promise<Observable<AxiosResponse<[]>>> {
     let adminAccount: LoginDTO = {
       username: KEYCLOAK_ADMIN_ID,
       password: KEYCLOAK_ADMIN_PASSWORD
     }
-    const response =  firstValueFrom(this.getAcessToken(adminAccount))
+    const response =  await firstValueFrom(this.getAcessToken(adminAccount))
     let token = `Bearer ${response['access_token']}`
-    const user =  this.userService.findUserByName(username, token)
+    const user =  await this.userService.findUserByName(name, token)
+    const userId= user[0].id
     return this.httpService
       .put(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/execute-actions-email`,
+        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/execute-actions-email`,
         [RequiredAction.UPDATE_PASSWORD],
         {
           headers: {
@@ -124,9 +122,7 @@ export class AuthService {
     return this.httpService
       .put(
         `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/execute-actions-email`,
-
         [RequiredAction.VERIFY_EMAIL],
-
         {
           headers: {
             'Content-Type': 'application/json',
@@ -139,9 +135,7 @@ export class AuthService {
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
       ));;
   }
-//1. login bang admin
-//2.Find username (bang token cua admin) 
-//3.Neu username co ton tai thi input user id roi gui mail reset password
+
   forgetPassword(userId: string, token: string): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
@@ -22,6 +22,7 @@ export class UserService {
     private readonly httpService: HttpService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService
   ) { }
 
@@ -40,8 +41,8 @@ export class UserService {
       .pipe(catchError(err => of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))));
   }
 
-  findUserByName(username: string, token?: string | null): Promise<User> {
-    return lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
+ async findUserByName(username: string, token?: string | null): Promise<User> {
+    const user=await lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
       headers: {
         'Accept': 'application/json',
         'Authorization': token
@@ -53,6 +54,7 @@ export class UserService {
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)
         ))
     ));
+    return user
   }
 
 
@@ -108,7 +110,7 @@ export class UserService {
       ErrorHelper.BadRequestException(err.response.data.errorMessage)
     })
     const user = await this.findUserByName(createUserDTO.username, token)
-    await this.authService.verifyEmail(user[0].id, token)
+    this.authService.verifyEmail(user[0].id, token)
     const userInfor = await this.userRepository.save({
       id: user[0].id,
       username: createUserDTO.username,
