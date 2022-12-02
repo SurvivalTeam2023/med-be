@@ -1,9 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
+  KEYCLOAK_ADMIN_ID,
+  KEYCLOAK_ADMIN_PASSWORD,
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_CLIENT_SECRECT,
   KEYCLOAK_HOST,
@@ -16,11 +18,17 @@ import { TokenDTO } from './dto/token.dto';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { RequiredAction } from 'src/common/enums/user-action.enum';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
+import { InjectRepository } from '@nestjs/typeorm';
+import User from '../user/entities/user.entity';
+import { Repository } from 'typeorm';
+import { UserService } from '../user/user.services';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly httpService: HttpService,
+    @InjectRepository(User)
+    private readonly userService:UserService
   ) { }
 
   logout(userId: string, token: string | null): Observable<AxiosResponse<[UserDTO]>> {
@@ -86,10 +94,17 @@ export class AuthService {
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
       ));
   }
-  changePassword(id: string, token?: string | null): Observable<AxiosResponse<[]>> {
+  changePassword(username: string): Observable<AxiosResponse<[]>> {
+    let adminAccount: LoginDTO = {
+      username: KEYCLOAK_ADMIN_ID,
+      password: KEYCLOAK_ADMIN_PASSWORD
+    }
+    const response =  firstValueFrom(this.getAcessToken(adminAccount))
+    let token = `Bearer ${response['access_token']}`
+    const user =  this.userService.findUserByName(username, token)
     return this.httpService
       .put(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${id}/execute-actions-email`,
+        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/execute-actions-email`,
         [RequiredAction.UPDATE_PASSWORD],
         {
           headers: {

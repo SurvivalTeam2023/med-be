@@ -20,11 +20,11 @@ export class AuthController {
     return this.authService.getAcessToken(loginDTO);
   }
 
-  @Get('password/:id')
+  @Get('change-password/:username')
   @ApiOperation({ summary: 'change password for user' })
   @Roles({ roles: [USER_ROLE.ADMIN], })
-  changePassword(@Param('id') id: string, @RequestPayload() token: string) {
-    return this.authService.changePassword(id, token);
+  changePassword(@Param('username') username: string,) {
+    return this.authService.changePassword(username);
   }
   @Post('getRefreshToken')
   @ApiOperation({ summary: 'get refresh token' })
