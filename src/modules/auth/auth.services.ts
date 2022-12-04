@@ -18,6 +18,7 @@ import { TokenDTO } from './dto/token.dto';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { RequiredAction } from 'src/common/enums/user-action.enum';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
+
 import Password from 'antd/lib/input/Password';
 import { UserService } from '../user/user.services';
 
@@ -31,10 +32,7 @@ export class AuthService {
     private readonly userService:UserService,
 
   ) { }
-
   
-  
-
   async logout(username: string, token: string): Promise<Observable<AxiosResponse<[]>>> {
     const adminAccount = this.userService.getAdminAccount()
     const response = await firstValueFrom(this.getAcessToken(adminAccount))
@@ -102,7 +100,6 @@ export class AuthService {
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
       ));
   }
-
   changePassword(): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(
@@ -119,6 +116,7 @@ export class AuthService {
       )
       .pipe(map((response) => response.data));
   }
+
 
   async verifyEmail(username: string): Promise<Observable<AxiosResponse<[]>>> {
     const adminAccount = this.userService.getAdminAccount()

@@ -19,7 +19,7 @@ const KEYCLOAK_CLIENT_SECRECT: string =
   process.env.KEYCLOAK_CLIENT_SECRECT || 'EwfsGCeuMDHS2At96ftlzZtN6Mz9aY09';
 const KEYCLOAK_ADMIN_ID: string =
   process.env.KEYCLOAK_ADMIN_ID || 'tam';
-const KEYCLOAK_ADMIN_PASSWORD: string =
+const  KEYCLOAK_ADMIN_PASSWORD: string =
   process.env.KEYCLOAK_ADMIN_ID || 'abc@123';
 const KEYCLOAK_CONTAINER_ID: string =
   process.env.KEYCLOAK_CONTAINER_ID || '1a57fe94-417c-4cf4-a308-31b69f8fb399';

@@ -1,4 +1,6 @@
+
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
@@ -57,7 +59,7 @@ export class UserService {
       .pipe(map((response) => response.data))
       .pipe(catchError(err => of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))));
   }
-
+  
   async assignRole(username: string, roleName: string): Promise<Observable<AxiosResponse<[]>>> {
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
@@ -114,6 +116,7 @@ export class UserService {
         ))
     ));
   }
+
 
   async createUser(createUserDTO: CreateUserDTO): Promise<User> {
     this.validateAge(createUserDTO.dob)
