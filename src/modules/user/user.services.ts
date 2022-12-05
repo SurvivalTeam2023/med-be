@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CreateUserDTO } from './dto/createUser.dto';
-import { KEYCLOAK_ADMIN_ID, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_HOST, KEYCLOAK_REALM_ClIENT } from 'src/environments';
+import { KEYCLOAK_ADMIN_ID, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_CONTAINER_ID, KEYCLOAK_HOST, KEYCLOAK_REALM_ClIENT } from 'src/environments';
 import { UserDTO } from './dto/user.dto';
 import * as moment from 'moment';
 import User from './entities/user.entity';
@@ -15,18 +15,33 @@ import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { LoginDTO } from '../auth/dto/login.dto';
 import { AuthService } from '../auth/auth.services';
 import { RequiredAction } from 'src/common/enums/user-action.enum';
+import { USER_REALM_ROLE } from 'src/common/enums/user-realm-role.enum';
+import { RoleDTO } from '../auth/dto/role.dto';
+import Artist from '../artist/entities/artist.entity';
+import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
+import { USER_STATUS } from 'src/common/enums/user-status.enum';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly httpService: HttpService,
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly userRepository: Repository<User,
+    @InjectRepository(Artist)
+    private readonly artistRepository: Repository<Artist>,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService
   ) { }
 
-  findAll(token?: string | null): Observable<AxiosResponse<UserDTO[]>> {
+  getAdminAccount = () => {
+    let adminAccount: LoginDTO = {
+      username: KEYCLOAK_ADMIN_ID,
+      password: KEYCLOAK_ADMIN_PASSWORD
+    }
+    return adminAccount
+  }
+
+  getUserList(token?: string | null): Observable<AxiosResponse<UserDTO[]>> {
     return this.httpService
       .get(
         `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users`,
@@ -38,6 +53,32 @@ export class UserService {
         },
       )
       .pipe(map((response) => response.data))
+      .pipe(catchError(err => of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))));
+  }
+
+  async assignRole(username: string, roleName: string): Promise<Observable<AxiosResponse<[]>>> {
+    const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
+    let token = `Bearer ${response['access_token']}`
+    const user = await this.findUserByName(username, token)
+    const role = await this.findRoleByName(roleName, token)
+    return this.httpService.post(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/role-mappings/realm`,
+      [{
+        //role id
+        "id": `${role['id']}`,
+        //role name
+        "name": `${role['name']}`,
+        "description": "",
+        "composite": true,
+        "clientRole": false,
+        "containerId": KEYCLOAK_CONTAINER_ID
+      }],
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': token
+        },
+      }
+    ).pipe(map((response) => response.data))
       .pipe(catchError(err => of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))));
   }
 
@@ -57,14 +98,24 @@ export class UserService {
     return user
   }
 
+  findRoleByName(roleName: string, token: string): Promise<RoleDTO> {
+    return lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/roles/${roleName}`, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': token
+      }
+    }).pipe(
+      map(response => response.data),
+    ).pipe(
+      catchError(err =>
+        of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)
+        ))
+    ));
+  }
 
-  async create(createUserDTO: CreateUserDTO): Promise<User> {
+  async createUser(createUserDTO: CreateUserDTO): Promise<User> {
     this.validateAge(createUserDTO.dob)
-    let adminAccount: LoginDTO = {
-      username: KEYCLOAK_ADMIN_ID,
-      password: KEYCLOAK_ADMIN_PASSWORD
-    }
-    const response = await firstValueFrom(this.authService.getAcessToken(adminAccount))
+    const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
     await firstValueFrom(this.httpService
       .post(
@@ -95,13 +146,14 @@ export class UserService {
             impersonate: true,
             manage: true,
           },
-          realmRoles: ['user'],
+          realmRoles:
+            [USER_REALM_ROLE.APP_USER],
         },
         {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: `${token}`,
+            Authorization: token,
           },
         },
       )
@@ -109,16 +161,86 @@ export class UserService {
     ).catch(err => {
       ErrorHelper.BadRequestException(err.response.data.errorMessage)
     })
+
+    await this.assignRole(createUserDTO.username, USER_REALM_ROLE.APP_USER)
     const user = await this.findUserByName(createUserDTO.username, token)
-    this.authService.verifyEmail(user[0].id, token)
+    await firstValueFrom(await this.authService.verifyEmail(createUserDTO.username))
     const userInfor = await this.userRepository.save({
       id: user[0].id,
       username: createUserDTO.username,
       firstName: createUserDTO.firstName,
       lastName: createUserDTO.lastName,
+      gender: createUserDTO.gender,
+      city: createUserDTO.city,
+      address: createUserDTO.address,
+      status: USER_STATUS.ACTIVE,
       dob: createUserDTO.dob,
     })
     return userInfor
+  }
+
+  async createArtist(createArtistDTO: CreateArtistDTO): Promise<Artist> {
+    this.validateAge(createArtistDTO.dob)
+    const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
+    let token = `Bearer ${response['access_token']}`
+    await firstValueFrom(this.httpService
+      .post(
+        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users`,
+        {
+          createdTimestamp: null,
+          username: createArtistDTO.username,
+          enabled: true,
+          totp: false,
+          emailVerified: false,
+          firstName: createArtistDTO.firstName,
+          lastName: createArtistDTO.lastName,
+          email: createArtistDTO.email,
+          credentials: [
+            {
+              type: 'password',
+              value: createArtistDTO.password,
+              temporary: false,
+            },
+          ],
+          requiredActions: [RequiredAction.VERIFY_EMAIL]
+          ,
+          notBefore: 0,
+          access: {
+            manageGroupMembership: true,
+            view: true,
+            mapRoles: true,
+            impersonate: true,
+            manage: true,
+          },
+          realmRoles:
+            [USER_REALM_ROLE.APP_USER]
+          ,
+
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: token,
+          },
+        },
+      )
+      .pipe(map((response) => response.data))
+    ).catch(err => {
+      ErrorHelper.BadRequestException(err.response.data.errorMessage)
+    })
+    await firstValueFrom(await this.assignRole(createArtistDTO.username, USER_REALM_ROLE.APP_ARTIST))
+    const artist = await this.findUserByName(createArtistDTO.username, token)
+    await firstValueFrom(await this.authService.verifyEmail(createArtistDTO.username))
+    const artistInfor = await this.artistRepository.save({
+      id: artist[0].id,
+      username: createArtistDTO.username,
+      bio: createArtistDTO.firstName,
+      artist_name: createArtistDTO.lastName,
+      status: USER_STATUS.ACTIVE,
+      dob: createArtistDTO.dob,
+    })
+    return artistInfor
   }
 
   validateAge = (ageInput: Date): void => {

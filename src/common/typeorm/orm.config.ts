@@ -12,7 +12,8 @@ import {
 import { Playlist } from 'src/modules/playlist/entities/playlist.entity';
 import User from 'src/modules/user/entities/user.entity';
 import { File } from 'src/modules/files/entities/file.entity';
-const entities = [Audio, Playlist, AudioPlaylist, User, File];
+import Artist from 'src/modules/artist/entities/artist.entity';
+const entities = [Audio, Playlist, AudioPlaylist, User, File, Artist];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
