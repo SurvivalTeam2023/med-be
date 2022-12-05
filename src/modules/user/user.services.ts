@@ -26,7 +26,7 @@ export class UserService {
   constructor(
     private readonly httpService: HttpService,
     @InjectRepository(User)
-    private readonly userRepository: Repository<User,
+    private readonly userRepository: Repository<User>,
     @InjectRepository(Artist)
     private readonly artistRepository: Repository<Artist>,
     @Inject(forwardRef(() => AuthService))

@@ -33,12 +33,7 @@ export class AuthController {
   async getRefreshToken(@Body() loginDTO: LoginDTO) {
     return this.authService.getRefreshToken(loginDTO);
   }
-  @Put('password')
-  @Unprotected()
-  changePassword() {
-    return this.authService.changePassword();
-  }
-
+  
   @Post(':username')
   @ApiOperation({ summary: 'api log out' })
   @Unprotected()

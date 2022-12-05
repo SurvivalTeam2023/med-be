@@ -32,7 +32,7 @@ export default class AudioController {
   }
 
   @Get()
-  @Roles({ roles: [USER_ROLE.ARTIST] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
   async getAudios(
