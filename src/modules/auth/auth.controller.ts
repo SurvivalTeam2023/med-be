@@ -4,16 +4,19 @@ import { ApiBearerAuth, ApiOperation, ApiTags, } from '@nestjs/swagger';
 import { LoginDTO } from './dto/login.dto';
 import { AuthService } from './auth.services';
 import { RequestPayload } from 'src/decorator/request-payload.decorator';
-import { USER_ROLE } from 'src/common/enums/user-role.enum';
+
+import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
+
+
+
 
 @ApiTags('Auth Apis')
 @Controller('auth')
 @ApiBearerAuth()
 export class AuthController {
-  userService: any;
   constructor(private authService: AuthService) { }
 
-  @Post('login')
+  @Post('getToken')
   @ApiOperation({ summary: 'api login to med-app' })
   @Unprotected()
   async login(@Body() loginDTO: LoginDTO) {
@@ -33,28 +36,26 @@ export class AuthController {
     return this.authService.changePassword();
   }
 
-  @Post(':userId')
+  @Post(':username')
   @ApiOperation({ summary: 'api log out' })
   @Unprotected()
-  logout(@Param('userId') userId: string, @RequestPayload() token: string) {
-    return this.authService.logout(userId, token);
+  logout(@Param('username') username: string, @RequestPayload() token: string) {
+    return this.authService.logout(username, token);
   }
 
-  @Put(':userId')
+  @Put(':username')
   @ApiOperation({ summary: 'verify email' })
-  @Roles({
-    roles: [USER_ROLE.ADMIN]
-  })
-  verifyEmail(@Param('userId') userId: string, @RequestPayload() token: string) {
-    return this.authService.verifyEmail(userId, token);
+  @Unprotected()
+  verifyEmail(@Param('username') username: string) {
+    return this.authService.verifyEmail(username);
   }
 
   @Put()
   @ApiOperation({ summary: 'forgot password' })
   @Roles({
-    roles: [USER_ROLE.ADMIN]
+    roles: [USER_CLIENT_ROLE.ADMIN]
   })
-  async forgetPassword(@Param('userId') userId: string, @RequestPayload() token: string) {
-    return this.authService.forgetPassword(userId, token);
+  async forgetPassword(@Param('username') username: string, @RequestPayload() token: string) {
+    return this.authService.forgetPassword(username, token);
   }
 }

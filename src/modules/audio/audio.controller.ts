@@ -18,7 +18,7 @@ import UpdateAudioDto from './dto/updateAudio.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'nest-keycloak-connect';
-import { USER_ROLE } from 'src/common/enums/user-role.enum';
+import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
 
 @ApiTags('audio')
 @Controller('audio')
@@ -47,14 +47,14 @@ export default class AudioController {
     );
   }
 
-  @Roles({ roles: [USER_ROLE.ARTIST, USER_ROLE.SUBSCRIBER] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.SUBSCRIBER] })
   @Post()
   async createAudio(@Body() createAudioDto: CreateAudioDTO): Promise<Audio> {
     return this.audioService.createAudio(createAudioDto);
   }
 
   @Put(':id')
-  @Roles({ roles: [USER_ROLE.ARTIST] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   async updateAudio(
     @Param('id') id: number,
     @Body() updateAudioDto: UpdateAudioDto,
@@ -63,7 +63,7 @@ export default class AudioController {
   }
 
   @Delete(':id')
-  @Roles({ roles: [USER_ROLE.ARTIST] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   async deleteAudio(@Param('id') id: number) {
     return await this.audioService.deleteAudio(id);
   }

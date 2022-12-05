@@ -1,9 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
+  KEYCLOAK_ADMIN_ID,
+  KEYCLOAK_ADMIN_PASSWORD,
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_CLIENT_SECRECT,
   KEYCLOAK_HOST,
@@ -17,17 +19,28 @@ import { ErrorHelper } from 'src/helpers/error.helper';
 import { RequiredAction } from 'src/common/enums/user-action.enum';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 
+import Password from 'antd/lib/input/Password';
+import { UserService } from '../user/user.services';
+
 @Injectable()
 export class AuthService {
+
+  
   constructor(
     private readonly httpService: HttpService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService:UserService,
 
   ) { }
-
-  logout(userId: string, token: string | null): Observable<AxiosResponse<[UserDTO]>> {
+  
+  async logout(username: string, token: string): Promise<Observable<AxiosResponse<[]>>> {
+    const adminAccount = this.userService.getAdminAccount()
+    const response = await firstValueFrom(this.getAcessToken(adminAccount))
+    let access_token = `Bearer ${response['access_token']}`
+    const user = await this.userService.findUserByName(username, access_token)
     return this.httpService
       .post(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/logout`, {},
+        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/logout`, {},
         {
           headers: {
             Accept: 'application/json',
@@ -38,7 +51,6 @@ export class AuthService {
       .pipe(catchError(err =>
         of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.KEY_CLOAK.UNAUTHORIZED))
       ));
-
   }
 
   getAcessToken(loginDTO: LoginDTO): Observable<AxiosResponse<TokenDTO[]>> {
@@ -88,8 +100,6 @@ export class AuthService {
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
       ));
   }
-
-
   changePassword(): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(
@@ -107,10 +117,15 @@ export class AuthService {
       .pipe(map((response) => response.data));
   }
 
-  verifyEmail(userId: string, token: string): Observable<AxiosResponse<[]>> {
+
+  async verifyEmail(username: string): Promise<Observable<AxiosResponse<[]>>> {
+    const adminAccount = this.userService.getAdminAccount()
+    const response = await firstValueFrom(this.getAcessToken(adminAccount))
+    let token = `Bearer ${response['access_token']}`
+    const user = await this.userService.findUserByName(username, token)
     return this.httpService
       .put(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/execute-actions-email`,
+        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/execute-actions-email`,
 
         [RequiredAction.VERIFY_EMAIL],
 
@@ -124,7 +139,7 @@ export class AuthService {
       .pipe(map((response) => response.data))
       .pipe(catchError(err =>
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
-      ));;
+      ));
   }
 
   forgetPassword(userId: string, token: string): Observable<AxiosResponse<[]>> {
