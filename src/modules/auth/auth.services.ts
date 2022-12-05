@@ -99,9 +99,9 @@ export class AuthService {
     return this.httpService
       .put(
         `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/28972a06-e764-447f-8cba-7f5ee15ea99d/execute-actions-email`,
-
-        [RequiredAction.UPDATE_PASSWORD],
-
+        {
+          actions: [RequiredAction.UPDATE_PASSWORD],
+        },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -121,9 +121,7 @@ export class AuthService {
     return this.httpService
       .put(
         `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/execute-actions-email`,
-
         [RequiredAction.VERIFY_EMAIL],
-
         {
           headers: {
             'Content-Type': 'application/json',
