@@ -50,7 +50,6 @@ export class CreateUserDTO {
   @ApiProperty()
   address: string;
 
-  // @IsNumber()
   @ApiProperty()
   @IsDateString()
   dob: Date;

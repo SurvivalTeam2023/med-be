@@ -1,6 +1,5 @@
 
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
@@ -18,8 +17,6 @@ import { LoginDTO } from '../auth/dto/login.dto';
 import { AuthService } from '../auth/auth.services';
 import { RequiredAction } from 'src/common/enums/user-action.enum';
 import { USER_REALM_ROLE } from 'src/common/enums/user-realm-role.enum';
-import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
-import { response } from 'express';
 import { RoleDTO } from '../auth/dto/role.dto';
 import Artist from '../artist/entities/artist.entity';
 import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
@@ -59,7 +56,7 @@ export class UserService {
       .pipe(map((response) => response.data))
       .pipe(catchError(err => of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))));
   }
-  
+
   async assignRole(username: string, roleName: string): Promise<Observable<AxiosResponse<[]>>> {
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
@@ -85,7 +82,6 @@ export class UserService {
     ).pipe(map((response) => response.data))
       .pipe(catchError(err => of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))));
   }
-
 
   findUserByName(username: string, token?: string | null): Promise<User> {
     return lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
@@ -116,7 +112,6 @@ export class UserService {
         ))
     ));
   }
-
 
   async createUser(createUserDTO: CreateUserDTO): Promise<User> {
     this.validateAge(createUserDTO.dob)
@@ -152,9 +147,7 @@ export class UserService {
             manage: true,
           },
           realmRoles:
-            [USER_REALM_ROLE.APP_USER]
-          ,
-
+            [USER_REALM_ROLE.APP_USER],
         },
         {
           headers: {
@@ -168,6 +161,7 @@ export class UserService {
     ).catch(err => {
       ErrorHelper.BadRequestException(err.response.data.errorMessage)
     })
+
     await this.assignRole(createUserDTO.username, USER_REALM_ROLE.APP_USER)
     const user = await this.findUserByName(createUserDTO.username, token)
     await firstValueFrom(await this.authService.verifyEmail(createUserDTO.username))

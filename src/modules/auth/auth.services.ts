@@ -1,11 +1,9 @@
-import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import {
-  KEYCLOAK_ADMIN_ID,
-  KEYCLOAK_ADMIN_PASSWORD,
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_CLIENT_SECRECT,
   KEYCLOAK_HOST,
@@ -13,26 +11,22 @@ import {
   REALM_PRODUCTION,
 } from 'src/environments';
 import { LoginDTO } from './dto/login.dto';
-import { UserDTO } from './dto/user.dto';
 import { TokenDTO } from './dto/token.dto';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { RequiredAction } from 'src/common/enums/user-action.enum';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
-
-import Password from 'antd/lib/input/Password';
 import { UserService } from '../user/user.services';
 
 @Injectable()
 export class AuthService {
 
-  
   constructor(
     private readonly httpService: HttpService,
     @Inject(forwardRef(() => UserService))
-    private readonly userService:UserService,
+    private readonly userService: UserService,
 
   ) { }
-  
+
   async logout(username: string, token: string): Promise<Observable<AxiosResponse<[]>>> {
     const adminAccount = this.userService.getAdminAccount()
     const response = await firstValueFrom(this.getAcessToken(adminAccount))
@@ -100,6 +94,7 @@ export class AuthService {
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
       ));
   }
+  
   changePassword(): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(
