@@ -3,7 +3,7 @@ import { IsNotEmpty, IsEmail, IsString, IsDateString, Length } from 'class-valid
 import { GENDER } from 'src/common/enums/user-gender.enum';
 import { MatchPassword } from 'src/decorator/validate.decorator';
 
-export class CreateUserDTO {
+export class CreateArtistDTO {
   @IsString()
   @ApiProperty()
   @IsNotEmpty({
@@ -27,7 +27,7 @@ export class CreateUserDTO {
 
   @IsString()
   @ApiProperty()
-  @MatchPassword(CreateUserDTO, (s) => s.password)
+  @MatchPassword(CreateArtistDTO, (s) => s.password)
   repassword: string;
 
   @IsString()
@@ -38,16 +38,13 @@ export class CreateUserDTO {
   @ApiProperty()
   lastName: string;
 
-  @ApiProperty({ enum: GENDER })
-  gender: GENDER;  
+
+  @ApiProperty()
+  bio: string;  
 
   @IsString()
   @ApiProperty()
-  city: string;
-
-  @IsString()
-  @ApiProperty()
-  address: string;
+  artist_name: string;
 
   @ApiProperty()
   @IsDateString()
