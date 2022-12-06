@@ -38,7 +38,6 @@ export class CreateUserDTO {
   @ApiProperty()
   lastName: string;
 
-
   @ApiProperty({ enum: GENDER })
   gender: GENDER;  
 
