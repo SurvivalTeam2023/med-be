@@ -1,3 +1,4 @@
+
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
@@ -82,8 +83,8 @@ export class UserService {
       .pipe(catchError(err => of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))));
   }
 
- async findUserByName(username: string, token?: string | null): Promise<User> {
-    const user=await lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
+  findUserByName(username: string, token?: string | null): Promise<User> {
+    return lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
       headers: {
         'Accept': 'application/json',
         'Authorization': token
@@ -95,7 +96,6 @@ export class UserService {
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)
         ))
     ));
-    return user
   }
 
   findRoleByName(roleName: string, token: string): Promise<RoleDTO> {
