@@ -16,7 +16,7 @@ import { CreateAudioDTO } from './dto/createAudio.dto';
 import SearchAudioDto from './dto/searchAudio.dto';
 import UpdateAudioDto from './dto/updateAudio.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
 
@@ -32,20 +32,18 @@ export default class AudioController {
   }
 
   @Get()
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
-  @ApiQuery({ name: 'page', required: false })
-  @ApiQuery({ name: 'limit', required: false })
   async getAudios(
     @Query() audio: SearchAudioDto,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
   ): Promise<Pagination<Audio>> {
     limit = limit > 100 ? 100 : limit;
     return this.audioService.findAudios(
-      audio, {
-      page,
-      limit,
-    },
+      {
+        page,
+        limit,
+      },
+      audio,
     );
   }
 
