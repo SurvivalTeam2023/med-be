@@ -21,33 +21,12 @@ export class UserController {
     return this.userService.getUserList(token);
   }
 
-  @Get(':username')
-  @ApiOperation({ summary: 'find user by name' })
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
-  findUserByName(@Param('username') username: string, @RequestPayload() token: string) {
-    return this.userService.findUserByName(username, token);
-  }
-
-  @Get(':roleName')
-  @ApiOperation({ summary: 'find user by name' })
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
-  findRoleByName(@Param('roleName') roleName: string, @RequestPayload() token: string) {
-    return this.userService.findRoleByName(roleName, token);
-  }
-
   @Unprotected()
   @ApiOperation({ summary: 'create user' })
   @ApiBody({ type: CreateUserDTO })
   @Post('user')
   createUser(@Body() createUserDTO: CreateUserDTO) {
     return this.userService.createUser(createUserDTO);
-  }
-
-  @Unprotected()
-  @ApiOperation({ summary: 'assign role' })
-  @Post(':usernane/:roleName')
-  assignRole(@Param('username') username: string, @Param('roleName') roleName: string) {
-    return this.userService.assignRole(username, roleName);
   }
 
   @Unprotected()

@@ -97,7 +97,6 @@ export class UserService {
     ));
   }
 
-
   async findRoleByName(roleName: string, token: string): Promise<RoleDTO> {
     try {
       return await lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/roles/${roleName}`, {
