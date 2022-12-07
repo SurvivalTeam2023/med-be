@@ -44,8 +44,7 @@ export class UserController {
   }
 
   @Unprotected()
-  @ApiOperation({ summary: 'create user' })
-  @ApiBody({ type: CreateUserDTO })
+  @ApiOperation({ summary: 'assign role' })
   @Post(':usernane/:roleName')
   assignRole(@Param('username') username: string, @Param('roleName') roleName: string) {
     return this.userService.assignRole(username, roleName);

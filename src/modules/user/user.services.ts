@@ -57,19 +57,18 @@ export class UserService {
   }
 
   async assignRole(username: string, roleName: string): Promise<Observable<AxiosResponse<[]>>> {
-    const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
+    const response = await lastValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
     const user = await this.findUserByName(username, token)
     const role = await this.findRoleByName(roleName, token)
-    console.log('role', role['id'])
     return this.httpService.post(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/role-mappings/realm`,
       [{
-        //role id
+        //role id `${role['id']}`
         "id": `${role['id']}`,
         //role name
         "name": `${role['name']}`,
         "description": "",
-        "composite": true,
+        "composite": false,
         "clientRole": false,
         "containerId": `${role['containerId']}`
       }],
@@ -84,7 +83,7 @@ export class UserService {
   }
 
   async findUserByName(username: string, token?: string | null): Promise<User> {
-    const user = await lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
+    return await lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
       headers: {
         'Accept': 'application/json',
         'Authorization': token
@@ -96,7 +95,6 @@ export class UserService {
         of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEY_CLOAK.USER_NAME)
         ))
     ));
-    return user
   }
 
 
@@ -169,8 +167,7 @@ export class UserService {
       ErrorHelper.BadRequestException(err.response.data.errorMessage)
     })
 
-    const url = await this.assignRole(createUserDTO.username, USER_REALM_ROLE.APP_USER)
-    console.log('rolename', url)
+    await lastValueFrom(await this.assignRole(createUserDTO.username, USER_REALM_ROLE.APP_USER))
     const user = await this.findUserByName(createUserDTO.username, token)
     await firstValueFrom(await this.authService.verifyEmail(createUserDTO.username))
     const userInfor = await this.userRepository.save({
