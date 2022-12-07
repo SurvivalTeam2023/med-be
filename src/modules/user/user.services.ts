@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CreateUserDTO } from './dto/createUser.dto';
-import { KEYCLOAK_ADMIN_ID, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_CONTAINER_ID, KEYCLOAK_HOST, KEYCLOAK_REALM_ClIENT } from 'src/environments';
+import { KEYCLOAK_ADMIN_ID, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_HOST, KEYCLOAK_REALM_ClIENT } from 'src/environments';
 import { UserDTO } from './dto/user.dto';
 import * as moment from 'moment';
 import User from './entities/user.entity';
@@ -57,20 +57,20 @@ export class UserService {
   }
 
   async assignRole(username: string, roleName: string): Promise<Observable<AxiosResponse<[]>>> {
-    const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
+    const response = await lastValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
     const user = await this.findUserByName(username, token)
     const role = await this.findRoleByName(roleName, token)
     return this.httpService.post(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/role-mappings/realm`,
       [{
-        //role id
+        //role id `${role['id']}`
         "id": `${role['id']}`,
         //role name
         "name": `${role['name']}`,
         "description": "",
-        "composite": true,
+        "composite": false,
         "clientRole": false,
-        "containerId": KEYCLOAK_CONTAINER_ID
+        "containerId": `${role['containerId']}`
       }],
       {
         headers: {
@@ -79,11 +79,11 @@ export class UserService {
         },
       }
     ).pipe(map((response) => response.data))
-      .pipe(catchError(err => of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))));
+      .pipe(catchError(err => of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEY_CLOAK.ROLE_ASSIGN))));
   }
 
- async findUserByName(username: string, token?: string | null): Promise<User> {
-    const user=await lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
+  async findUserByName(username: string, token?: string | null): Promise<User> {
+    return await lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
       headers: {
         'Accept': 'application/json',
         'Authorization': token
@@ -92,25 +92,29 @@ export class UserService {
       map(response => response.data),
     ).pipe(
       catchError(err =>
-        of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)
+        of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEY_CLOAK.USER_NAME)
         ))
     ));
-    return user
   }
 
-  findRoleByName(roleName: string, token: string): Promise<RoleDTO> {
-    return lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/roles/${roleName}`, {
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': token
-      }
-    }).pipe(
-      map(response => response.data),
-    ).pipe(
-      catchError(err =>
-        of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)
-        ))
-    ));
+  async findRoleByName(roleName: string, token: string): Promise<RoleDTO> {
+    try {
+      return await lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/roles/${roleName}`, {
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': token
+        }
+      }).pipe(
+        map(response => response.data),
+      ).pipe(
+        catchError(err =>
+          of(ErrorHelper.BadRequestException(ERROR_MESSAGE.KEY_CLOAK.ROLE_NAME)
+          ))
+      ));
+    } catch (error) {
+      console.log('error', error)
+    }
+
   }
 
   async createUser(createUserDTO: CreateUserDTO): Promise<User> {
@@ -162,7 +166,7 @@ export class UserService {
       ErrorHelper.BadRequestException(err.response.data.errorMessage)
     })
 
-    await this.assignRole(createUserDTO.username, USER_REALM_ROLE.APP_USER)
+    await lastValueFrom(await this.assignRole(createUserDTO.username, USER_REALM_ROLE.APP_USER))
     const user = await this.findUserByName(createUserDTO.username, token)
     await firstValueFrom(await this.authService.verifyEmail(createUserDTO.username))
     const userInfor = await this.userRepository.save({
