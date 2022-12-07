@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CreateUserDTO } from './dto/createUser.dto';
-import { KEYCLOAK_ADMIN_ID, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_CONTAINER_ID, KEYCLOAK_HOST, KEYCLOAK_REALM_ClIENT } from 'src/environments';
+import { KEYCLOAK_ADMIN_ID, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_HOST, KEYCLOAK_REALM_ClIENT } from 'src/environments';
 import { UserDTO } from './dto/user.dto';
 import * as moment from 'moment';
 import User from './entities/user.entity';
