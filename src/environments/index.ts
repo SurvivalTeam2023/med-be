@@ -16,7 +16,7 @@ const KEYCLOAK_REALM_ClIENT: string =
 const REALM_PRODUCTION = process.env.REALM_PRODUCTION || 'null';
 const KEYCLOAK_CLIENT_ID: string = process.env.KEYCLOAK_CLIENT_ID || 'med-app';
 const KEYCLOAK_CLIENT_SECRECT: string =
-  process.env.KEYCLOAK_CLIENT_SECRECT || 'EwfsGCeuMDHS2At96ftlzZtN6Mz9aY09';
+  process.env.KEYCLOAK_CLIENT_SECRECT || 'EwfsGCeuMDHS2At96ftlzZtN6Mz9aY09 ';
 const KEYCLOAK_ADMIN_ID: string =
   process.env.KEYCLOAK_ADMIN_ID || 'tam';
 const  KEYCLOAK_ADMIN_PASSWORD: string =

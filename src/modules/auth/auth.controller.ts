@@ -19,19 +19,21 @@ export class AuthController {
     return this.authService.getAcessToken(loginDTO);
   }
 
+  @Get('change-password/:username')
+  @ApiOperation({ summary: 'change password for user' })
+  @Unprotected()
+  changePassword(@Param('username') username: string,) {
+    return this.authService.changePassword(username);
+  }
+  @Post('getRefreshToken')
+  @ApiOperation({ summary: 'get refresh token' })
   @Post('getRefreshToken')
   @ApiOperation({ summary: 'get refresh token' })
   @Unprotected()
   async getRefreshToken(@Body() loginDTO: LoginDTO) {
     return this.authService.getRefreshToken(loginDTO);
   }
-
-  @Put('password')
-  @Unprotected()
-  changePassword() {
-    return this.authService.changePassword();
-  }
-
+  
   @Post(':username')
   @ApiOperation({ summary: 'api log out' })
   @Unprotected()
