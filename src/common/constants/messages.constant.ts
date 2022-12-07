@@ -13,6 +13,9 @@ export const ERROR_MESSAGE = {
   KEY_CLOAK: {
     SERVER_DEAD: 'Something went wrong, Keycloaks server',
     NOT_VERIFY_EMAIL: 'Email is not verified',
-    UNAUTHORIZED: 'Unauthorized'
+    UNAUTHORIZED: 'Unauthorized',
+    ROLE_ASSIGN: 'Unable to assign role to user',
+    ROLE_NAME: 'Unable to find role name',
+    USER_NAME: 'Unable to find username'
   }
 };
