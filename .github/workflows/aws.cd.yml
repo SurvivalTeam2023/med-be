@@ -4,7 +4,7 @@ on:
     branches:
       - deployment
 jobs:
-  Build:
+  Deploy:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -70,26 +70,24 @@ jobs:
           docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
 
-  deploy:
-    needs: build
-    name: deploy uni-be
-    runs-on: ubuntu-latest
+      - name: deploy to cluster
+        uses: kodermax/kubectl-aws-eks@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          EKS_DEPLOYMENT: ${{ secrets.EKS_DEPLOYMENT }}
+          IMAGE_TAG: "banhsbao-${{ steps.format-time.outputs.replaced }}"
+        with:
+          args: set image deployment/$EKS_DEPLOYMENT $ECR_REPOSITORY=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+  
+  Verify:
     steps:
-    - name: deploy to cluster
-      uses: kodermax/kubectl-aws-eks@master
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        EKS_DEPLOYMENT: ${{ secrets.EKS_DEPLOYMENT }}
-        IMAGE_TAG: "banhsbao-${{ steps.format-time.outputs.replaced }}"
-      with:
-        args: set image deployment/$EKS_DEPLOYMENT $ECR_REPOSITORY=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        
     - name: verify deployment
       uses: kodermax/kubectl-aws-eks@master
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       with:
         args: rollout status deployment/my-app
+        
     - name: say Oye
-      run: echo Ohayo Oni chan :3
+      run: echo Ohayo Oni chan :3   
