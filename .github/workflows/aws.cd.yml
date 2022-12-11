@@ -86,10 +86,10 @@ jobs:
         args: set image deployment/$EKS_DEPLOYMENT $ECR_REPOSITORY=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         
     - name: verify deployment
-        uses: kodermax/kubectl-aws-eks@master
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      uses: kodermax/kubectl-aws-eks@master
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         with:
           args: rollout status deployment/my-app
-      - name: say Oye
-        run: echo Ohayo Oni chan :3
+    - name: say Oye
+      run: echo Ohayo Oni chan :3
