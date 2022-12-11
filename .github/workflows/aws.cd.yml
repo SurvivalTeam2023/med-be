@@ -90,7 +90,7 @@ jobs:
           REPOSITORY: ${{ secrets.REPOSITORY }}
           IMAGE_TAG: "banhsbao-${{ steps.format-time.outputs.replaced }}"
         with:
-          args: set image deployment/$EKS_DEPLOYMENT $REGISTRY_ALIAS=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+          args: set image deployment/med-app-med-be med-be=public.ecr.aws/s5b2k5y9/med-app:banhsbao-2022-12-11T14-38-10-759Z
       - name: say Oye
         run: echo Ohayo Oni chan :3   
 
