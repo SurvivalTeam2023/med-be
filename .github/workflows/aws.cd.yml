@@ -5,7 +5,7 @@ on:
       - deployment
 jobs:
   Remove-Antifact:
-    name: Remove rac
+    name: Remove artifact
     runs-on: ubuntu-latest
     steps:
       - name: Clear useless artifacts
