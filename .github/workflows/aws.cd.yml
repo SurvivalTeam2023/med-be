@@ -85,6 +85,9 @@ jobs:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           EKS_DEPLOYMENT: ${{ secrets.EKS_DEPLOYMENT }}
+          REGISTRY: ${{ secrets.REGISTRY }}
+          REGISTRY_ALIAS: ${{ secrets.REGISTRY_ALIAS }}
+          REPOSITORY: ${{ secrets.REPOSITORY }}
           IMAGE_TAG: "banhsbao-${{ steps.format-time.outputs.replaced }}"
         with:
           args: set image deployment/$EKS_DEPLOYMENT $REGISTRY_ALIAS=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
