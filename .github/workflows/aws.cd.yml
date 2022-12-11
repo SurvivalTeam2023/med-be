@@ -12,7 +12,7 @@ jobs:
         node: [16]
     env:
       NODE_ENV: "development"
-    name: Build
+    name: Build and Deploy
     steps:  
       - name: Checkout 🛎
         uses: actions/checkout@v3
@@ -81,6 +81,14 @@ jobs:
           args: set image deployment/$EKS_DEPLOYMENT $ECR_REPOSITORY=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
   
   Verify:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [16]
+    env:
+      NODE_ENV: "development"
+    name: Verify
     steps:
     - name: verify deployment
       uses: kodermax/kubectl-aws-eks@master
@@ -88,6 +96,6 @@ jobs:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       with:
         args: rollout status deployment/my-app
-        
+
     - name: say Oye
       run: echo Ohayo Oni chan :3   
