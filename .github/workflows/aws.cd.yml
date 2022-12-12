@@ -2,7 +2,7 @@ name: CD
 on:
   push:
     branches:
-      - main
+      - develop
 jobs:
   Remove-Antifact:
     name: Remove artifact
