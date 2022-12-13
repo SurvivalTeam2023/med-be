@@ -93,7 +93,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-              kubect set image deployment/$EKS_DEPLOYMENT $APP_NAME=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+              kubectl set image deployment/$EKS_DEPLOYMENT $APP_NAME=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
           
       - name: say Oye
         run: echo Ohayo Oni chan :3   
