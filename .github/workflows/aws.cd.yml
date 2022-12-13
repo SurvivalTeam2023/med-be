@@ -96,5 +96,5 @@ jobs:
               kubectl set image deployment/$EKS_DEPLOYMENT $APP_NAME=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
           
       - name: say Oye
-        run: echo Ohayo Oni chan :3   
+        run: echo Done ola :3   
 
