@@ -69,16 +69,6 @@ jobs:
           replace-with: '-'
           flags: 'g'
 
-      - name: Build, tag, and push docker image to Amazon ECR Public
-        env:
-          REGISTRY: ${{ secrets.REGISTRY }}
-          REGISTRY_ALIAS: ${{ secrets.REGISTRY_ALIAS }}
-          REPOSITORY: ${{ secrets.REPOSITORY }}
-          IMAGE_TAG: "banhsbao-${{ steps.format-time.outputs.replaced }}"
-        run: |
-          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
-
       - name: Executing remote ssh EC2
         uses: appleboy/ssh-action@master
         env: 
@@ -93,7 +83,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-              kubectl set image deployment/$EKS_DEPLOYMENT $APP_NAME=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+            kubectl set image deployment/med-be med-be=public.ecr.aws/s5b2k5y9/med-app:banhsbao-2022-12-13T11-04-31-446Z
           
       - name: say Oye
         run: echo Done ola :3   
