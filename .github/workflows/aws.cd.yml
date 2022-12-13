@@ -2,7 +2,7 @@ name: CD
 on:
   push:
     branches:
-      - develop
+      - deployment
 jobs:
   Remove-Antifact:
     name: Remove artifact
@@ -79,19 +79,22 @@ jobs:
           docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
 
-      - name: Deploy to cluster
-        uses: kodermax/kubectl-aws-eks@master
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-          APP_NAME: ${{ secrets.APP_NAME }}
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          EKS_DEPLOYMENT: ${{ secrets.EKS_DEPLOYMENT }}
+      - name: Executing remote ssh EC2
+        uses: appleboy/ssh-action@master
+        env: 
           REGISTRY: ${{ secrets.REGISTRY }}
           REGISTRY_ALIAS: ${{ secrets.REGISTRY_ALIAS }}
           REPOSITORY: ${{ secrets.REPOSITORY }}
           IMAGE_TAG: "banhsbao-${{ steps.format-time.outputs.replaced }}"
+          EKS_DEPLOYMENT: ${{ secrets.EKS_DEPLOYMENT }}
+          APP_NAME: ${{ secrets.APP_NAME }}
         with:
-          args: set image deployment/$EKS_DEPLOYMENT $APP_NAME=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+          host: ${{ secrets.HOST_EC2 }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+              kubect set image deployment/$EKS_DEPLOYMENT $APP_NAME=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+          
       - name: say Oye
         run: echo Ohayo Oni chan :3   
 
