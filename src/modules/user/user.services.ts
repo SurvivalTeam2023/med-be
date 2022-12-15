@@ -3,7 +3,6 @@ import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { firstValueFrom, lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { CreateUserDTO } from './dto/createUser.dto';
 import { KEYCLOAK_ADMIN_ID, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_HOST, KEYCLOAK_REALM_ClIENT } from 'src/environments';
 import { UserDTO } from './dto/user.dto';
 import * as moment from 'moment';
@@ -20,6 +19,7 @@ import { RoleDTO } from '../auth/dto/role.dto';
 import Artist from '../artist/entities/artist.entity';
 import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
 import { USER_STATUS } from 'src/common/enums/user-status.enum';
+import { CreateUserDTO } from './dto/createUser.dto';
 
 @Injectable()
 export class UserService {
@@ -44,7 +44,7 @@ export class UserService {
   getUserList(token?: string | null): Observable<AxiosResponse<UserDTO[]>> {
     return this.httpService
       .get(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users`,
+        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users`,
         {
           headers: {
             Accept: 'application/json',
@@ -61,11 +61,9 @@ export class UserService {
     let token = `Bearer ${response['access_token']}`
     const user = await this.findUserByName(username, token)
     const role = await this.findRoleByName(roleName, token)
-    return this.httpService.post(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/role-mappings/realm`,
+    return this.httpService.post(`${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/role-mappings/realm`,
       [{
-        //role id `${role['id']}`
         "id": `${role['id']}`,
-        //role name
         "name": `${role['name']}`,
         "description": "",
         "composite": false,
@@ -83,7 +81,7 @@ export class UserService {
   }
 
   async findUserByName(username: string, token?: string | null): Promise<User> {
-    return await lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
+    return await lastValueFrom(this.httpService.get(`${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
       headers: {
         'Accept': 'application/json',
         'Authorization': token
@@ -99,7 +97,7 @@ export class UserService {
 
   async findRoleByName(roleName: string, token: string): Promise<RoleDTO> {
     try {
-      return await lastValueFrom(this.httpService.get(`http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/roles/${roleName}`, {
+      return await lastValueFrom(this.httpService.get(`${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/roles/${roleName}`, {
         headers: {
           'Accept': 'application/json',
           'Authorization': token
@@ -121,9 +119,10 @@ export class UserService {
     this.validateAge(createUserDTO.dob)
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
+    console.log('token', token)
     await firstValueFrom(this.httpService
       .post(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users`,
+        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users`,
         {
           createdTimestamp: null,
           username: createUserDTO.username,
@@ -183,13 +182,15 @@ export class UserService {
     return userInfor
   }
 
+ 
+
   async createArtist(createArtistDTO: CreateArtistDTO): Promise<Artist> {
     this.validateAge(createArtistDTO.dob)
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
     await firstValueFrom(this.httpService
       .post(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users`,
+        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users`,
         {
           createdTimestamp: null,
           username: createArtistDTO.username,

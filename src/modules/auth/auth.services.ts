@@ -18,6 +18,7 @@ import { ErrorHelper } from 'src/helpers/error.helper';
 import { RequiredAction } from 'src/common/enums/user-action.enum';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { UserService } from '../user/user.services';
+import { LoginServerDTO } from './dto/loginServer';
 
 @Injectable()
 export class AuthService {
@@ -35,7 +36,7 @@ export class AuthService {
     const user = await this.userService.findUserByName(username, access_token)
     return this.httpService
       .post(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/logout`, {},
+        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/logout`, {},
         {
           headers: {
             Accept: 'application/json',
@@ -58,7 +59,7 @@ export class AuthService {
     form.append('scope', 'openid');
     return this.httpService
       .post(
-        `http://${KEYCLOAK_HOST}:8080/auth/realms/${KEYCLOAK_REALM_ClIENT}/protocol/openid-connect/token`,
+        `${KEYCLOAK_HOST}/auth/realms/${KEYCLOAK_REALM_ClIENT}/protocol/openid-connect/token`,
         form,
         {
           headers: {
@@ -68,7 +69,7 @@ export class AuthService {
       )
       .pipe(map((response) => response.data))
       .pipe(catchError(err =>
-        of(ErrorHelper.BadRequestException(ERROR_MESSAGE.KEY_CLOAK.NOT_VERIFY_EMAIL))
+        of(ErrorHelper.BadRequestException(err))
       ));
   }
 
@@ -82,7 +83,7 @@ export class AuthService {
     form.append('scope', 'openid');
     return this.httpService
       .post(
-        `http://${KEYCLOAK_HOST}:8080/auth/realms/${KEYCLOAK_REALM_ClIENT}/protocol/openid-connect/token`,
+        `${KEYCLOAK_HOST}/auth/realms/${KEYCLOAK_REALM_ClIENT}/protocol/openid-connect/token`,
         form,
         {
           headers: {
@@ -95,6 +96,7 @@ export class AuthService {
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
       ));
   }
+  
   async changePassword(name: string): Promise<Observable<AxiosResponse<[]>>> {
     let adminAccount: LoginDTO = {
       username: KEYCLOAK_ADMIN_ID,
@@ -106,7 +108,7 @@ export class AuthService {
     const userId= user[0].id
     return this.httpService
       .put(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/execute-actions-email`,
+        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/execute-actions-email`,
         [RequiredAction.UPDATE_PASSWORD],
         {
           headers: {
@@ -130,7 +132,7 @@ export class AuthService {
     const user = await this.userService.findUserByName(username, token)
     return this.httpService
       .put(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/execute-actions-email`,
+        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/execute-actions-email`,
         [RequiredAction.VERIFY_EMAIL],
         {
           headers: {
@@ -148,7 +150,7 @@ export class AuthService {
   forgetPassword(userId: string, token: string): Observable<AxiosResponse<[]>> {
     return this.httpService
       .put(
-        `http://${KEYCLOAK_HOST}:8080/auth/admin/realms/${REALM_PRODUCTION}/users/${userId}/reset-password-email`,
+        `${KEYCLOAK_HOST}/auth/admin/realms/${REALM_PRODUCTION}/users/${userId}/reset-password-email`,
         {},
         {
           headers: {
