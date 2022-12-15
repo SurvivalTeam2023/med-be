@@ -7,13 +7,14 @@ import {
   AuthGuard,
 } from 'nest-keycloak-connect';
 import { APP_GUARD } from '@nestjs/core';
+import { KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRECT, KEYCLOAK_HOST } from 'src/environments';
 @Module({
   imports: [
     KeycloakConnectModule.register({
-      authServerUrl: 'http://localhost:8080/auth',
+      authServerUrl: `${KEYCLOAK_HOST}/auth`,
       realm: 'med-app',
-      clientId: 'med-app',
-      secret: 'EwfsGCeuMDHS2At96ftlzZtN6Mz9aY09',
+      clientId: KEYCLOAK_CLIENT_ID,
+      secret: KEYCLOAK_CLIENT_SECRECT,
     }),
     HttpModule,
   ],
