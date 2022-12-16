@@ -38,7 +38,6 @@ export class UserController {
     return this.userService.createArtist(createArtistDTO);
   }
 
-  
   @Unprotected()
   @ApiOperation({ summary: 'change user role to artist' })
   @ApiQuery({ name: 'role', enum: USER_REALM_ROLE })
