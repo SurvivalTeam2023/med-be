@@ -80,6 +80,31 @@ export class UserService {
       .pipe(catchError(err => of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEY_CLOAK.ROLE_ASSIGN))));
   }
 
+  async changeRole(username: string, deleteRole :string, addRole: string): Promise<Observable<AxiosResponse<[]>>> {
+    const response = await lastValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
+    let token = `Bearer ${response['access_token']}`
+    const user = await this.findUserByName(username, token)
+    const role = await this.findRoleByName(deleteRole, token)
+    lastValueFrom(await this.assignRole(username, addRole))
+    return this.httpService.delete(`${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/role-mappings/realm`,
+    { data:  [{
+        "id": `${role['id']}`,
+        "name": `${role['name']}`,
+        "description": "",
+        "composite": false,
+        "clientRole": false,
+        "containerId": `${role['containerId']}`
+      }],
+      
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': token
+        },
+      }
+    ).pipe(map((response) => response.data))
+      .pipe(catchError(err => of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEY_CLOAK.ROLE_ASSIGN))));
+  }
+
   async findUserByName(username: string, token?: string | null): Promise<User> {
     return await lastValueFrom(this.httpService.get(`${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
       headers: {
@@ -106,7 +131,7 @@ export class UserService {
         map(response => response.data),
       ).pipe(
         catchError(err =>
-          of(ErrorHelper.BadRequestException(ERROR_MESSAGE.KEY_CLOAK.ROLE_NAME)
+          of(ErrorHelper.BadRequestException(err)
           ))
       ));
     } catch (error) {
@@ -119,7 +144,6 @@ export class UserService {
     this.validateAge(createUserDTO.dob)
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
-    console.log('token', token)
     await firstValueFrom(this.httpService
       .post(
         `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users`,
