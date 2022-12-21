@@ -97,6 +97,7 @@ export class AuthService {
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
       ));
   }
+
   getAccessWithGoogle(loginGmailDTO: LoginGmailDTO): Observable<AxiosResponse<TokenDTO[]>> {
     const form = new URLSearchParams();
     form.append('grant_type', "urn:ietf:params:oauth:grant-type:token-exchange");
@@ -123,6 +124,7 @@ export class AuthService {
       ));
 
   }
+  
   async changePassword(name: string): Promise<Observable<AxiosResponse<[]>>> {
     let adminAccount: LoginDTO = {
       username: KEYCLOAK_ADMIN_ID,

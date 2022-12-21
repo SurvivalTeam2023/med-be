@@ -1,12 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateUserDTO } from './dto/createUser.dto';
 import { UserService } from './user.services';
 import { RequestPayload } from 'src/decorator/request-payload.decorator';
 import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
 import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
 import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
+import { USER_REALM_ROLE } from 'src/common/enums/user-realm-role.enum';
 
 @ApiTags('Users')
 @Controller('user')
@@ -44,5 +45,13 @@ export class UserController {
   @Post('google')
   signInGoogle(@Body() LoginGmailDTO: LoginGmailDTO) {
     return this.userService.signInGoogle(LoginGmailDTO);
+}
+
+  @Unprotected()
+  @ApiOperation({ summary: 'change user role to artist' })
+  @ApiQuery({ name: 'role', enum: USER_REALM_ROLE })
+  @Put(':username/role')
+  changeUserRoleToArtist(@Param('username') username:string , @Query('role') role: USER_REALM_ROLE) {
+    return this.userService.changeRole(username,USER_REALM_ROLE.APP_USER,role);
   }
 }
