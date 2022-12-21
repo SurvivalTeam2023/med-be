@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsEmail, IsString, IsDateString, Length } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsString, IsDateString, Length, IsOptional } from 'class-validator';
 import { GENDER } from 'src/common/enums/user-gender.enum';
 import { MatchPassword } from 'src/decorator/validate.decorator';
 
@@ -32,21 +32,26 @@ export class CreateArtistDTO {
 
   @IsString()
   @ApiProperty()
+  @IsOptional()
   firstName: string;
 
   @IsString()
   @ApiProperty()
+  @IsOptional()
   lastName: string;
 
 
   @ApiProperty()
+  @IsOptional()
   bio: string;  
 
   @IsString()
   @ApiProperty()
+  @IsOptional()
   artist_name: string;
 
   @ApiProperty()
   @IsDateString()
+  @IsOptional()
   dob: Date;
 }

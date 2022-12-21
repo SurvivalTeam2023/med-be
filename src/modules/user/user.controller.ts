@@ -6,6 +6,7 @@ import { UserService } from './user.services';
 import { RequestPayload } from 'src/decorator/request-payload.decorator';
 import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
 import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
+import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
 
 @ApiTags('Users')
 @Controller('user')
@@ -35,5 +36,13 @@ export class UserController {
   @Post('artist')
   createArtist(@Body() createArtistDTO: CreateArtistDTO) {
     return this.userService.createArtist(createArtistDTO);
+  }
+
+  @Unprotected()
+  @ApiOperation({ summary: 'sign in with Google' })
+  @ApiBody({ type: LoginGmailDTO })
+  @Post('google')
+  signInGoogle(@Body() LoginGmailDTO: LoginGmailDTO) {
+    return this.userService.signInGoogle(LoginGmailDTO);
   }
 }

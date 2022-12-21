@@ -21,13 +21,17 @@ import {
     @Column()
     username: string;
   
-    @Column()
+    @Column({
+      nullable: true,
+    })
     bio: string;
   
     @Column()
     artist_name: string;
 
-    @Column()
+    @Column({
+      nullable: true,
+    })
     dob: Date;
   
     @Column({
