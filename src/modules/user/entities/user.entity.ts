@@ -19,22 +19,35 @@ export class User extends BaseEntity {
   @Column()
   username: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   firstName: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   lastName: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   gender: GENDER;  
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   city: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  }
+  )
   address: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   dob: Date;
 
   @Column({

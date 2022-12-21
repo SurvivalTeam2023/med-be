@@ -5,6 +5,7 @@ import { LoginDTO } from './dto/login.dto';
 import { AuthService } from './auth.services';
 import { RequestPayload } from 'src/decorator/request-payload.decorator';
 import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
+import { LoginGmailDTO } from './dto/loginGmail.dto';
 
 @ApiTags('Auth Apis')
 @Controller('auth')
@@ -19,14 +20,20 @@ export class AuthController {
     return this.authService.getAcessToken(loginDTO);
   }
 
+  @Post('google')
+  @ApiOperation({ summary: 'google' })
+  @Unprotected()
+  async getAccessWithGoogle(@Body() loginGmailDTO: LoginGmailDTO) {
+    return this.authService.getAccessWithGoogle(loginGmailDTO);
+  }
+  
   @Get('change-password/:username')
   @ApiOperation({ summary: 'change password for user' })
   @Unprotected()
   changePassword(@Param('username') username: string,) {
     return this.authService.changePassword(username);
   }
-  @Post('getRefreshToken')
-  @ApiOperation({ summary: 'get refresh token' })
+
   @Post('getRefreshToken')
   @ApiOperation({ summary: 'get refresh token' })
   @Unprotected()

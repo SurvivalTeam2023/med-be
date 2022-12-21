@@ -8,7 +8,7 @@ import { UserDTO } from './dto/user.dto';
 import * as moment from 'moment';
 import User from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, EntityManager, Repository } from 'typeorm';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { LoginDTO } from '../auth/dto/login.dto';
@@ -20,11 +20,13 @@ import Artist from '../artist/entities/artist.entity';
 import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
 import { USER_STATUS } from 'src/common/enums/user-status.enum';
 import { CreateUserDTO } from './dto/createUser.dto';
+import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly httpService: HttpService,
+    private readonly entityManage: EntityManager,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Artist)
@@ -141,7 +143,9 @@ export class UserService {
   }
 
   async createUser(createUserDTO: CreateUserDTO): Promise<User> {
-    this.validateAge(createUserDTO.dob)
+    if(createUserDTO.dob){
+      this.validateAge(createUserDTO.dob)
+    }
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
     await firstValueFrom(this.httpService
@@ -195,13 +199,13 @@ export class UserService {
     const userInfor = await this.userRepository.save({
       id: user[0].id,
       username: createUserDTO.username,
-      firstName: createUserDTO.firstName,
-      lastName: createUserDTO.lastName,
-      gender: createUserDTO.gender,
-      city: createUserDTO.city,
-      address: createUserDTO.address,
+      firstName: createUserDTO?.firstName,
+      lastName: createUserDTO?.lastName,
+      gender: createUserDTO?.gender,
+      city: createUserDTO?.city,
+      address: createUserDTO?.address,
       status: USER_STATUS.ACTIVE,
-      dob: createUserDTO.dob,
+      dob: createUserDTO?.dob,
     })
     return userInfor
   }
@@ -209,7 +213,9 @@ export class UserService {
  
 
   async createArtist(createArtistDTO: CreateArtistDTO): Promise<Artist> {
-    this.validateAge(createArtistDTO.dob)
+    if(!createArtistDTO.dob){
+      this.validateAge(createArtistDTO.dob)
+    }
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
     await firstValueFrom(this.httpService
@@ -264,10 +270,10 @@ export class UserService {
     const artistInfor = await this.artistRepository.save({
       id: artist[0].id,
       username: createArtistDTO.username,
-      bio: createArtistDTO.firstName,
-      artist_name: createArtistDTO.lastName,
+      bio: createArtistDTO?.firstName,
+      artist_name: createArtistDTO?.lastName,
       status: USER_STATUS.ACTIVE,
-      dob: createArtistDTO.dob,
+      dob: createArtistDTO?.dob,
     })
     return artistInfor
   }
@@ -279,5 +285,19 @@ export class UserService {
       ErrorHelper.BadRequestException(ERROR_MESSAGE.USER.UNDER_AGES)
       return null;
     }
+  }
+
+  async signInGoogle(loginGmailDTO: LoginGmailDTO): Promise<any> {
+    const access_token = await firstValueFrom(this.authService.getAccessWithGoogle(loginGmailDTO))
+    const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
+    let token = `Bearer ${response['access_token']}`
+    const user = await this.findUserByName(loginGmailDTO.username, token)
+    const userId = user[0].id
+    const existedUser = await this.entityManage.findOne(User, {where: {id: userId}})
+    if(!existedUser){
+      const newUser:DeepPartial<User> = {id: userId ,firstName: user[0].firstName, username: loginGmailDTO.username}
+      const createdUser = await this.entityManage.save(this.entityManage.create(User, newUser))
+    }
+    return access_token
   }
 }
