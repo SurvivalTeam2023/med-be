@@ -6,8 +6,8 @@ import { Repository } from 'typeorm';
 import CreatePlaylistDto from './dto/createPlaylist.dto';
 import SearchPlaylistDto from './dto/searchPlaylistDto';
 import UpdatePlaylistDto from './dto/updatePlaylist.dto';
-import { Playlist } from './entities/playlist.entity';
-import { PlaylistStatus } from './enum/playlistStatus.enum';
+import { PlaylistEntity } from './entities/playlist.entity';
+import { PlaylistStatus } from '../../common/enums/playlistStatus.enum';
 import {
   IPaginationOptions,
   Pagination,
@@ -17,11 +17,11 @@ import {
 @Injectable()
 export default class PlaylistService {
   constructor(
-    @InjectRepository(Playlist)
-    private playlistRepository: Repository<Playlist>,
-  ) {}
+    @InjectRepository(PlaylistEntity)
+    private playlistRepository: Repository<PlaylistEntity>,
+  ) { }
 
-  async findPlaylistById(playlistId: number): Promise<Playlist> {
+  async findPlaylistById(playlistId: number): Promise<PlaylistEntity> {
     const playList = await this.playlistRepository.findOneBy({
       id: playlistId,
     });
@@ -32,7 +32,7 @@ export default class PlaylistService {
   async findPlaylist(
     option: IPaginationOptions,
     dto: SearchPlaylistDto,
-  ): Promise<Pagination<Playlist>> {
+  ): Promise<Pagination<PlaylistEntity>> {
     const querybuilder = await this.playlistRepository
       .createQueryBuilder('playlist')
       .where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` })
@@ -40,10 +40,10 @@ export default class PlaylistService {
         playlistStatus: dto.status,
       })
       .orderBy('playlist.created_at', 'DESC');
-    return paginate<Playlist>(querybuilder, option);
+    return paginate<PlaylistEntity>(querybuilder, option);
   }
 
-  async createPlaylist(dto: CreatePlaylistDto): Promise<Playlist> {
+  async createPlaylist(dto: CreatePlaylistDto): Promise<PlaylistEntity> {
     const entity = await this.playlistRepository.save({ ...dto });
     return entity;
   }
@@ -51,7 +51,7 @@ export default class PlaylistService {
   async updatePlaylist(
     playlistId: number,
     dto: UpdatePlaylistDto,
-  ): Promise<Playlist> {
+  ): Promise<PlaylistEntity> {
     const playlist = await this.playlistRepository.findOneBy({
       id: playlistId,
     });
@@ -65,7 +65,7 @@ export default class PlaylistService {
     return updatedPlaylist;
   }
 
-  async deletePlaylist(PlaylistId: number): Promise<Playlist> {
+  async deletePlaylist(PlaylistId: number): Promise<PlaylistEntity> {
     const entity = await this.playlistRepository.findOne({
       where: { id: PlaylistId },
     });

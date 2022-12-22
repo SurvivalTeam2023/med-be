@@ -1,17 +1,21 @@
 import { BaseEntity } from 'src/common/base/base.entity';
-import AudioPlaylist from 'src/modules/audio/entities/audioPlaylist.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
-import { PlaylistStatus } from '../enum/playlistStatus.enum';
+import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
+import { AudioPlaylistEntity } from 'src/modules/playlistAudio/entities/audioPlaylist.entity';
+import { PlaylistTypeEntity } from 'src/modules/playlistType/entities/playlistType.entity';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { PlaylistStatus } from '../../../common/enums/playlistStatus.enum';
 
 @Entity('playlist')
-export class Playlist extends BaseEntity {
+export class PlaylistEntity extends BaseEntity {
   @Column()
   public name: string;
 
   @Column()
   public image_url: string;
-
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: PlaylistStatus
+  })
   public status: PlaylistStatus;
 
   @Column()
@@ -20,6 +24,16 @@ export class Playlist extends BaseEntity {
   @Column()
   public user_id?: number;
 
-  @OneToMany(() => AudioPlaylist, (audio_playlist) => audio_playlist.playlist)
-  audio_playlist: AudioPlaylist[];
+  @OneToMany(() => AudioPlaylistEntity, (audio_playlist) => audio_playlist.playlist, {
+    cascade: true,
+  })
+  audio_playlist: AudioPlaylistEntity[];
+
+  @ManyToOne(() => PlaylistTypeEntity, (playlistType) => playlistType.playlist)
+  public playlistType: PlaylistTypeEntity;
+
+  @OneToMany(() => FollowerEntity, (follower) => follower.playlistId, {
+    cascade: true,
+  })
+  follower: FollowerEntity[];
 }

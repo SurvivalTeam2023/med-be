@@ -2,13 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import AudioController from 'src/modules/audio/audio.controller';
 import AudioService from 'src/modules/audio/audio.services';
-import { Audio } from 'src/modules/audio/entities/audio.entity';
-import AudioPlaylist from 'src/modules/audio/entities/audioPlaylist.entity';
-import { PlaylistModule } from 'src/modules/playlist/playlist.module';
+import { AudioEntity } from './entities/audio.entity';
+import { AudioPlaylistEntity } from '../playlistAudio/entities/audioPlaylist.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Audio, AudioPlaylist])],
+  imports: [TypeOrmModule.forFeature([AudioEntity, AudioPlaylistEntity])],
   controllers: [AudioController],
   providers: [AudioService],
 })
-export class AudioModule {}
+export class AudioModule { }

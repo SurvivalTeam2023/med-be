@@ -1,8 +1,8 @@
-import { Audio } from 'src/modules/audio/entities/audio.entity';
+import { AudioEntity } from 'src/modules/audio/entities/audio.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class File {
+export class FileEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -12,6 +12,6 @@ export class File {
   @Column()
   public key: string;
 
-  @ManyToOne(() => Audio, (audio) => audio.files)
-  audio: Audio
+  @ManyToOne(() => AudioEntity, (audio) => audio.files)
+  audio: AudioEntity
 }

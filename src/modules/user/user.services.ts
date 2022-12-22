@@ -6,7 +6,6 @@ import { catchError, map } from 'rxjs/operators';
 import { KEYCLOAK_ADMIN_ID, KEYCLOAK_ADMIN_PASSWORD, KEYCLOAK_HOST, KEYCLOAK_REALM_ClIENT } from 'src/environments';
 import { UserDTO } from './dto/user.dto';
 import * as moment from 'moment';
-import User from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ErrorHelper } from 'src/helpers/error.helper';
@@ -16,19 +15,20 @@ import { AuthService } from '../auth/auth.services';
 import { RequiredAction } from 'src/common/enums/user-action.enum';
 import { USER_REALM_ROLE } from 'src/common/enums/user-realm-role.enum';
 import { RoleDTO } from '../auth/dto/role.dto';
-import Artist from '../artist/entities/artist.entity';
 import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
 import { USER_STATUS } from 'src/common/enums/user-status.enum';
 import { CreateUserDTO } from './dto/createUser.dto';
+import UserEntity from './entities/user.entity';
+import ArtistEntity from '../artist/entities/artist.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly httpService: HttpService,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Artist)
-    private readonly artistRepository: Repository<Artist>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(ArtistEntity)
+    private readonly artistRepository: Repository<ArtistEntity>,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService
   ) { }
@@ -105,7 +105,7 @@ export class UserService {
       .pipe(catchError(err => of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEY_CLOAK.ROLE_ASSIGN))));
   }
 
-  async findUserByName(username: string, token?: string | null): Promise<User> {
+  async findUserByName(username: string, token?: string | null): Promise<UserEntity> {
     return await lastValueFrom(this.httpService.get(`${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users?username=${username}&exact=true`, {
       headers: {
         'Accept': 'application/json',
@@ -140,7 +140,7 @@ export class UserService {
 
   }
 
-  async createUser(createUserDTO: CreateUserDTO): Promise<User> {
+  async createUser(createUserDTO: CreateUserDTO): Promise<UserEntity> {
     this.validateAge(createUserDTO.dob)
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
@@ -208,7 +208,7 @@ export class UserService {
 
  
 
-  async createArtist(createArtistDTO: CreateArtistDTO): Promise<Artist> {
+  async createArtist(createArtistDTO: CreateArtistDTO): Promise<ArtistEntity> {
     this.validateAge(createArtistDTO.dob)
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
