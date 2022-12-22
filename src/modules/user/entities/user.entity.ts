@@ -22,22 +22,37 @@ export class UserEntity {
   @Column()
   username: string;
 
-  @Column({ name: "first_name" })
+  @Column({
+    nullable: true,
+    name:"first_name"
+  })
   firstName: string;
 
-  @Column({ name: "last_name" })
+  @Column({
+    nullable: true,
+    name:"last_name"
+  })
   lastName: string;
 
-  @Column()
-  gender: GENDER;
+  @Column({
+    nullable: true
+  })
+  gender: GENDER;  
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   city: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  }
+  )
   address: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   dob: Date;
 
   @Column({

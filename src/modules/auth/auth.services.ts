@@ -19,6 +19,7 @@ import { RequiredAction } from 'src/common/enums/user-action.enum';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { UserService } from '../user/user.services';
 import { LoginServerDTO } from './dto/loginServer';
+import { LoginGmailDTO } from './dto/loginGmail.dto';
 
 @Injectable()
 export class AuthService {
@@ -95,6 +96,33 @@ export class AuthService {
       .pipe(catchError(err =>
         of(ErrorHelper.BadGatewayException(err.response.data.errorMessage))
       ));
+  }
+
+  getAccessWithGoogle(loginGmailDTO: LoginGmailDTO): Observable<AxiosResponse<TokenDTO[]>> {
+    const form = new URLSearchParams();
+    form.append('grant_type', "urn:ietf:params:oauth:grant-type:token-exchange");
+    form.append('subject_token_type', "urn:ietf:params:oauth:token-type:access_token");
+    form.append('client_id', `${KEYCLOAK_CLIENT_ID}`);
+    form.append('client_secret', `${KEYCLOAK_CLIENT_SECRECT}`);
+    //YOUR GOOGLE ACCESS TOKEN
+    form.append('subject_token', loginGmailDTO.subject_token);
+    // YOUR KEYCLOAK IDENTITY PROVIDER NAME
+    form.append('subject_issuer', "google");
+    return this.httpService
+      .post(
+        `${KEYCLOAK_HOST}/auth/realms/${KEYCLOAK_REALM_ClIENT}/protocol/openid-connect/token`,
+        form,
+        {
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded',
+          },
+        },
+      )
+      .pipe(map((response) => response.data))
+      .pipe(catchError(err =>
+        of(ErrorHelper.BadRequestException(err))
+      ));
+
   }
   
   async changePassword(name: string): Promise<Observable<AxiosResponse<[]>>> {
