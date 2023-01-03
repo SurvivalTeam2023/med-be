@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import AudioPlaylist from 'src/modules/audio/entities/audioPlaylist.entity';
 import { Repository } from 'typeorm';
-import { Audio } from './entities/audio.entity';
-import { AudioStatus } from './enum/audioStatus.enum';
+import { AudioEntity } from './entities/audio.entity';
+import { AudioStatus } from '../../common/enums/audioStatus.enum';
 import { CreateAudioDTO } from './dto/createAudio.dto';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
@@ -14,15 +13,16 @@ import {
   paginate,
 } from 'nestjs-typeorm-paginate';
 import UpdateAudioDTO from './dto/updateAudio.dto';
+import { AudioPlaylistEntity } from '../playlistAudio/entities/audioPlaylist.entity';
 
 @Injectable()
 export default class AudioService {
   constructor(
-    @InjectRepository(Audio)
-    private audioRepository: Repository<Audio>,
+    @InjectRepository(AudioEntity)
+    private audioRepository: Repository<AudioEntity>,
   ) { }
 
-  async findAudioById(audioId: number): Promise<Audio> {
+  async findAudioById(audioId: number): Promise<AudioEntity> {
     const entity = await this.audioRepository
       .createQueryBuilder('audio')
       .select(['audio', 'audio_playlist.playlist_id'])
@@ -38,7 +38,7 @@ export default class AudioService {
   async findAudios(
     dto: SearchAudioDTO,
     option: IPaginationOptions,
-  ): Promise<Pagination<Audio>> {
+  ): Promise<Pagination<AudioEntity>> {
     const querybuilder = await this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audio_playlist', 'audio_playlist');
@@ -54,11 +54,11 @@ export default class AudioService {
       querybuilder.orWhere('LOWER(audio.name) like :name', {
         name: `%${dto.name}%`,
       });
-    return paginate<Audio>(querybuilder, option);
+    return paginate<AudioEntity>(querybuilder, option);
   }
-  async createAudio(dto: CreateAudioDTO): Promise<Audio> {
+  async createAudio(dto: CreateAudioDTO): Promise<AudioEntity> {
     const audioPlaylists = dto.playlist_id.map((playlistId) => {
-      const audioPlaylist = new AudioPlaylist();
+      const audioPlaylist = new AudioPlaylistEntity();
       audioPlaylist.playlist_id = playlistId;
       return audioPlaylist;
     });
@@ -68,7 +68,7 @@ export default class AudioService {
     });
     return entity;
   }
-  async updateAudio(audioId: number, dto: UpdateAudioDTO): Promise<Audio> {
+  async updateAudio(audioId: number, dto: UpdateAudioDTO): Promise<AudioEntity> {
     const audio = await this.audioRepository.findOneBy({
       id: audioId,
     });
@@ -81,7 +81,7 @@ export default class AudioService {
     return updatedAUdio;
   }
 
-  async deleteAudio(audioId: number): Promise<Audio> {
+  async deleteAudio(audioId: number): Promise<AudioEntity> {
     const entity = await this.audioRepository.findOne({
       where: { id: audioId },
     });

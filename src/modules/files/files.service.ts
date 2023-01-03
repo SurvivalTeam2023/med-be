@@ -4,12 +4,12 @@ import { S3 } from 'aws-sdk';
 import { BUCKET_NAME } from 'src/environments';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
-import { File } from './entities/file.entity';
+import { FileEntity } from './entities/file.entity';
 @Injectable()
 export class FilesService {
   constructor(
-    @InjectRepository(File)
-    private publicFilesRepository: Repository<File>,
+    @InjectRepository(FileEntity)
+    private publicFilesRepository: Repository<FileEntity>,
   ) {}
 
   async uploadPublicFile(dataBuffer: Buffer, filename: string) {

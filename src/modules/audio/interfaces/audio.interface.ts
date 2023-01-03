@@ -1,4 +1,4 @@
-import { AudioStatus } from '../enum/audioStatus.enum';
+import { AudioStatus } from '../../../common/enums/audioStatus.enum';
 
 export interface AudioInterface {
   id: number;

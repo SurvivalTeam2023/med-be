@@ -14,7 +14,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import CreatePlaylistDto from './dto/createPlaylist.dto';
 import SearchPlaylistDto from './dto/searchPlaylistDto';
 import UpdatePlaylistDto from './dto/updatePlaylist.dto';
-import { Playlist } from './entities/playlist.entity';
+import { PlaylistEntity } from './entities/playlist.entity';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import PlaylistService from './playlist.service';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
@@ -28,7 +28,7 @@ export default class PlaylistController {
 
   @Get(':id')
   @Unprotected()
-  async getPlaylistById(@Param('id') id: number): Promise<Playlist> {
+  async getPlaylistById(@Param('id') id: number): Promise<PlaylistEntity> {
     return await this.playlistService.findPlaylistById(id);
   }
 
@@ -38,7 +38,7 @@ export default class PlaylistController {
     @Query() playlist: SearchPlaylistDto,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page:number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit:number = 10,
-  ): Promise<Pagination<Playlist>> {
+  ): Promise<Pagination<PlaylistEntity>> {
     limit = limit > 100 ? 100 : limit;
     return this.playlistService.findPlaylist(
       {
@@ -53,7 +53,7 @@ export default class PlaylistController {
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   async createPlaylist(
     @Body() createPlaylistDto: CreatePlaylistDto,
-  ): Promise<Playlist> {
+  ): Promise<PlaylistEntity> {
     return await this.playlistService.createPlaylist(createPlaylistDto);
   }
 
@@ -62,7 +62,7 @@ export default class PlaylistController {
   async updatePlaylist(
     @Param('id') id: number,
     @Body() updatePlaylistDto: UpdatePlaylistDto,
-  ): Promise<Playlist> {
+  ): Promise<PlaylistEntity> {
     return await this.playlistService.updatePlaylist(id, updatePlaylistDto);
   }
 

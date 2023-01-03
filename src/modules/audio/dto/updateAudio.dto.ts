@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { AudioStatus } from '../enum/audioStatus.enum';
+import { AudioStatus } from '../../../common/enums/audioStatus.enum';
 
 export class UpdateAudioDTO {
   @ApiProperty()

@@ -10,7 +10,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { Audio } from './entities/audio.entity';
+import { AudioEntity } from './entities/audio.entity';
 import AudioService from './audio.services';
 import { CreateAudioDTO } from './dto/createAudio.dto';
 import SearchAudioDto from './dto/searchAudio.dto';
@@ -27,7 +27,7 @@ export default class AudioController {
   constructor(private readonly audioService: AudioService) { }
 
   @Get(':id')
-  async getAudioById(@Param('id') id: number): Promise<Audio> {
+  async getAudioById(@Param('id') id: number): Promise<AudioEntity> {
     return this.audioService.findAudioById(id);
   }
 
@@ -39,7 +39,7 @@ export default class AudioController {
     @Query() audio: SearchAudioDto,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
-  ): Promise<Pagination<Audio>> {
+  ): Promise<Pagination<AudioEntity>> {
     limit = limit > 100 ? 100 : limit;
     return this.audioService.findAudios(
       audio, {
@@ -51,7 +51,7 @@ export default class AudioController {
 
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.SUBSCRIBER] })
   @Post()
-  async createAudio(@Body() createAudioDto: CreateAudioDTO): Promise<Audio> {
+  async createAudio(@Body() createAudioDto: CreateAudioDTO): Promise<AudioEntity> {
     return this.audioService.createAudio(createAudioDto);
   }
 
@@ -60,7 +60,7 @@ export default class AudioController {
   async updateAudio(
     @Param('id') id: number,
     @Body() updateAudioDto: UpdateAudioDto,
-  ): Promise<Audio> {
+  ): Promise<AudioEntity> {
     return await this.audioService.updateAudio(id, updateAudioDto);
   }
 

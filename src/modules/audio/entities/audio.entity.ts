@@ -1,30 +1,47 @@
-import AudioPlaylist from 'src/modules/audio/entities/audioPlaylist.entity';
-import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
-import { AudioStatus } from '../enum/audioStatus.enum';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { AudioStatus } from '../../../common/enums/audioStatus.enum';
 import { BaseEntity } from '../../../common/base/base.entity';
-import { File } from 'src/modules/files/entities/file.entity';
+import { FileEntity } from 'src/modules/files/entities/file.entity';
+import { AudioPlaylistEntity } from '../../playlistAudio/entities/audioPlaylist.entity';
+import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
+import { HistoryEntity } from 'src/modules/history/entities/history.entity';
+import { AccessEntity } from 'src/modules/access/entities/access.entity';
 
 @Entity('audio')
-export class Audio extends BaseEntity {
+export class AudioEntity extends BaseEntity {
   @Column()
   public name: string;
 
   @Column()
   public image_url: string;
 
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: AudioStatus
+  })
   public status: AudioStatus;
 
   @Column()
   public length: string;
 
-  @OneToMany(() => AudioPlaylist, (audio_playlist) => audio_playlist.audio, {
+  @OneToMany(() => AudioPlaylistEntity, (audioPlaylist) => audioPlaylist.audio, {
     cascade: true,
   })
-  public audio_playlist: AudioPlaylist[];
+  public audio_playlist: AudioPlaylistEntity[];
 
-  @OneToMany(() => File, (file) => file.audio, {
+  @OneToMany(() => AudioGenreEntity, (audioGenre) => audioGenre.audio, {
     cascade: true,
   })
-  public files: File[];
+  public audioGenre: AudioGenreEntity[];
+
+  @OneToMany(() => FileEntity, (file) => file.audio, {
+    cascade: true,
+  })
+  public files: FileEntity[];
+
+  @OneToMany(() => HistoryEntity, (history) => history.audioId, { cascade: true })
+  history: HistoryEntity[];
+
+  @OneToMany(() => AccessEntity, (access) => access.audioId, { cascade: true })
+  access: AccessEntity[];
 }
