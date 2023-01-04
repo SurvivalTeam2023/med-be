@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { IPaginationOptions, paginate, Pagination } from "nestjs-typeorm-paginate";
 import { ERROR_MESSAGE } from "src/common/constants/messages.constant";
 import { GenreStatus } from "src/common/enums/genreStatus.enum";
 import { ErrorHelper } from "src/helpers/error.helper";

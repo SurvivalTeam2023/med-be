@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { Unprotected, Roles, RoleGuard } from 'nest-keycloak-connect';
+import { Unprotected, Roles } from 'nest-keycloak-connect';
 import { ApiBearerAuth, ApiOperation, ApiTags, } from '@nestjs/swagger';
 import { LoginDTO } from './dto/login.dto';
 import { AuthService } from './auth.services';

@@ -1,15 +1,12 @@
-import { ApiBearerAuth, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import {
     Body,
     Controller,
-    DefaultValuePipe,
     Delete,
     Get,
     Param,
-    ParseIntPipe,
     Post,
     Put,
-    Query,
     Patch
 } from '@nestjs/common';
 import GenreService from "./genre.services";
