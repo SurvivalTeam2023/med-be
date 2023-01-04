@@ -31,6 +31,8 @@ import { HistoryEntity } from 'src/modules/history/entities/history.entity';
 import { AccessEntity } from 'src/modules/access/entities/access.entity';
 import { QuestionMentalHealthEntity } from 'src/modules/questionMentalHealth/entities/questionMentalHealth.entity';
 import { MentalHealthDegreeEntity } from 'src/modules/mentalHealthDegree/entities/mentalHealthDegree.entity';
+import { MentalHealthLogEntity } from 'src/modules/mentalHealthLog/entities/mentalHealthLog.entity';
+import { MentalHealthDegreeLogEntity } from 'src/modules/mentalHealthDegreeLog/entities/mentalHealthDegreeLog.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -55,7 +57,9 @@ const entities = [
   HistoryEntity,
   AccessEntity,
   QuestionMentalHealthEntity,
-  MentalHealthDegreeEntity
+  MentalHealthDegreeEntity,
+  MentalHealthLogEntity,
+  MentalHealthDegreeLogEntity
 ];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {
