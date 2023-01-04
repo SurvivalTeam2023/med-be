@@ -11,7 +11,7 @@ export class CreatePlaylistDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  image_url: string;
+  imageUrl: string;
 
   @ApiProperty({ enum: PlaylistStatus })
   @IsEnum(PlaylistStatus)
@@ -24,6 +24,6 @@ export class CreatePlaylistDto {
 
   @ApiProperty()
   @IsNumber()
-  user_id: number;
+  userId: number;
 }
 export default CreatePlaylistDto;

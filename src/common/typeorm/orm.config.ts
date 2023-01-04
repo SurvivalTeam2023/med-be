@@ -29,6 +29,8 @@ import { SubcriptionEntity } from 'src/modules/subcription/entities/subcription.
 import { SubcriptionTypeEntity } from 'src/modules/subcriptionType/entities/subcriptionType.entity';
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
 import { AccessEntity } from 'src/modules/access/entities/access.entity';
+import { QuestionMentalHealthEntity } from 'src/modules/questionMentalHealth/entities/questionMentalHealth.entity';
+import { MentalHealthDegreeEntity } from 'src/modules/mentalHealthDegree/entities/mentalHealthDegree.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -51,7 +53,10 @@ const entities = [
   SubcriptionEntity,
   SubcriptionTypeEntity,
   HistoryEntity,
-  AccessEntity];
+  AccessEntity,
+  QuestionMentalHealthEntity,
+  MentalHealthDegreeEntity
+];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {

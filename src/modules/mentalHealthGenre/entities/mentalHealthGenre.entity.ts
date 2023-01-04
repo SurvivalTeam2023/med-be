@@ -5,6 +5,8 @@ import { MentalHealthEntity } from 'src/modules/mentalHealth/entities/mentalHeal
 
 @Entity('mental_health_genre')
 export class MentalHealthGenreEntity extends BaseEntity {
+    
+
 
     @ManyToOne(() => MentalHealthEntity, (mental_health) => mental_health.mentalHealthGenre)
     @JoinColumn({ name: 'mental_health_id' })

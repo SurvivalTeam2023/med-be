@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { AudioStatus } from '../../../common/enums/audioStatus.enum';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { FileEntity } from 'src/modules/files/entities/file.entity';
@@ -6,14 +6,15 @@ import { AudioPlaylistEntity } from '../../playlistAudio/entities/audioPlaylist.
 import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
 import { AccessEntity } from 'src/modules/access/entities/access.entity';
+import ArtistEntity from 'src/modules/artist/entities/artist.entity';
 
 @Entity('audio')
-export class AudioEntity extends BaseEntity {
+export class  AudioEntity extends BaseEntity {
   @Column()
   public name: string;
 
-  @Column()
-  public image_url: string;
+  @Column({name:"image_url"})
+  public imageUrl: string;
 
   @Column({
     type: 'enum',
@@ -24,10 +25,8 @@ export class AudioEntity extends BaseEntity {
   @Column()
   public length: string;
 
-  @OneToMany(() => AudioPlaylistEntity, (audioPlaylist) => audioPlaylist.audio, {
-    cascade: true,
-  })
-  public audio_playlist: AudioPlaylistEntity[];
+  @OneToMany(() => AudioPlaylistEntity, (audioPlaylist) => audioPlaylist.audio,)
+  public audioPlaylist: AudioPlaylistEntity[];
 
   @OneToMany(() => AudioGenreEntity, (audioGenre) => audioGenre.audio, {
     cascade: true,
@@ -44,4 +43,7 @@ export class AudioEntity extends BaseEntity {
 
   @OneToMany(() => AccessEntity, (access) => access.audioId, { cascade: true })
   access: AccessEntity[];
+
+  @ManyToOne(() => ArtistEntity, (artist) => artist.audios)
+  public artist: ArtistEntity
 }

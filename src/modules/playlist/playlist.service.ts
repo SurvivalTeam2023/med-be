@@ -26,7 +26,7 @@ export default class PlaylistService {
       id: playlistId,
     });
     if (!playList)
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAY_LIST.NOT_FOUND);
+      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAYLIST.NOT_FOUND);
     return playList;
   }
   async findPlaylist(
@@ -56,7 +56,7 @@ export default class PlaylistService {
       id: playlistId,
     });
     if (!playlist)
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAY_LIST.NOT_FOUND);
+      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAYLIST.NOT_FOUND);
 
     const updatedPlaylist = await this.playlistRepository.save({
       id: playlist.id,

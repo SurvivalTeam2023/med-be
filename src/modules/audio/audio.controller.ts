@@ -20,21 +20,20 @@ import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
 
-@ApiTags('audio')
+@ApiTags('Audios')
 @Controller('audio')
 @ApiBearerAuth()
 export default class AudioController {
   constructor(private readonly audioService: AudioService) { }
 
   @Get(':id')
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   async getAudioById(@Param('id') id: number): Promise<AudioEntity> {
     return this.audioService.findAudioById(id);
   }
 
   @Get()
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
-  @ApiQuery({ name: 'page', required: false })
-  @ApiQuery({ name: 'limit', required: false })
   async getAudios(
     @Query() audio: SearchAudioDto,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,

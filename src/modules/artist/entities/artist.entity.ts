@@ -1,4 +1,5 @@
 import { USER_STATUS } from 'src/common/enums/user-status.enum';
+import { AudioEntity } from 'src/modules/audio/entities/audio.entity';
 import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
 import { WalletEntity } from 'src/modules/wallet/entities/wallet.entity';
 import {
@@ -16,8 +17,8 @@ export class ArtistEntity {
   @PrimaryColumn()
   id: string;
 
-  @Column()
-  audio_id: string;
+  @OneToMany(() => AudioEntity, (audio) => audio.artist)
+  audios: AudioEntity[];
 
   @Column()
   username: string;

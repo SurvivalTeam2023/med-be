@@ -5,6 +5,7 @@ import { AudioModule } from './modules/audio/audio.module';
 import { PlaylistModule } from './modules/playlist/playlist.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { GenreModule } from './modules/genre/genre.module';
 @Module({
   imports: [
     TypeOrmConfigModule,
@@ -13,8 +14,9 @@ import { AuthModule } from './modules/auth/auth.module';
     PlaylistModule,
     FilesModules,
     AuthModule,
+    GenreModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

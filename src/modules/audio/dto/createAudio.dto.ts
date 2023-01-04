@@ -11,7 +11,7 @@ export class CreateAudioDTO {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  image_url: string;
+  imageUrl: string;
 
   @ApiProperty({ enum: AudioStatus, default: AudioStatus.ACTIVE })
   status: AudioStatus;
@@ -24,6 +24,6 @@ export class CreateAudioDTO {
   @ApiProperty({ type: [Number] })
   @IsOptional()
   @IsArray()
-  playlist_id?: number[];
+  playlistId?: number[];
 }
 export default CreateAudioDTO;

@@ -20,7 +20,7 @@ import PlaylistService from './playlist.service';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
 
-@ApiTags('playlist')
+@ApiTags('Playlists')
 @Controller('playlist')
 @ApiBearerAuth()
 export default class PlaylistController {
