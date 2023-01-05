@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { Unprotected, Roles, RoleGuard } from 'nest-keycloak-connect';
+import { Unprotected, Roles } from 'nest-keycloak-connect';
 import { ApiBearerAuth, ApiOperation, ApiTags, } from '@nestjs/swagger';
 import { LoginDTO } from './dto/login.dto';
 import { AuthService } from './auth.services';
@@ -7,13 +7,13 @@ import { RequestPayload } from 'src/decorator/request-payload.decorator';
 import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
 import { LoginGmailDTO } from './dto/loginGmail.dto';
 
-@ApiTags('Auth Apis')
+@ApiTags('Auth')
 @Controller('auth')
 @ApiBearerAuth()
 export class AuthController {
   constructor(private authService: AuthService) { }
 
-  @Post('getToken')
+  @Post('token')
   @ApiOperation({ summary: 'api login to med-app' })
   @Unprotected()
   async login(@Body() loginDTO: LoginDTO) {
@@ -34,7 +34,7 @@ export class AuthController {
     return this.authService.changePassword(username);
   }
 
-  @Post('getRefreshToken')
+  @Post('refreshToken')
   @ApiOperation({ summary: 'get refresh token' })
   @Unprotected()
   async getRefreshToken(@Body() loginDTO: LoginDTO) {

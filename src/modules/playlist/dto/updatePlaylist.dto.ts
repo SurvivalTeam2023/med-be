@@ -31,6 +31,5 @@ export class UpdatePlaylistDto {
   @IsOptional()
   description: string;
 
-  user_id?: number;
 }
 export default UpdatePlaylistDto;

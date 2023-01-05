@@ -46,7 +46,7 @@ export class AuthService {
         },
       ).pipe(map((response) => response.data))
       .pipe(catchError(err =>
-        of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.KEY_CLOAK.UNAUTHORIZED))
+        of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.KEYCLOAK.UNAUTHORIZED))
       ));
   }
 

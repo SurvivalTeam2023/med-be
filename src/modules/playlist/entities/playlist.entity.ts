@@ -10,8 +10,8 @@ export class PlaylistEntity extends BaseEntity {
   @Column()
   public name: string;
 
-  @Column()
-  public image_url: string;
+  @Column({name:"image_url"})
+  public imageUrl: string;
   @Column({
     type: 'enum',
     enum: PlaylistStatus
@@ -21,12 +21,10 @@ export class PlaylistEntity extends BaseEntity {
   @Column()
   public description: string;
 
-  @Column()
-  public user_id?: number;
+  @Column({name:"user_id"})
+  public userId?: number;
 
-  @OneToMany(() => AudioPlaylistEntity, (audio_playlist) => audio_playlist.playlist, {
-    cascade: true,
-  })
+  @OneToMany(() => AudioPlaylistEntity, (audio_playlist) => audio_playlist.playlist,)
   audio_playlist: AudioPlaylistEntity[];
 
   @ManyToOne(() => PlaylistTypeEntity, (playlistType) => playlistType.playlist)

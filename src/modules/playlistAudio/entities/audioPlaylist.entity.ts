@@ -9,19 +9,23 @@ import {
 } from 'typeorm';
 
 @Entity('audio_playlist')
-export class AudioPlaylistEntity extends BaseEntity{
+export class AudioPlaylistEntity extends BaseEntity {
 
-  @Column()
-  public audio_id!: number;
+  @Column({ name: 'audio_id' })
+  public audioId!: number;
 
-  @Column()
-  public playlist_id!: number;
+  @Column({ name: 'playlist_id' })
+  public playlistId!: number;
 
-  @ManyToOne(() => AudioEntity, (audio) => audio.audio_playlist)
+  @ManyToOne(() => AudioEntity, (audio) => audio.audioPlaylist, {
+    cascade: true,
+  })
   @JoinColumn({ name: 'audio_id' })
   public audio: AudioEntity;
 
-  @ManyToOne(() => PlaylistEntity, (playlist) => playlist.audio_playlist)
+  @ManyToOne(() => PlaylistEntity, (playlist) => playlist.audio_playlist, {
+    cascade: true,
+  })
   @JoinColumn({ name: 'playlist_id' })
   public playlist: PlaylistEntity;
 

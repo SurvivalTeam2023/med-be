@@ -11,7 +11,7 @@ export class UpdateAudioDTO {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  image_url: string;
+  imageUrl: string;
 
   @ApiProperty({ enum: AudioStatus, default: AudioStatus.ACTIVE })
   status: AudioStatus;

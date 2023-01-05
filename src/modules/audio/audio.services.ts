@@ -41,30 +41,27 @@ export default class AudioService {
   ): Promise<Pagination<AudioEntity>> {
     const querybuilder = await this.audioRepository
       .createQueryBuilder('audio')
-      .leftJoinAndSelect('audio.audio_playlist', 'audio_playlist');
+      .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist');
     if (dto.name)
       querybuilder
         .orWhere('LOWER(audio.name) like :name', { name: `%${dto.name}%` })
         .orWhere('audio.status = :audioStatus', { audioStatus: dto.status })
-        .orWhere('audio_playlist.playlist_id = :playlistId', {
-          playlistId: dto.playlist_id,
-        })
+        .orWhere('audio_playlist.playlist_id = :playlistId', { playlistId: dto.playlist_id })
         .orderBy('audio.created_at', 'DESC');
-    if (dto.name)
-      querybuilder.orWhere('LOWER(audio.name) like :name', {
-        name: `%${dto.name}%`,
-      });
     return paginate<AudioEntity>(querybuilder, option);
   }
   async createAudio(dto: CreateAudioDTO): Promise<AudioEntity> {
-    const audioPlaylists = dto.playlist_id.map((playlistId) => {
+    const audioPlaylists = dto.playlistId.map((playlistId) => {
       const audioPlaylist = new AudioPlaylistEntity();
-      audioPlaylist.playlist_id = playlistId;
+      if(!playlistId) {
+        ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAYLIST.NOT_FOUND);
+      }
+      audioPlaylist.playlistId = playlistId;
       return audioPlaylist;
     });
     const entity = this.audioRepository.save({
       ...dto,
-      audio_playlist: audioPlaylists,
+      audioPlaylist: audioPlaylists,
     });
     return entity;
   }
@@ -74,11 +71,11 @@ export default class AudioService {
     });
     if (!audio) ErrorHelper.NotFoundExeption(ERROR_MESSAGE.AUDIO.NOT_FOUND);
 
-    const updatedAUdio = await this.audioRepository.save({
+    const updatedAudio = await this.audioRepository.save({
       id: audio.id,
       ...dto,
     });
-    return updatedAUdio;
+    return updatedAudio;
   }
 
   async deleteAudio(audioId: number): Promise<AudioEntity> {

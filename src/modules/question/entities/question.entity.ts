@@ -4,6 +4,7 @@ import { MentalHealthEntity } from 'src/modules/mentalHealth/entities/mentalHeal
 import { OptionEntity } from 'src/modules/option/entities/option.entity';
 import { QuestionBankQuestionEntity } from 'src/modules/questionBankQuestion/entities/questionBankQuestion.entity';
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
+import { QuestionMentalHealthEntity } from 'src/modules/questionMentalHealth/entities/questionMentalHealth.entity';
 
 @Entity('question')
 export class QuestionEntity extends BaseEntity {
@@ -26,4 +27,7 @@ export class QuestionEntity extends BaseEntity {
 
     @OneToMany(() => ResultEntity, (result) => result.questionId)
     public result: ResultEntity[];
+
+    @OneToMany(() => QuestionMentalHealthEntity, (questionMentalHealth) => questionMentalHealth.question)
+    public questionMentalHealth: ResultEntity[];
 }

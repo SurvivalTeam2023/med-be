@@ -2,10 +2,16 @@ import { BaseEntity } from 'src/common/base/base.entity';
 import { QuestionBankQuestionEntity } from 'src/modules/questionBankQuestion/entities/questionBankQuestion.entity';
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
 import UserEntity from 'src/modules/user/entities/user.entity';
-import { Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('question_bank')
 export class QuestionBankEntity extends BaseEntity {
+
+    @Column({name:"is_finished"})
+    public isFinished:boolean
+
+    @Column({name:"number_of_question"})
+    public numberOfQuestion:number
 
     @OneToMany(() => ResultEntity, (result) => result.questionBankId, {
         cascade: true,
@@ -18,6 +24,6 @@ export class QuestionBankEntity extends BaseEntity {
     public questionBankQuestion: QuestionBankQuestionEntity[];
 
     @ManyToOne(() => UserEntity, (user) => user.questionBank)
-    @JoinColumn({ name: "subcriber_id" })
-    public subcriberId: UserEntity;
+    @JoinColumn({ name: "user_id" })
+    public userId: UserEntity;
 }

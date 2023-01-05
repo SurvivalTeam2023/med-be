@@ -71,7 +71,7 @@ export class UserEntity {
   @CreateDateColumn({ type: 'timestamp' })
   public created_at: Date;
 
-  @OneToMany(() => QuestionBankEntity, (questionBank) => questionBank.subcriberId, {
+  @OneToMany(() => QuestionBankEntity, (questionBank) => questionBank.userId, {
     cascade: true,
   })
   questionBank: QuestionBankEntity[];

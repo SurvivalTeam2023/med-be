@@ -79,7 +79,7 @@ export class UserService {
         },
       }
     ).pipe(map((response) => response.data))
-      .pipe(catchError(err => of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEY_CLOAK.ROLE_ASSIGN))));
+      .pipe(catchError(err => of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEYCLOAK.ROLE_ASSIGN))));
   }
 
   async changeRole(username: string, deleteRole :string, addRole: string): Promise<Observable<AxiosResponse<[]>>> {
@@ -104,7 +104,7 @@ export class UserService {
         },
       }
     ).pipe(map((response) => response.data))
-      .pipe(catchError(err => of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEY_CLOAK.ROLE_ASSIGN))));
+      .pipe(catchError(err => of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEYCLOAK.ROLE_ASSIGN))));
   }
 
   async findUserByName(username: string, token?: string | null): Promise<UserEntity> {
@@ -117,7 +117,7 @@ export class UserService {
       map(response => response.data),
     ).pipe(
       catchError(err =>
-        of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEY_CLOAK.USER_NAME)
+        of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEYCLOAK.USER_NAME)
         ))
     ));
   }
