@@ -13,7 +13,6 @@ import GenreService from "./genre.services";
 import { Roles } from "nest-keycloak-connect";
 import { USER_CLIENT_ROLE } from "src/common/enums/user-client-role.enum";
 import { GenreEntity } from "./entities/genre.entity";
-import { Pagination } from "nestjs-typeorm-paginate";
 import CreateGenreDTO from "./dto/createGenre.dto";
 import UpdateGenreDTO from "./dto/updateGenre.dto";
 import AddGenreToAudioDTO from "./dto/addGenreToAudio.dto";

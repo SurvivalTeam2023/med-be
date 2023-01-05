@@ -1,17 +1,22 @@
 export const ERROR_MESSAGE = {
   PLAYLIST: {
     NOT_FOUND: 'Playlist not found!',
-    DUPLICATE_NME: 'Playlist is duplicate name!',
+    DUPLICATE_NAME: 'Name already exist!',
   },
   AUDIO: {
     NOT_FOUND: 'Audio not found!',
-    DUPLICATE_NAME: 'Audio is duplicate name!',
+    DUPLICATE_NAME: 'Name already exist!',
   },
   GENRE: {
     NOT_FOUND: 'Genre not found!',
     DUPLICATE_NAME: 'Name already exist!',
   },
+  Subcription: {
+    NOT_FOUND: 'Subcription not found!',
+    DUPLICATE_NAME: 'Name already exist!',
+  },
   USER: {
+    NOT_FOUND: 'User not found!',
     UNDER_AGES: 'User must over 12 year old!'
   },
   KEYCLOAK: {
