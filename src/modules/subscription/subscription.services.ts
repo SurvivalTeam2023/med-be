@@ -15,7 +15,7 @@ import UserEntity from '../user/entities/user.entity';
 import UpdateSubcriptionDTO from './dto/updateSubscription.dto';
 import { SubscriptionTypeEntity } from '../subscriptionType/entities/subscriptionType.entity';
 import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
-
+import * as moment from 'moment';
 @Injectable()
 export default class SubscriptionService {
     constructor(
@@ -31,11 +31,11 @@ export default class SubscriptionService {
             .where('subscription.id = :subscriptionId', { subscriptionId })
             .getOne();
         if (!subcription) {
-            ErrorHelper.NotFoundExeption(ERROR_MESSAGE.Subcription.NOT_FOUND);
+            ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
         }
         return subcription;
     }
-    async findSubcriptions(
+    async findSubscriptions(
         dto: SearchSubscriptionDTO,
         option: IPaginationOptions,
     ): Promise<Pagination<SubscriptionEntity>> {
@@ -51,35 +51,47 @@ export default class SubscriptionService {
         return paginate<SubscriptionEntity>(querybuilder, option);
     }
 
-    async createSubcription(dto: CreateSubcriptionDTO): Promise<SubscriptionEntity> {
+    async createSubscription(dto: CreateSubcriptionDTO): Promise<SubscriptionEntity> {
         const user = await this.entityManage.findOne(UserEntity, { where: { id: dto.userId } })
-        const subcriptionType = await this.entityManage.findOne(SubscriptionTypeEntity, { where: { id: dto.subcriptionTypeId } })
-        const entity = await this.subscriptionRepo.save({
+        if (!user) {
+            ErrorHelper.NotFoundExeption(ERROR_MESSAGE.USER.NOT_FOUND);
+        }
+        const subscriptionType = await this.entityManage.findOne(SubscriptionTypeEntity, { where: { id: dto.subcriptionTypeId } })
+        if (!subscriptionType) {
+            ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION_TYPE.NOT_FOUND);
+        }
+        const startDate = moment(dto.startDate)
+        const endDate = moment(dto.endDate)
+        if (endDate.isBefore(startDate)) {
+            ErrorHelper.BadRequestException(ERROR_MESSAGE.SUBSCRIPTION.END_DATE_INVALID);
+        }
+        const subscription = await this.subscriptionRepo.save({
             ...dto,
-            userId: user,
-            subcriptionTypeId: subcriptionType,
+            user: user,
+            subscriptionType: subscriptionType,
+
         });
-        return entity;
+        return subscription;
     }
     async updateSubscription(subscriptionId: number, dto: UpdateSubcriptionDTO): Promise<SubscriptionEntity> {
-        const subcription = await this.findSubscriptionById(subscriptionId)
-        if (!subcription) ErrorHelper.NotFoundExeption(ERROR_MESSAGE.AUDIO.NOT_FOUND);
+        const subscription = await this.findSubscriptionById(subscriptionId)
+        if (!subscription) ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
 
         const updatedSubcription = await this.subscriptionRepo.save({
-            id: subcription.id,
+            id: subscription.id,
             ...dto,
         });
         return updatedSubcription;
     }
 
     async deleteSubscription(subscriptionId: number): Promise<SubscriptionEntity> {
-        const entity = await this.subscriptionRepo.findOne({
+        const subscription = await this.subscriptionRepo.findOne({
             where: { id: subscriptionId },
         });
-        if (entity) {
-            entity.status = SubscriptionStatus.INACTIVE;
-            await this.subscriptionRepo.save(entity);
+        if (subscription) {
+            subscription.status = SubscriptionStatus.INACTIVE;
+            await this.subscriptionRepo.save(subscription);
         }
-        return entity;
+        return subscription;
     }
 }

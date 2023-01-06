@@ -14,12 +14,12 @@ import { FileQuery } from './dto/file-query.dto';
 import { FilesService } from './files.service';
 import { PublicFile } from './dto/publicFile.dto';
 
-@ApiTags('upload')
-@Controller('upload')
+@ApiTags('Files')
+@Controller('files')
 export class FilesController {
   constructor(private readonly fileService: FilesService) {}
 
-  @Post('/files')
+  @Post()
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -33,13 +33,12 @@ export class FilesController {
     return this.fileService.uploadPublicFile(file.buffer, file.originalname);
   }
 
-  @Get('file')
+  @Get('id')
   async getFiles(@Query() query: FileQuery) {
-    console.log('queyr', query);
     return this.fileService.getFile(query.id, query.key);
   }
 
-  @Get('files')
+  @Get()
   async getAllFiles() {
     return this.fileService.getAllFiles();
   }

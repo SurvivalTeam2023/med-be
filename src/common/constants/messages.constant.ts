@@ -11,8 +11,14 @@ export const ERROR_MESSAGE = {
     NOT_FOUND: 'Genre not found!',
     DUPLICATE_NAME: 'Name already exist!',
   },
-  Subcription: {
+  SUBSCRIPTION: {
+    END_DATE_INVALID:"End date must after start date",
     NOT_FOUND: 'Subcription not found!',
+    DUPLICATE_NAME: 'Name already exist!',
+  },
+
+  SUBSCRIPTION_TYPE: {
+    NOT_FOUND: 'Subcriptiontype not found!',
     DUPLICATE_NAME: 'Name already exist!',
   },
   USER: {

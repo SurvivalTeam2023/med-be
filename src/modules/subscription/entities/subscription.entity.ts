@@ -7,9 +7,10 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('subscription')
 export class SubscriptionEntity extends BaseEntity {
+   
     @ManyToOne(() => UserEntity, (user) => user.subcription)
     @JoinColumn({ name: "user_id" })
-    public userId: UserEntity;
+    public user: UserEntity;
 
     @Column({
         type: 'enum',
@@ -19,7 +20,7 @@ export class SubscriptionEntity extends BaseEntity {
 
     @ManyToOne(() => SubscriptionTypeEntity, (subscriptionType) => subscriptionType.subscription)
     @JoinColumn({ name: "subscription_type_id" })
-    public subscriptionTypeId: SubscriptionTypeEntity;
+    public subscriptionType: SubscriptionTypeEntity;
 
     @Column({ name: "start_date", type: 'timestamp' })
     startDate: Date

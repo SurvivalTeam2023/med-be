@@ -1,4 +1,4 @@
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiQuery, ApiTags } from "@nestjs/swagger";
 import {
     Body,
     Controller,
@@ -12,7 +12,7 @@ import {
     ParseIntPipe
 } from '@nestjs/common';
 import { Roles } from "nest-keycloak-connect";
-import { USER_CLIENT_ROLE } from "src/common/enums/user-client-role.enum";
+import { USER_CLIENT_ROLE } from "src/common/enums/userClientRole.enum";
 import SubscriptionService from "./subscription.services";
 import { SubscriptionEntity } from "./entities/subscription.entity";
 import SearchSubscriptionDTO from "./dto/searchSubscription.dto";
@@ -35,13 +35,21 @@ export default class SubscriptionController {
 
     @Get()
     @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+    @ApiQuery({
+        name: "page",
+        required: false
+      })
+      @ApiQuery({
+        name: "limit",
+        required: false
+      })
     async getSubcriptions(
         @Query() subscription: SearchSubscriptionDTO,
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
         @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
     ): Promise<Pagination<SubscriptionEntity>> {
         limit = limit > 100 ? 100 : limit;
-        return this.subscriptionService.findSubcriptions(
+        return this.subscriptionService.findSubscriptions(
             subscription, {
             page,
             limit,
@@ -51,8 +59,8 @@ export default class SubscriptionController {
 
     @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
     @Post()
-    async createSubscription(@Body() dto: CreaxteSubscriptionDTO): Promise<SubscriptionEntity> {
-        return this.subscriptionService.createSubcription(dto);
+    async createSubscription(@Body() dto: CreateSubscriptionDTO): Promise<SubscriptionEntity> {
+        return this.subscriptionService.createSubscription(dto);
     }
 
 

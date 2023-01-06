@@ -12,8 +12,8 @@ import { ErrorHelper } from 'src/helpers/error.helper';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { LoginDTO } from '../auth/dto/login.dto';
 import { AuthService } from '../auth/auth.services';
-import { RequiredAction } from 'src/common/enums/user-action.enum';
-import { USER_REALM_ROLE } from 'src/common/enums/user-realm-role.enum';
+import { RequiredAction } from 'src/common/enums/userAction.enum';
+import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
 import { RoleDTO } from '../auth/dto/role.dto';
 import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
 import { USER_STATUS } from 'src/common/enums/user-status.enum';
@@ -21,6 +21,7 @@ import { CreateUserDTO } from './dto/createUser.dto';
 import UserEntity from './entities/user.entity';
 import ArtistEntity from '../artist/entities/artist.entity';
 import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
+import { TokenDTO } from '../auth/dto/token.dto';
 
 @Injectable()
 export class UserService {
@@ -82,22 +83,23 @@ export class UserService {
       .pipe(catchError(err => of(ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEYCLOAK.ROLE_ASSIGN))));
   }
 
-  async changeRole(username: string, deleteRole :string, addRole: string): Promise<Observable<AxiosResponse<[]>>> {
+  async changeRole(username: string, deleteRole: string, addRole: string): Promise<Observable<AxiosResponse<[]>>> {
     const response = await lastValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
     const user = await this.findUserByName(username, token)
     const role = await this.findRoleByName(deleteRole, token)
     lastValueFrom(await this.assignRole(username, addRole))
     return this.httpService.delete(`${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/role-mappings/realm`,
-    { data:  [{
-        "id": `${role['id']}`,
-        "name": `${role['name']}`,
-        "description": "",
-        "composite": false,
-        "clientRole": false,
-        "containerId": `${role['containerId']}`
-      }],
-      
+      {
+        data: [{
+          "id": `${role['id']}`,
+          "name": `${role['name']}`,
+          "description": "",
+          "composite": false,
+          "clientRole": false,
+          "containerId": `${role['containerId']}`
+        }],
+
         headers: {
           'Accept': 'application/json',
           'Authorization': token
@@ -143,7 +145,7 @@ export class UserService {
   }
 
   async createUser(createUserDTO: CreateUserDTO): Promise<UserEntity> {
-    if(createUserDTO.dob){
+    if (createUserDTO.dob) {
       this.validateAge(createUserDTO.dob)
     }
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
@@ -198,22 +200,16 @@ export class UserService {
     await firstValueFrom(await this.authService.verifyEmail(createUserDTO.username))
     const userInfor = await this.userRepository.save({
       id: user[0].id,
-      username: createUserDTO.username,
-      firstName: createUserDTO?.firstName,
-      lastName: createUserDTO?.lastName,
-      gender: createUserDTO?.gender,
-      city: createUserDTO?.city,
-      address: createUserDTO?.address,
       status: USER_STATUS.ACTIVE,
-      dob: createUserDTO?.dob,
+      ...createUserDTO
     })
     return userInfor
   }
 
- 
+
 
   async createArtist(createArtistDTO: CreateArtistDTO): Promise<ArtistEntity> {
-    if(!createArtistDTO.dob){
+    if (!createArtistDTO.dob) {
       this.validateAge(createArtistDTO.dob)
     }
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
@@ -269,11 +265,8 @@ export class UserService {
     await firstValueFrom(await this.authService.verifyEmail(createArtistDTO.username))
     const artistInfor = await this.artistRepository.save({
       id: artist[0].id,
-      username: createArtistDTO.username,
-      bio: createArtistDTO?.firstName,
-      artist_name: createArtistDTO?.lastName,
       status: USER_STATUS.ACTIVE,
-      dob: createArtistDTO?.dob,
+      ...createArtistDTO
     })
     return artistInfor
   }
@@ -287,16 +280,16 @@ export class UserService {
     }
   }
 
-  async signInGoogle(loginGmailDTO: LoginGmailDTO): Promise<any> {
+  async signInGoogle(loginGmailDTO: LoginGmailDTO): Promise<AxiosResponse<TokenDTO[]>> {
     const access_token = await firstValueFrom(this.authService.getAccessWithGoogle(loginGmailDTO))
     const response = await firstValueFrom(this.authService.getAcessToken(this.getAdminAccount()))
     let token = `Bearer ${response['access_token']}`
     const user = await this.findUserByName(loginGmailDTO.username, token)
     const userId = user[0].id
-    const existedUser = await this.entityManage.findOne(UserEntity, {where: {id: userId}})
-    if(!existedUser){
-      const newUser:DeepPartial<UserEntity> = {id: userId ,firstName: user[0].firstName, username: loginGmailDTO.username}
-      const createdUser = await this.entityManage.save(this.entityManage.create(UserEntity, newUser))
+    const existedUser = await this.entityManage.findOne(UserEntity, { where: { id: userId } })
+    if (!existedUser) {
+      const newUser: DeepPartial<UserEntity> = { id: userId, firstName: user[0].firstName, username: loginGmailDTO.username }
+      await this.entityManage.save(this.entityManage.create(UserEntity, newUser))
     }
     return access_token
   }

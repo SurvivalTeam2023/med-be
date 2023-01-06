@@ -10,9 +10,10 @@ export class SubscriptionTypeEntity extends BaseEntity {
   @Column()
   public desc: string;
 
-  @OneToMany(() => SubscriptionEntity, (subscription) => subscription.subscriptionTypeId, {
-    cascade: true,
-  })
+  @Column()
+  public status: string;
+
+  @OneToMany(() => SubscriptionEntity, (subscription) => subscription.subscriptionType,)
   public subscription: SubscriptionEntity[];
 }
 

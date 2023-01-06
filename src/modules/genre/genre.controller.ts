@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import GenreService from "./genre.services";
 import { Roles } from "nest-keycloak-connect";
-import { USER_CLIENT_ROLE } from "src/common/enums/user-client-role.enum";
+import { USER_CLIENT_ROLE } from "src/common/enums/userClientRole.enum";
 import { GenreEntity } from "./entities/genre.entity";
 import CreateGenreDTO from "./dto/createGenre.dto";
 import UpdateGenreDTO from "./dto/updateGenre.dto";

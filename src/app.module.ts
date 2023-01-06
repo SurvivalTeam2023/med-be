@@ -6,6 +6,8 @@ import { PlaylistModule } from './modules/playlist/playlist.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { GenreModule } from './modules/genre/genre.module';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
+import { SubscriptionTypeModule } from './modules/subscriptionType/subscriptionType.module';
 @Module({
   imports: [
     TypeOrmConfigModule,
@@ -15,6 +17,8 @@ import { GenreModule } from './modules/genre/genre.module';
     FilesModules,
     AuthModule,
     GenreModule,
+    SubscriptionModule,
+    SubscriptionTypeModule
   ],
   controllers: [],
   providers: [],
