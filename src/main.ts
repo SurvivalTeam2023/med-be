@@ -7,6 +7,7 @@ import { SERVER_PORT } from './environments';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   await appConfig(app);
   await swaggerConfig(app);
   await awsConfig();
