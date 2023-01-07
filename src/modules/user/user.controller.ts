@@ -22,7 +22,7 @@ export class UserController {
     return this.userService.getUserList(token);
   }
 
-  @Unprotected()
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @ApiOperation({ summary: 'create user' })
   @ApiBody({ type: CreateUserDTO })
   @Post('user')
@@ -30,7 +30,7 @@ export class UserController {
     return this.userService.createUser(createUserDTO);
   }
 
-  @Unprotected()
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @ApiOperation({ summary: 'create artist' })
   @ApiBody({ type: CreateArtistDTO })
   @Post('artist')
@@ -38,7 +38,7 @@ export class UserController {
     return this.userService.createArtist(createArtistDTO);
   }
 
-  @Roles({ roles: [USER_REALM_ROLE.APP_USER] })
+  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
   @ApiOperation({ summary: 'sign in with Google' })
   @ApiBody({ type: LoginGmailDTO })
   @Post('google')
@@ -46,7 +46,7 @@ export class UserController {
     return this.userService.signInGoogle(LoginGmailDTO);
   }
 
-  @Unprotected()
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @ApiOperation({ summary: 'change user role to artist' })
   @ApiQuery({ name: 'role', enum: USER_REALM_ROLE })
   @Put(':username/role')

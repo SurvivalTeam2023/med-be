@@ -57,9 +57,7 @@ export class AuthController {
 
   @Put()
   @ApiOperation({ summary: 'forgot password' })
-  @Roles({
-    roles: [USER_CLIENT_ROLE.ADMIN]
-  })
+  @Unprotected()
   async forgetPassword(@Param('username') username: string, @RequestPayload() token: string) {
     return this.authService.forgetPassword(username, token);
   }
