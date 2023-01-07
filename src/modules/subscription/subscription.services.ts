@@ -63,7 +63,7 @@ export default class SubscriptionService {
         const startDate = moment(dto.startDate)
         const endDate = moment(dto.endDate)
         if (endDate.isBefore(startDate)) {
-            ErrorHelper.BadRequestException(ERROR_MESSAGE.SUBSCRIPTION.END_DATE_INVALID);
+            ErrorHelper.BadRequestException(ERROR_MESSAGE.SUBSCRIPTION.INVALID_DATE);
         }
         const subscription = await this.subscriptionRepo.save({
             ...dto,
@@ -76,7 +76,9 @@ export default class SubscriptionService {
     async updateSubscription(subscriptionId: number, dto: UpdateSubcriptionDTO): Promise<SubscriptionEntity> {
         const subscription = await this.findSubscriptionById(subscriptionId)
         if (!subscription) ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
-
+        const startDate = moment(dto.startDate)
+        const endDate = moment(dto.endDate)
+        if (endDate.isBefore(startDate)) ErrorHelper.BadRequestException(ERROR_MESSAGE.SUBSCRIPTION.INVALID_DATE);
         const updatedSubcription = await this.subscriptionRepo.save({
             id: subscription.id,
             ...dto,

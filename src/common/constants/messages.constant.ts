@@ -12,7 +12,7 @@ export const ERROR_MESSAGE = {
     DUPLICATE_NAME: 'Name already exist!',
   },
   SUBSCRIPTION: {
-    END_DATE_INVALID:"End date must after start date",
+    INVALID_DATE:"End date must after start date",
     NOT_FOUND: 'Subcription not found!',
     DUPLICATE_NAME: 'Name already exist!',
   },
