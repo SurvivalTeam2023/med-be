@@ -18,7 +18,6 @@ import { ErrorHelper } from 'src/helpers/error.helper';
 import { RequiredAction } from 'src/common/enums/userAction.enum';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { UserService } from '../user/user.services';
-import { LoginServerDTO } from './dto/loginServer';
 import { LoginGmailDTO } from './dto/loginGmail.dto';
 
 @Injectable()
