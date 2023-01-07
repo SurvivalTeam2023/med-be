@@ -21,6 +21,7 @@ export const ERROR_MESSAGE = {
     NOT_FOUND: 'Subcriptiontype not found!',
     DUPLICATE_NAME: 'Name already exist!',
   },
+
   USER: {
     NOT_FOUND: 'User not found!',
     UNDER_AGES: 'User must over 12 year old!'
