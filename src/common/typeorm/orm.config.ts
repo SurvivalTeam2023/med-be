@@ -25,14 +25,14 @@ import { QuestionBankEntity } from 'src/modules/questionBank/entities/questionBa
 import { QuestionBankQuestionEntity } from 'src/modules/questionBankQuestion/entities/questionBankQuestion.entity';
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
 import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
-import { SubcriptionEntity } from 'src/modules/subcription/entities/subcription.entity';
-import { SubcriptionTypeEntity } from 'src/modules/subcriptionType/entities/subcriptionType.entity';
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
 import { AccessEntity } from 'src/modules/access/entities/access.entity';
 import { QuestionMentalHealthEntity } from 'src/modules/questionMentalHealth/entities/questionMentalHealth.entity';
 import { MentalHealthDegreeEntity } from 'src/modules/mentalHealthDegree/entities/mentalHealthDegree.entity';
 import { MentalHealthLogEntity } from 'src/modules/mentalHealthLog/entities/mentalHealthLog.entity';
 import { MentalHealthDegreeLogEntity } from 'src/modules/mentalHealthDegreeLog/entities/mentalHealthDegreeLog.entity';
+import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
+import { SubscriptionTypeEntity } from 'src/modules/subscriptionType/entities/subscriptionType.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -52,14 +52,14 @@ const entities = [
   QuestionBankQuestionEntity,
   ResultEntity,
   FollowerEntity,
-  SubcriptionEntity,
-  SubcriptionTypeEntity,
   HistoryEntity,
   AccessEntity,
   QuestionMentalHealthEntity,
   MentalHealthDegreeEntity,
   MentalHealthLogEntity,
-  MentalHealthDegreeLogEntity
+  MentalHealthDegreeLogEntity,
+  SubscriptionEntity,
+  SubscriptionTypeEntity
 ];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {

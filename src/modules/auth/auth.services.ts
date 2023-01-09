@@ -15,10 +15,9 @@ import {
 import { LoginDTO } from './dto/login.dto';
 import { TokenDTO } from './dto/token.dto';
 import { ErrorHelper } from 'src/helpers/error.helper';
-import { RequiredAction } from 'src/common/enums/user-action.enum';
+import { RequiredAction } from 'src/common/enums/userAction.enum';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { UserService } from '../user/user.services';
-import { LoginServerDTO } from './dto/loginServer';
 import { LoginGmailDTO } from './dto/loginGmail.dto';
 
 @Injectable()
@@ -124,16 +123,16 @@ export class AuthService {
       ));
 
   }
-  
+
   async changePassword(name: string): Promise<Observable<AxiosResponse<[]>>> {
     let adminAccount: LoginDTO = {
       username: KEYCLOAK_ADMIN_ID,
       password: KEYCLOAK_ADMIN_PASSWORD
     }
-    const response =  await firstValueFrom(this.getAcessToken(adminAccount))
+    const response = await firstValueFrom(this.getAcessToken(adminAccount))
     let token = `Bearer ${response['access_token']}`
-    const user =  await this.userService.findUserByName(name, token)
-    const userId= user[0].id
+    const user = await this.userService.findUserByName(name, token)
+    const userId = user[0].id
     return this.httpService
       .put(
         `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/execute-actions-email`,

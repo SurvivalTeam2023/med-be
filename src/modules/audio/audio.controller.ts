@@ -18,7 +18,7 @@ import UpdateAudioDto from './dto/updateAudio.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'nest-keycloak-connect';
-import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
+import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 
 @ApiTags('Audios')
 @Controller('audio')
@@ -34,6 +34,14 @@ export default class AudioController {
 
   @Get()
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @ApiQuery({
+    name: "page",
+    required: false
+  })
+  @ApiQuery({
+    name: "limit",
+    required: false
+  })
   async getAudios(
     @Query() audio: SearchAudioDto,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,

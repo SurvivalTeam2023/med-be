@@ -20,7 +20,7 @@ const KEYCLOAK_CLIENT_SECRECT: string =
 const KEYCLOAK_ADMIN_ID: string =
   process.env.KEYCLOAK_ADMIN_ID || 'tam';
 const KEYCLOAK_ADMIN_PASSWORD: string =
-  process.env.KEYCLOAK_ADMIN_PASSWORD || 'abc@123';
+  process.env.KEYCLOAK_ADMIN_PASSWORD || '123456';
 
 
 //aws config

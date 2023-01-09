@@ -1,9 +1,9 @@
-import { GENDER } from 'src/common/enums/user-gender.enum';
+import { GENDER } from 'src/common/enums/userGender.enum';
 import { USER_STATUS } from 'src/common/enums/user-status.enum';
 import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
 import { QuestionBankEntity } from 'src/modules/questionBank/entities/questionBank.entity';
-import { SubcriptionEntity } from 'src/modules/subcription/entities/subcription.entity';
+import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
 import {
   Column,
   CreateDateColumn,
@@ -24,20 +24,20 @@ export class UserEntity {
 
   @Column({
     nullable: true,
-    name:"first_name"
+    name: "first_name"
   })
   firstName: string;
 
   @Column({
     nullable: true,
-    name:"last_name"
+    name: "last_name"
   })
   lastName: string;
 
   @Column({
     nullable: true
   })
-  gender: GENDER;  
+  gender: GENDER;
 
   @Column({
     nullable: true
@@ -81,10 +81,10 @@ export class UserEntity {
   })
   follower: FollowerEntity[];
 
-  @OneToMany(() => SubcriptionEntity, (subcription) => subcription.userId, {
+  @OneToMany(() => SubscriptionEntity, (subcription) => subcription.user, {
     cascade: true,
   })
-  subcription: SubcriptionEntity[];
+  subcription: SubscriptionEntity[];
 
   @OneToMany(() => HistoryEntity, (history) => history.userId, {
     cascade: true,

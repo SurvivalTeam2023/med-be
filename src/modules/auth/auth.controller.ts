@@ -3,8 +3,8 @@ import { Unprotected, Roles } from 'nest-keycloak-connect';
 import { ApiBearerAuth, ApiOperation, ApiTags, } from '@nestjs/swagger';
 import { LoginDTO } from './dto/login.dto';
 import { AuthService } from './auth.services';
-import { RequestPayload } from 'src/decorator/request-payload.decorator';
-import { USER_CLIENT_ROLE } from 'src/common/enums/user-client-role.enum';
+import { RequestPayload } from 'src/decorator/requestPayload.decorator';
+import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import { LoginGmailDTO } from './dto/loginGmail.dto';
 
 @ApiTags('Auth')
@@ -26,7 +26,7 @@ export class AuthController {
   async getAccessWithGoogle(@Body() loginGmailDTO: LoginGmailDTO) {
     return this.authService.getAccessWithGoogle(loginGmailDTO);
   }
-  
+
   @Get('change-password/:username')
   @ApiOperation({ summary: 'change password for user' })
   @Unprotected()
@@ -40,7 +40,7 @@ export class AuthController {
   async getRefreshToken(@Body() loginDTO: LoginDTO) {
     return this.authService.getRefreshToken(loginDTO);
   }
-  
+
   @Post(':username')
   @ApiOperation({ summary: 'api log out' })
   @Unprotected()
@@ -57,9 +57,7 @@ export class AuthController {
 
   @Put()
   @ApiOperation({ summary: 'forgot password' })
-  @Roles({
-    roles: [USER_CLIENT_ROLE.ADMIN]
-  })
+  @Unprotected()
   async forgetPassword(@Param('username') username: string, @RequestPayload() token: string) {
     return this.authService.forgetPassword(username, token);
   }
