@@ -22,7 +22,7 @@ export class UserController {
     return this.userService.getUserList(token);
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
   @ApiOperation({ summary: 'create user' })
   @ApiBody({ type: CreateUserDTO })
   @Post('user')
@@ -30,7 +30,7 @@ export class UserController {
     return this.userService.createUser(createUserDTO);
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
   @ApiOperation({ summary: 'create artist' })
   @ApiBody({ type: CreateArtistDTO })
   @Post('artist')
