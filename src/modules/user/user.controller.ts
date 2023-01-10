@@ -22,6 +22,9 @@ export class UserController {
     return this.userService.getUserList(token);
   }
 
+
+
+
   @Get('userName')
   @ApiOperation({ summary: 'find user by name' })
   @Roles({ roles: [USER_CLIENT_ROLE.USER] })
@@ -29,7 +32,7 @@ export class UserController {
     return this.userService.findUserByName(username, token);
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
   @ApiOperation({ summary: 'create user' })
   @ApiBody({ type: CreateUserDTO })
   @Post('user')
@@ -37,7 +40,7 @@ export class UserController {
     return this.userService.createUser(createUserDTO);
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
   @ApiOperation({ summary: 'create artist' })
   @ApiBody({ type: CreateArtistDTO })
   @Post('artist')
