@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { Roles } from 'nest-keycloak-connect';
+import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateUserDTO } from './dto/createUser.dto';
 import { UserService } from './user.services';
@@ -32,7 +32,7 @@ export class UserController {
     return this.userService.findUserByName(username, token);
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
+  @Unprotected()
   @ApiOperation({ summary: 'create user' })
   @ApiBody({ type: CreateUserDTO })
   @Post('user')
@@ -40,7 +40,7 @@ export class UserController {
     return this.userService.createUser(createUserDTO);
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
+  @Unprotected()
   @ApiOperation({ summary: 'create artist' })
   @ApiBody({ type: CreateArtistDTO })
   @Post('artist')
