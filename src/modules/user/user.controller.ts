@@ -22,6 +22,13 @@ export class UserController {
     return this.userService.getUserList(token);
   }
 
+  @Get('userName')
+  @ApiOperation({ summary: 'find user by name' })
+  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
+  findUserByName(@Param('username') username: string, @RequestPayload() token: string, ) {
+    return this.userService.findUserByName(username, token);
+  }
+
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @ApiOperation({ summary: 'create user' })
   @ApiBody({ type: CreateUserDTO })
