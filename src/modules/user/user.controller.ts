@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { Roles } from 'nest-keycloak-connect';
+import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateUserDTO } from './dto/createUser.dto';
 import { UserService } from './user.services';
@@ -22,7 +22,17 @@ export class UserController {
     return this.userService.getUserList(token);
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+
+
+
+  @Get('userName')
+  @ApiOperation({ summary: 'find user by name' })
+  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
+  findUserByName(@Param('username') username: string, @RequestPayload() token: string, ) {
+    return this.userService.findUserByName(username, token);
+  }
+
+  @Unprotected()
   @ApiOperation({ summary: 'create user' })
   @ApiBody({ type: CreateUserDTO })
   @Post('user')
@@ -30,7 +40,7 @@ export class UserController {
     return this.userService.createUser(createUserDTO);
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Unprotected()
   @ApiOperation({ summary: 'create artist' })
   @ApiBody({ type: CreateArtistDTO })
   @Post('artist')
@@ -38,7 +48,7 @@ export class UserController {
     return this.userService.createArtist(createArtistDTO);
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
+  @Unprotected()
   @ApiOperation({ summary: 'sign in with Google' })
   @ApiBody({ type: LoginGmailDTO })
   @Post('google')

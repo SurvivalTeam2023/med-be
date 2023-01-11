@@ -10,6 +10,7 @@ import {
   Put,
   Patch,
 } from '@nestjs/common';
+
 import GenreService from './genre.services';
 import { Roles } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
@@ -30,11 +31,13 @@ export default class GenreController {
     return this.genreService.findGenreById(id);
   }
 
+
   @Get()
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   async getGenres(): Promise<GenreEntity[]> {
     return this.genreService.findGenres();
   }
+
 
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @Post()
