@@ -48,7 +48,7 @@ export class UserController {
     return this.userService.createArtist(createArtistDTO);
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
+  @Unprotected()
   @ApiOperation({ summary: 'sign in with Google' })
   @ApiBody({ type: LoginGmailDTO })
   @Post('google')
