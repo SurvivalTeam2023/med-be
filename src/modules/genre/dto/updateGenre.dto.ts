@@ -14,6 +14,11 @@ export class UpdateGenreDTO {
   @IsString()
   desc: string;
 
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  image: string;
+
   @ApiProperty({ enum: GenreStatus, default: GenreStatus.ACTIVE })
   status: GenreStatus;
 }
