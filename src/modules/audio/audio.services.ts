@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -20,7 +21,7 @@ export default class AudioService {
   constructor(
     @InjectRepository(AudioEntity)
     private audioRepository: Repository<AudioEntity>,
-  ) { }
+  ) {}
 
   async findAudioById(audioId: number): Promise<AudioEntity> {
     const entity = await this.audioRepository
@@ -46,14 +47,16 @@ export default class AudioService {
       querybuilder
         .orWhere('LOWER(audio.name) like :name', { name: `%${dto.name}%` })
         .orWhere('audio.status = :audioStatus', { audioStatus: dto.status })
-        .orWhere('audio_playlist.playlist_id = :playlistId', { playlistId: dto.playlist_id })
+        .orWhere('audio_playlist.playlist_id = :playlistId', {
+          playlistId: dto.playlist_id,
+        })
         .orderBy('audio.created_at', 'DESC');
     return paginate<AudioEntity>(querybuilder, option);
   }
   async createAudio(dto: CreateAudioDTO): Promise<AudioEntity> {
     const audioPlaylists = dto.playlistId.map((playlistId) => {
       const audioPlaylist = new AudioPlaylistEntity();
-      if(!playlistId) {
+      if (!playlistId) {
         ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAYLIST.NOT_FOUND);
       }
       audioPlaylist.playlistId = playlistId;
@@ -65,7 +68,10 @@ export default class AudioService {
     });
     return entity;
   }
-  async updateAudio(audioId: number, dto: UpdateAudioDTO): Promise<AudioEntity> {
+  async updateAudio(
+    audioId: number,
+    dto: UpdateAudioDTO,
+  ): Promise<AudioEntity> {
     const audio = await this.audioRepository.findOneBy({
       id: audioId,
     });

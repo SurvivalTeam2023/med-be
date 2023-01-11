@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Column, Entity, JoinColumn, ManyToOne, } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { AudioEntity } from 'src/modules/audio/entities/audio.entity';

@@ -2,15 +2,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateSubscriptionTypeDTO {
+export class SearchFavoriteDTO {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  name: string;
+  userId: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  desc: string;
+  genreId: string;
 }
-export default CreateSubscriptionTypeDTO;

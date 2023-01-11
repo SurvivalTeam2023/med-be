@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { AudioEntity } from 'src/modules/audio/entities/audio.entity';
@@ -33,6 +34,7 @@ import { MentalHealthLogEntity } from 'src/modules/mentalHealthLog/entities/ment
 import { MentalHealthDegreeLogEntity } from 'src/modules/mentalHealthDegreeLog/entities/mentalHealthDegreeLog.entity';
 import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
 import { SubscriptionTypeEntity } from 'src/modules/subscriptionType/entities/subscriptionType.entity';
+import { FavoriteEntity } from 'src/modules/favorite/entities/favorite.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -59,7 +61,8 @@ const entities = [
   MentalHealthLogEntity,
   MentalHealthDegreeLogEntity,
   SubscriptionEntity,
-  SubscriptionTypeEntity
+  SubscriptionTypeEntity,
+  FavoriteEntity,
 ];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {

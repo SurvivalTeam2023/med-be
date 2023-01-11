@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { BaseEntity } from 'src/common/base/base.entity';
 import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
 import { AccessEntity } from 'src/modules/access/entities/access.entity';
@@ -7,28 +8,31 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('subscription')
 export class SubscriptionEntity extends BaseEntity {
-   
-    @ManyToOne(() => UserEntity, (user) => user.subcription)
-    @JoinColumn({ name: "user_id" })
-    public user: UserEntity;
+  @ManyToOne(() => UserEntity, (user) => user.subcription)
+  @JoinColumn({ name: 'user_id' })
+  public user: UserEntity;
 
-    @Column({
-        type: 'enum',
-        enum: SubscriptionStatus
-    })
-    public status: SubscriptionStatus;
+  @Column({
+    type: 'enum',
+    enum: SubscriptionStatus,
+  })
+  public status: SubscriptionStatus;
 
-    @ManyToOne(() => SubscriptionTypeEntity, (subscriptionType) => subscriptionType.subscription)
-    @JoinColumn({ name: "subscription_type_id" })
-    public subscriptionType: SubscriptionTypeEntity;
+  @ManyToOne(
+    () => SubscriptionTypeEntity,
+    (subscriptionType) => subscriptionType.subscription,
+  )
+  @JoinColumn({ name: 'subscription_type_id' })
+  public subscriptionType: SubscriptionTypeEntity;
 
-    @Column({ name: "start_date", type: 'timestamp' })
-    startDate: Date
+  @Column({ name: 'start_date', type: 'timestamp' })
+  startDate: Date;
 
-    @Column({ name: "end_date", type: 'timestamp' })
-    endDate: Date
+  @Column({ name: 'end_date', type: 'timestamp' })
+  endDate: Date;
 
-    @OneToMany(() => AccessEntity, (access) => access.subscriptionId, { cascade: true })
-    access: AccessEntity[];
-
+  @OneToMany(() => AccessEntity, (access) => access.subscriptionId, {
+    cascade: true,
+  })
+  access: AccessEntity[];
 }

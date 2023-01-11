@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-inferrable-types */
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -24,23 +27,23 @@ import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 @Controller('playlist')
 @ApiBearerAuth()
 export default class PlaylistController {
-  constructor(private readonly playlistService: PlaylistService) { }
+  constructor(private readonly playlistService: PlaylistService) {}
 
   @Get(':id')
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST,USER_CLIENT_ROLE.ADMIN] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.ADMIN] })
   async getPlaylistById(@Param('id') id: number): Promise<PlaylistEntity> {
     return await this.playlistService.findPlaylistById(id);
   }
 
   @Get()
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST,USER_CLIENT_ROLE.ADMIN] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.ADMIN] })
   @ApiQuery({
-    name: "page",
-    required: false
+    name: 'page',
+    required: false,
   })
   @ApiQuery({
-    name: "limit",
-    required: false
+    name: 'limit',
+    required: false,
   })
   async getPlaylists(
     @Query() playlist: SearchPlaylistDto,

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { MentalHealthEntity } from 'src/modules/mentalHealth/entities/mentalHealth.entity';
@@ -8,26 +9,33 @@ import { QuestionMentalHealthEntity } from 'src/modules/questionMentalHealth/ent
 
 @Entity('question')
 export class QuestionEntity extends BaseEntity {
-    @Column()
-    public question: string;
+  @Column()
+  public question: string;
 
-    @OneToMany(() => OptionEntity, (option) => option.question, {
-        cascade: true,
-    })
-    public answer: OptionEntity[];
+  @OneToMany(() => OptionEntity, (option) => option.question, {
+    cascade: true,
+  })
+  public answer: OptionEntity[];
 
-    @OneToMany(() => QuestionBankQuestionEntity, (questionBankQuestion) => questionBankQuestion.question, {
-        cascade: true,
-    })
-    public questionBankQuestion: QuestionBankQuestionEntity[];
+  @OneToMany(
+    () => QuestionBankQuestionEntity,
+    (questionBankQuestion) => questionBankQuestion.question,
+    {
+      cascade: true,
+    },
+  )
+  public questionBankQuestion: QuestionBankQuestionEntity[];
 
-    @OneToOne(() => MentalHealthEntity)
-    @JoinColumn({ name: "mental_health_id" })
-    public mentalHealth: MentalHealthEntity
+  @OneToOne(() => MentalHealthEntity)
+  @JoinColumn({ name: 'mental_health_id' })
+  public mentalHealth: MentalHealthEntity;
 
-    @OneToMany(() => ResultEntity, (result) => result.questionId)
-    public result: ResultEntity[];
+  @OneToMany(() => ResultEntity, (result) => result.questionId)
+  public result: ResultEntity[];
 
-    @OneToMany(() => QuestionMentalHealthEntity, (questionMentalHealth) => questionMentalHealth.question)
-    public questionMentalHealth: ResultEntity[];
+  @OneToMany(
+    () => QuestionMentalHealthEntity,
+    (questionMentalHealth) => questionMentalHealth.question,
+  )
+  public questionMentalHealth: ResultEntity[];
 }

@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-inferrable-types */
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -24,7 +27,7 @@ import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 @Controller('audio')
 @ApiBearerAuth()
 export default class AudioController {
-  constructor(private readonly audioService: AudioService) { }
+  constructor(private readonly audioService: AudioService) {}
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
@@ -35,12 +38,12 @@ export default class AudioController {
   @Get()
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   @ApiQuery({
-    name: "page",
-    required: false
+    name: 'page',
+    required: false,
   })
   @ApiQuery({
-    name: "limit",
-    required: false
+    name: 'limit',
+    required: false,
   })
   async getAudios(
     @Query() audio: SearchAudioDto,
@@ -48,17 +51,17 @@ export default class AudioController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
   ): Promise<Pagination<AudioEntity>> {
     limit = limit > 100 ? 100 : limit;
-    return this.audioService.findAudios(
-      audio, {
+    return this.audioService.findAudios(audio, {
       page,
       limit,
-    },
-    );
+    });
   }
 
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.SUBSCRIBER] })
   @Post()
-  async createAudio(@Body() createAudioDto: CreateAudioDTO): Promise<AudioEntity> {
+  async createAudio(
+    @Body() createAudioDto: CreateAudioDTO,
+  ): Promise<AudioEntity> {
     return this.audioService.createAudio(createAudioDto);
   }
 
