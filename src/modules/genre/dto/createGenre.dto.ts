@@ -9,6 +9,9 @@ export class CreateGenreDTO {
   @ApiProperty()
   desc: string;
 
+  @ApiProperty()
+  image: string;
+
   @ApiProperty({ enum: GenreStatus, default: GenreStatus.ACTIVE })
   status: GenreStatus;
 }
