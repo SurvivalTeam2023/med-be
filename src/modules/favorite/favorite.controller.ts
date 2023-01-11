@@ -1,13 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import FavoriteService from './favorite.service';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
@@ -37,13 +29,6 @@ export default class FavoriteController {
   async delete(@Param('id') id: number) {
     await this.Favoriteservice.deleteFavorite(id);
   }
-
-  // @ApiOperation({ summary: 'find Favorite by Id' })
-  // @Unprotected()
-  // @Get(':id')
-  // async getFavoriteById(@Param('id') id: number): Promise<FavoriteEntity> {
-  //   return this.Favoriteservice.findFavoriteById(id);
-  // }
 
   @ApiOperation({ summary: 'find Favorite by userId' })
   @Get(':userId')

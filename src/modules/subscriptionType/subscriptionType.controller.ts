@@ -15,7 +15,6 @@ import SubscriptionTypeService from './subscriptionType.services';
 import { SubscriptionTypeEntity } from './entities/subscriptionType.entity';
 import CreateSubscriptionTypeDTO from './dto/createSubscriptionType.dto';
 import UpdateSubscriptionTypeDTO from './dto/updateSubscriptionType.dto';
-import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 
 @ApiTags('SubscriptionTypes')

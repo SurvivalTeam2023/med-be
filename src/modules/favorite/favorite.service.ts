@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable prettier/prettier */
@@ -7,12 +8,6 @@ import { FavoriteEntity } from './entities/favorite.entity';
 import { DeleteResult, EntityManager, Repository } from 'typeorm';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { ErrorHelper } from 'src/helpers/error.helper';
-import { SearchFavoriteDTO } from './dto/SearchFavorite.dto';
-import {
-  IPaginationOptions,
-  paginate,
-  Pagination,
-} from 'nestjs-typeorm-paginate';
 import { CreateFavoriteDTO } from './dto/createFavorite.dto';
 import UserEntity from '../user/entities/user.entity';
 import { GenreEntity } from '../genre/entities/genre.entity';
@@ -24,16 +19,6 @@ export default class FavoriteService {
     private favoriteRepo: Repository<FavoriteEntity>,
     private readonly entityManage: EntityManager,
   ) {}
-  // async findFavoriteById(favoriteId: number): Promise<FavoriteEntity> {
-  //   const favorite = await this.favoriteRepo
-  //     .createQueryBuilder('favorite')
-  //     .where('favorite.id = :favoriteId', { favoriteId })
-  //     .getOne();
-  //   if (!favorite) {
-  //     ErrorHelper.NotFoundExeption(ERROR_MESSAGE.FAVORITE.NOT_FOUND);
-  //   }
-  //   return favorite;
-  // }
   async findAllFavorite(userId: string): Promise<FavoriteEntity[]> {
     const querybuilder = this.favoriteRepo
       .createQueryBuilder('favorite')
