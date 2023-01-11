@@ -12,6 +12,9 @@ export class GenreEntity extends BaseEntity {
   @Column()
   public desc: string;
 
+  @Column()
+  public image: string;
+
   @Column({
     type: 'enum',
     enum: GenreStatus
