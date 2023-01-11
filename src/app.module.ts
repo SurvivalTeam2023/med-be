@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { FilesModules } from './modules/files/file.module';
 import { TypeOrmConfigModule } from './common/typeorm/typeorm.module';
@@ -8,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { GenreModule } from './modules/genre/genre.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { SubscriptionTypeModule } from './modules/subscriptionType/subscriptionType.module';
+import { FavoriteModule } from './modules/favorite/favorite.module';
 @Module({
   imports: [
     TypeOrmConfigModule,
@@ -18,9 +20,10 @@ import { SubscriptionTypeModule } from './modules/subscriptionType/subscriptionT
     AuthModule,
     GenreModule,
     SubscriptionModule,
-    SubscriptionTypeModule
+    SubscriptionTypeModule,
+    FavoriteModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

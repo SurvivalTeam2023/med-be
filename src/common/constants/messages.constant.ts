@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export const ERROR_MESSAGE = {
   PLAYLIST: {
     NOT_FOUND: 'Playlist not found!',
@@ -12,9 +13,14 @@ export const ERROR_MESSAGE = {
     DUPLICATE_NAME: 'Name already exist!',
   },
   SUBSCRIPTION: {
-    INVALID_DATE:"End date must after start date",
+    INVALID_DATE: 'End date must after start date',
     NOT_FOUND: 'Subcription not found!',
     DUPLICATE_NAME: 'Name already exist!',
+  },
+  FAVORITE: {
+    INVALID_DATE: 'End date must after start date',
+    NOT_FOUND: 'Favorite not found!',
+    DUPLICATE_NAME: 'already Favorite!',
   },
 
   SUBSCRIPTION_TYPE: {
@@ -24,7 +30,7 @@ export const ERROR_MESSAGE = {
 
   USER: {
     NOT_FOUND: 'User not found!',
-    UNDER_AGES: 'User must over 12 year old!'
+    UNDER_AGES: 'User must over 12 year old!',
   },
   KEYCLOAK: {
     SERVER_DEAD: 'Something went wrong, Keycloaks server',
@@ -32,6 +38,6 @@ export const ERROR_MESSAGE = {
     UNAUTHORIZED: 'Unauthorized',
     ROLE_ASSIGN: 'Unable to assign role to user',
     ROLE_NAME: 'Unable to find role name',
-    USER_NAME: 'Unable to find username'
-  }
+    USER_NAME: 'Unable to find username',
+  },
 };

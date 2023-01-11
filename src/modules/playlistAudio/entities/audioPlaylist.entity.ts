@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { BaseEntity } from 'src/common/base/base.entity';
 import { AudioEntity } from 'src/modules/audio/entities/audio.entity';
 import { PlaylistEntity } from 'src/modules/playlist/entities/playlist.entity';

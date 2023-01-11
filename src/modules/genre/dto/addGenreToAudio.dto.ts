@@ -1,7 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsNumber } from "class-validator";
-import { GenreStatus } from "src/common/enums/genreStatus.enum";
-
+/* eslint-disable prettier/prettier */
+import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsNumber } from 'class-validator';
+import { GenreStatus } from 'src/common/enums/genreStatus.enum';
 
 export class AddGenreToAudioDTO {
   @ApiProperty()
@@ -11,6 +11,5 @@ export class AddGenreToAudioDTO {
   @ApiProperty({ type: [Number] })
   @IsArray()
   audioIds: number[];
-
 }
 export default AddGenreToAudioDTO;

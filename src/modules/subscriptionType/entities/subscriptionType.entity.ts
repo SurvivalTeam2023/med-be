@@ -1,4 +1,5 @@
-import { Column, Entity, OneToMany, } from 'typeorm';
+/* eslint-disable prettier/prettier */
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
 
@@ -13,7 +14,9 @@ export class SubscriptionTypeEntity extends BaseEntity {
   @Column()
   public status: string;
 
-  @OneToMany(() => SubscriptionEntity, (subscription) => subscription.subscriptionType,)
+  @OneToMany(
+    () => SubscriptionEntity,
+    (subscription) => subscription.subscriptionType,
+  )
   public subscription: SubscriptionEntity[];
 }
-

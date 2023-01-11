@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { GENDER } from 'src/common/enums/userGender.enum';
 import { USER_STATUS } from 'src/common/enums/user-status.enum';
 import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
@@ -14,6 +15,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { FileEntity } from '../../files/entities/file.entity';
+import { FavoriteEntity } from 'src/modules/favorite/entities/favorite.entity';
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryColumn()
@@ -24,40 +26,39 @@ export class UserEntity {
 
   @Column({
     nullable: true,
-    name: "first_name"
+    name: 'first_name',
   })
   firstName: string;
 
   @Column({
     nullable: true,
-    name: "last_name"
+    name: 'last_name',
   })
   lastName: string;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   gender: GENDER;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   city: string;
 
   @Column({
-    nullable: true
-  }
-  )
+    nullable: true,
+  })
   address: string;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   dob: Date;
 
   @Column({
     type: 'enum',
-    enum: USER_STATUS
+    enum: USER_STATUS,
   })
   status: USER_STATUS;
 
@@ -90,5 +91,10 @@ export class UserEntity {
     cascade: true,
   })
   history: HistoryEntity[];
+
+  @OneToMany(() => FavoriteEntity, (favorite) => favorite.userId, {
+    cascade: true,
+  })
+  favorite: FavoriteEntity[];
 }
 export default UserEntity;

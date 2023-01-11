@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { PlaylistStatus } from '../../../common/enums/playlistStatus.enum';
@@ -30,6 +31,5 @@ export class UpdatePlaylistDto {
   @ApiProperty()
   @IsOptional()
   description: string;
-
 }
 export default UpdatePlaylistDto;
