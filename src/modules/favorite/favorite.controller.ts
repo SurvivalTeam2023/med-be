@@ -2,12 +2,9 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import FavoriteService from './favorite.service';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
-import { Roles, Unprotected } from 'nest-keycloak-connect';
-import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
+import { Unprotected } from 'nest-keycloak-connect';
 import CreateFavoriteDTO from './dto/createFavorite.dto';
 import { FavoriteEntity } from './entities/favorite.entity';
-import { SubscriptionTypeEntity } from '../subscriptionType/entities/subscriptionType.entity';
-import DeleteFavoriteDTO from './dto/deleteFavorite.dto';
 
 @ApiTags('Favorite')
 @Controller('Favorite')
