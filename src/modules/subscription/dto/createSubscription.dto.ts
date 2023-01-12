@@ -17,14 +17,5 @@ export class CreateSubscriptionDTO {
   @ApiProperty({ enum: SubscriptionStatus, default: SubscriptionStatus.ACTIVE })
   status: SubscriptionStatus;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsDateString()
-  startDate: Date;
-
-  @IsNotEmpty()
-  @ApiProperty()
-  @IsDateString()
-  endDate: Date;
 }
 export default CreateSubscriptionDTO;

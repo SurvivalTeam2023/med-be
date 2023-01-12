@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
-import { WalletStatus } from 'src/common/enums/walletStatus.enum';
 import ArtistEntity from 'src/modules/artist/entities/artist.entity';
+import { WalletStatus } from '../../../common/enums/walletStatus.enum';
 
 @Entity('wallet')
 export class WalletEntity extends BaseEntity {

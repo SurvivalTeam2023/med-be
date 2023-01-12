@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { AudioEntity } from 'src/modules/audio/entities/audio.entity';
@@ -76,7 +75,9 @@ export class OrmConfig implements TypeOrmOptionsFactory {
       database: DB_DATABASE,
       synchronize: true,
       logging: false,
+      migrations: ['dist/**/migrations/*.js'],
       entities,
+      migrationsRun: false  
     };
     return baseOptions;
   }

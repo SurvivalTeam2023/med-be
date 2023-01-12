@@ -1,4 +1,4 @@
-import { USER_STATUS } from 'src/common/enums/user-status.enum';
+import { USER_STATUS } from 'src/common/enums/userStatus.enum';
 import { AudioEntity } from 'src/modules/audio/entities/audio.entity';
 import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
 import { WalletEntity } from 'src/modules/wallet/entities/wallet.entity';
