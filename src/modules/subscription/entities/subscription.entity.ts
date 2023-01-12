@@ -25,9 +25,6 @@ export class SubscriptionEntity extends BaseEntity {
   @JoinColumn({ name: 'subscription_type_id' })
   public subscriptionType: SubscriptionTypeEntity;
 
-  @Column({ name: 'start_date', type: 'timestamp' })
-  startDate: Date;
-
   @Column({ name: 'end_date', type: 'timestamp' })
   endDate: Date;
 

@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
@@ -24,7 +22,7 @@ export default class SubscriptionService {
     @InjectRepository(SubscriptionEntity)
     private subscriptionRepo: Repository<SubscriptionEntity>,
     private readonly entityManage: EntityManager,
-  ) {}
+  ) { }
 
   async findSubscriptionById(
     subscriptionId: number,
@@ -76,15 +74,15 @@ export default class SubscriptionService {
     if (!subscriptionType) {
       ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION_TYPE.NOT_FOUND);
     }
-    const startDate = moment(dto.startDate);
-    const endDate = moment(dto.endDate);
-    if (endDate.isBefore(startDate)) {
-      ErrorHelper.BadRequestException(ERROR_MESSAGE.SUBSCRIPTION.INVALID_DATE);
-    }
     const subscription = await this.subscriptionRepo.save({
       ...dto,
       user: user,
       subscriptionType: subscriptionType,
+    });
+    const endDate = moment(subscription.createdAt).add(subscriptionType.usageTime, "M").format()
+    await this.subscriptionRepo.save({
+      id: subscription.id,
+      endDate: endDate
     });
     return subscription;
   }
@@ -95,10 +93,6 @@ export default class SubscriptionService {
     const subscription = await this.findSubscriptionById(subscriptionId);
     if (!subscription)
       ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
-    const startDate = moment(dto.startDate);
-    const endDate = moment(dto.endDate);
-    if (endDate.isBefore(startDate))
-      ErrorHelper.BadRequestException(ERROR_MESSAGE.SUBSCRIPTION.INVALID_DATE);
     const updatedSubcription = await this.subscriptionRepo.save({
       id: subscription.id,
       ...dto,

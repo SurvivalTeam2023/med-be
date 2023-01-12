@@ -1,5 +1,4 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { AudioStatus } from '../../../common/enums/audioStatus.enum';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { FileEntity } from 'src/modules/files/entities/file.entity';
 import { AudioPlaylistEntity } from '../../playlistAudio/entities/audioPlaylist.entity';
@@ -7,6 +6,7 @@ import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.ent
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
 import { AccessEntity } from 'src/modules/access/entities/access.entity';
 import ArtistEntity from 'src/modules/artist/entities/artist.entity';
+import { AudioStatus } from 'src/common/enums/audioStatus.enum';
 
 @Entity('audio')
 export class  AudioEntity extends BaseEntity {

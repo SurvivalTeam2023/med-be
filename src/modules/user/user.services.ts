@@ -16,7 +16,7 @@ import { RequiredAction } from 'src/common/enums/userAction.enum';
 import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
 import { RoleDTO } from '../auth/dto/role.dto';
 import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
-import { USER_STATUS } from 'src/common/enums/user-status.enum';
+import { USER_STATUS } from 'src/common/enums/userStatus.enum';
 import { CreateUserDTO } from './dto/createUser.dto';
 import UserEntity from './entities/user.entity';
 import ArtistEntity from '../artist/entities/artist.entity';

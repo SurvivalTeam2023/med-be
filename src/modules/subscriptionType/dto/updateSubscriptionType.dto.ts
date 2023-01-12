@@ -12,5 +12,15 @@ export class UpdateSubscriptionTypeDTO {
   @IsOptional()
   @IsString()
   desc: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  usageTime: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNumber()
+  cost: number;
 }
 export default UpdateSubscriptionTypeDTO;
