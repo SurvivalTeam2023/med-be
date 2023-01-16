@@ -11,6 +11,7 @@ import { ErrorHelper } from 'src/helpers/error.helper';
 import { CreateFavoriteDTO } from './dto/createFavorite.dto';
 import UserEntity from '../user/entities/user.entity';
 import { GenreEntity } from '../genre/entities/genre.entity';
+import { FavoriteStatus } from 'src/common/enums/favoriteStatus.enum';
 
 @Injectable()
 export default class FavoriteService {
@@ -49,7 +50,14 @@ export default class FavoriteService {
     return favorite;
   }
 
-  async deleteFavorite(id: number): Promise<DeleteResult> {
-    return this.favoriteRepo.delete(id);
+  async deleteFavorite(favoriteId: number): Promise<FavoriteEntity> {
+    const favorite = await this.favoriteRepo.findOne({
+      where: { id: favoriteId },
+    });
+    if (favorite) {
+      favorite.status = FavoriteStatus.INACTIVE;
+      await this.favoriteRepo.save(favorite);
+    }
+    return favorite;
   }
 }

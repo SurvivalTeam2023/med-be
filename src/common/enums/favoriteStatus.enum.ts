@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-export enum SubscriptionStatus {
+export enum FavoriteStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
 }
