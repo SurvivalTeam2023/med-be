@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateSubscriptionTypeDTO {
   @ApiProperty()
@@ -12,5 +12,15 @@ export class CreateSubscriptionTypeDTO {
   @IsNotEmpty()
   @IsString()
   desc: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  usageTime: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  cost: number;
 }
 export default CreateSubscriptionTypeDTO;

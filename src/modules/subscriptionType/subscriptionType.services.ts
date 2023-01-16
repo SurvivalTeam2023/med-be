@@ -4,10 +4,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { SubscriptionTypeEntity } from '../subscriptionType/entities/subscriptionType.entity';
-import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
 import { Repository } from 'typeorm';
 import CreateSubscriptionTypeDTO from './dto/createSubscriptionType.dto';
 import UpdateSubscriptionTypeDTO from './dto/updateSubscriptionType.dto';
+import { SubscriptionTypeStatus } from 'src/common/enums/subscriptionTypeStatus.enum';
 
 @Injectable()
 export default class SubscriptionTypeService {
@@ -71,6 +71,7 @@ export default class SubscriptionTypeService {
     );
     if (subsciptionType) {
       subsciptionType.status = SubscriptionStatus.INACTIVE;
+      subsciptionType.status = SubscriptionTypeStatus.EXPIRED;
       await this.subscriptionTypeRepo.save(subsciptionType);
     }
     return subsciptionType;

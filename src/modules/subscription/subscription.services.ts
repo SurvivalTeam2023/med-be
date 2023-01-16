@@ -86,6 +86,11 @@ export default class SubscriptionService {
       user: user,
       subscriptionType: subscriptionType,
     });
+    const endDate = moment(subscription.createdAt).add(subscriptionType.usageTime, "M").format()
+    await this.subscriptionRepo.save({
+      id: subscription.id,
+      endDate: endDate
+    });
     return subscription;
   }
   async updateSubscription(

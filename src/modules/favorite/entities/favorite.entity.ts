@@ -12,7 +12,6 @@ export class FavoriteEntity extends BaseEntity {
     enum: FavoriteStatus,
   })
   public status: FavoriteStatus;
-
   @ManyToOne(() => GenreEntity, (genre) => genre.favorite)
   @JoinColumn({ name: 'genre_id' })
   public genreId: GenreEntity;

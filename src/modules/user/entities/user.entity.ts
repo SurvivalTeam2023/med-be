@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { GENDER } from 'src/common/enums/userGender.enum';
-import { USER_STATUS } from 'src/common/enums/user-status.enum';
+import { USER_STATUS } from 'src/common/enums/userStatus.enum';
 import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
 import { QuestionBankEntity } from 'src/modules/questionBank/entities/questionBank.entity';

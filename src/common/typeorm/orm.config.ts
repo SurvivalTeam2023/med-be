@@ -76,7 +76,9 @@ export class OrmConfig implements TypeOrmOptionsFactory {
       database: DB_DATABASE,
       synchronize: true,
       logging: false,
+      migrations: ['dist/**/migrations/*.js'],
       entities,
+      migrationsRun: false  
     };
     return baseOptions;
   }
