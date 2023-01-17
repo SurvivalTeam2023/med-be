@@ -12,10 +12,10 @@ import { SubscriptionEntity } from './entities/subscription.entity';
 import { SearchSubscriptionDTO } from './dto/searchSubscription.dto';
 import CreateSubcriptionDTO from './dto/createSubscription.dto';
 import UserEntity from '../user/entities/user.entity';
-import UpdateSubcriptionDTO from './dto/updateSubscription.dto';
 import { SubscriptionTypeEntity } from '../subscriptionType/entities/subscriptionType.entity';
 import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
 import * as moment from 'moment';
+import UpdateSubscriptionDTO from './dto/updateSubscription.dto';
 @Injectable()
 export default class SubscriptionService {
   constructor(
@@ -87,7 +87,7 @@ export default class SubscriptionService {
   }
   async updateSubscription(
     subscriptionId: number,
-    dto: UpdateSubcriptionDTO,
+    dto: UpdateSubscriptionDTO,
   ): Promise<SubscriptionEntity> {
     const subscription = await this.findSubscriptionById(subscriptionId);
     if (!subscription)
