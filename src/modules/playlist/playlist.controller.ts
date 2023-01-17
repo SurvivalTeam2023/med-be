@@ -27,7 +27,7 @@ import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 @Controller('playlist')
 @ApiBearerAuth()
 export default class PlaylistController {
-  constructor(private readonly playlistService: PlaylistService) {}
+  constructor(private readonly playlistService: PlaylistService) { }
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.ADMIN] })
@@ -36,7 +36,7 @@ export default class PlaylistController {
   }
 
   @Get()
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.ADMIN] })
+  @Unprotected()
   @ApiQuery({
     name: 'page',
     required: false,

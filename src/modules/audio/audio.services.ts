@@ -21,7 +21,7 @@ export default class AudioService {
   constructor(
     @InjectRepository(AudioEntity)
     private audioRepository: Repository<AudioEntity>,
-  ) {}
+  ) { }
 
   async findAudioById(audioId: number): Promise<AudioEntity> {
     const entity = await this.audioRepository
@@ -40,17 +40,14 @@ export default class AudioService {
     dto: SearchAudioDTO,
     option: IPaginationOptions,
   ): Promise<Pagination<AudioEntity>> {
-    const querybuilder = await this.audioRepository
+    const querybuilder = this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist');
-    if (dto.name)
-      querybuilder
-        .orWhere('LOWER(audio.name) like :name', { name: `%${dto.name}%` })
-        .orWhere('audio.status = :audioStatus', { audioStatus: dto.status })
-        .orWhere('audio_playlist.playlist_id = :playlistId', {
-          playlistId: dto.playlist_id,
-        })
-        .orderBy('audio.created_at', 'DESC');
+    if (dto.name) querybuilder.where('LOWER(audio.name) like :name', { name: `%${dto.name}%` }).orderBy('audio.created_at', 'DESC').getMany()
+
+    if (dto.status) querybuilder.andWhere('audio.status = :audioStatus', { audioStatus: dto.status }).orderBy('audio.created_at', 'DESC')
+
+    if (dto.playlist_id) querybuilder.andWhere('audio_playlist.playlist_id = :playlistId', { playlistId: dto.playlist_id, }).orderBy('audio.created_at', 'DESC')
     return paginate<AudioEntity>(querybuilder, option);
   }
   async createAudio(dto: CreateAudioDTO): Promise<AudioEntity> {

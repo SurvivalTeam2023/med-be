@@ -20,7 +20,7 @@ export default class PlaylistService {
   constructor(
     @InjectRepository(PlaylistEntity)
     private playlistRepository: Repository<PlaylistEntity>,
-  ) {}
+  ) { }
 
   async findPlaylistById(playlistId: number): Promise<PlaylistEntity> {
     const playList = await this.playlistRepository.findOneBy({
@@ -36,10 +36,8 @@ export default class PlaylistService {
   ): Promise<Pagination<PlaylistEntity>> {
     const querybuilder = await this.playlistRepository
       .createQueryBuilder('playlist')
-      .where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` })
-      .orWhere('playlist.status = :playlistStatus', {
-        playlistStatus: dto.status,
-      })
+    if (dto.name) querybuilder.where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` })
+    if (dto.status) querybuilder.andWhere('playlist.status = :playlistStatus', { playlistStatus: dto.status, })
       .orderBy('playlist.created_at', 'DESC');
     return paginate<PlaylistEntity>(querybuilder, option);
   }

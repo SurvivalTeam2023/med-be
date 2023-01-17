@@ -4,7 +4,7 @@ import { BaseEntity } from '../../../common/base/base.entity';
 import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
 import { SubscriptionTypeStatus } from 'src/common/enums/subscriptionTypeStatus.enum';
 
-@Entity('subcription_type')
+@Entity('subscription_type')
 export class SubscriptionTypeEntity extends BaseEntity {
   @Column()
   public name: string;
@@ -12,7 +12,7 @@ export class SubscriptionTypeEntity extends BaseEntity {
   @Column()
   public desc: string;
 
-  @Column()
+  @Column({ name: "usage_time" })
   public usageTime: number;
 
   @Column()

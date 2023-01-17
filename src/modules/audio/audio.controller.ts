@@ -20,14 +20,14 @@ import SearchAudioDto from './dto/searchAudio.dto';
 import UpdateAudioDto from './dto/updateAudio.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'nest-keycloak-connect';
+import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 
 @ApiTags('Audios')
 @Controller('audio')
 @ApiBearerAuth()
 export default class AudioController {
-  constructor(private readonly audioService: AudioService) {}
+  constructor(private readonly audioService: AudioService) { }
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
@@ -36,7 +36,7 @@ export default class AudioController {
   }
 
   @Get()
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @Unprotected()
   @ApiQuery({
     name: 'page',
     required: false,

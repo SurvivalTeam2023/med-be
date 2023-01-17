@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
 
@@ -7,6 +8,7 @@ export class SearchSubscriptionDTO {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   userId: number;
 
   @ApiProperty({
@@ -20,6 +22,7 @@ export class SearchSubscriptionDTO {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   subscriptionTypeId: number;
 
   @ApiProperty({ required: false })
