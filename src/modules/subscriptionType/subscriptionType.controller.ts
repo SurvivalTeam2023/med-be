@@ -10,7 +10,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { Roles } from 'nest-keycloak-connect';
+import { Roles, Unprotected } from 'nest-keycloak-connect';
 import SubscriptionTypeService from './subscriptionType.services';
 import { SubscriptionTypeEntity } from './entities/subscriptionType.entity';
 import CreateSubscriptionTypeDTO from './dto/createSubscriptionType.dto';
@@ -34,7 +34,8 @@ export default class SubscriptionTypeController {
   }
 
   @Get()
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Unprotected()
+  // @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   async getSubcriptionTypes(
     @Query() name: string,
   ): Promise<SubscriptionTypeEntity[]> {
