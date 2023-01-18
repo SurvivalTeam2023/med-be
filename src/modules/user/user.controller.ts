@@ -26,7 +26,8 @@ export class UserController {
 
 
 
-  @Get('userName')
+
+  @Get('username')
   @Unprotected()
   @ApiOperation({ summary: 'find user by name' })
   // @Roles({ roles: [USER_CLIENT_ROLE.USER] })
