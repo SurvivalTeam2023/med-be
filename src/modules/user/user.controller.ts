@@ -1,6 +1,12 @@
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateUserDTO } from './dto/createUser.dto';
 import { UserService } from './user.services';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
@@ -13,25 +19,23 @@ import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
 @Controller('user')
 @ApiBearerAuth()
 export class UserController {
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   @Get('userList')
   @Unprotected()
   @ApiOperation({ summary: 'get user list' })
-  // @Roles({ roles: [USER_REALM_ROLE.APP_ADMIN] })
+  @Roles({ roles: [USER_REALM_ROLE.APP_ADMIN] })
   getUserList(@RequestPayload() token: string) {
     return this.userService.getUserList(token);
   }
 
-
-
-
-
-  @Get('username')
-  @Unprotected()
+  @Get(':username')
   @ApiOperation({ summary: 'find user by name' })
-  // @Roles({ roles: [USER_CLIENT_ROLE.USER] })
-  findUserByName(@Param('username') username: string, @RequestPayload() token: string, ) {
+  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
+  findUserByName(
+    @Param('username') username: string,
+    @RequestPayload() token: string,
+  ) {
     return this.userService.findUserByName(username, token);
   }
 
@@ -63,7 +67,14 @@ export class UserController {
   @ApiOperation({ summary: 'change user role to artist' })
   @ApiQuery({ name: 'role', enum: USER_REALM_ROLE })
   @Put(':username/role')
-  changeUserRoleToArtist(@Param('username') username: string, @Query('role') role: USER_REALM_ROLE) {
-    return this.userService.changeRole(username, USER_REALM_ROLE.APP_USER, role);
+  changeUserRoleToArtist(
+    @Param('username') username: string,
+    @Query('role') role: USER_REALM_ROLE,
+  ) {
+    return this.userService.changeRole(
+      username,
+      USER_REALM_ROLE.APP_USER,
+      role,
+    );
   }
 }
