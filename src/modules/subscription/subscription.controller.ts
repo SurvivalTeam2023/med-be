@@ -59,7 +59,8 @@ export default class SubscriptionController {
     });
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Unprotected()
+  // @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @Post()
   async createSubscription(
     @Body() dto: CreateSubscriptionDTO,
