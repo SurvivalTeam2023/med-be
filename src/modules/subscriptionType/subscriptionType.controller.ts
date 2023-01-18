@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -16,6 +16,7 @@ import { SubscriptionTypeEntity } from './entities/subscriptionType.entity';
 import CreateSubscriptionTypeDTO from './dto/createSubscriptionType.dto';
 import UpdateSubscriptionTypeDTO from './dto/updateSubscriptionType.dto';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
+import SearchSubscriptionTypeDTO from './dto/findSubscriptionType.dto';
 
 @ApiTags('SubscriptionTypes')
 @Controller('subscriptionTypes')
@@ -23,7 +24,7 @@ import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 export default class SubscriptionTypeController {
   constructor(
     private readonly subscriptionTypeService: SubscriptionTypeService,
-  ) {}
+  ) { }
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
@@ -35,11 +36,11 @@ export default class SubscriptionTypeController {
 
   @Get()
   @Unprotected()
-  // @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   async getSubcriptionTypes(
-    @Query() name: string,
+    @Query() dto: SearchSubscriptionTypeDTO,
   ): Promise<SubscriptionTypeEntity[]> {
-    return this.subscriptionTypeService.findSubscriptionTypes(name);
+    console.log('time', dto.usageTime)
+    return this.subscriptionTypeService.findSubscriptionTypes(dto);
   }
 
   @Post()

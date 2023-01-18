@@ -77,7 +77,7 @@ export class OrmConfig implements TypeOrmOptionsFactory {
       logging: false,
       migrations: ['dist/**/migrations/*.js'],
       entities,
-      migrationsRun: false  
+      migrationsRun: false
     };
     return baseOptions;
   }

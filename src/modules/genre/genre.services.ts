@@ -51,6 +51,7 @@ export default class GenreService {
 
   async findGenres(): Promise<GenreEntity[]> {
     const genres = await this.genreRepo.find({
+      
       order: {
         name: 'ASC',
       },

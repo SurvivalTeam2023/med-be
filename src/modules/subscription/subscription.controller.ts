@@ -14,7 +14,7 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
 } from '@nestjs/common';
-import { Roles } from 'nest-keycloak-connect';
+import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import SubscriptionService from './subscription.services';
 import { SubscriptionEntity } from './entities/subscription.entity';
@@ -27,7 +27,7 @@ import UpdateSubscriptionDTO from './dto/updateSubscription.dto';
 @Controller('subscriptions')
 @ApiBearerAuth()
 export default class SubscriptionController {
-  constructor(private readonly subscriptionService: SubscriptionService) {}
+  constructor(private readonly subscriptionService: SubscriptionService) { }
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
@@ -38,7 +38,7 @@ export default class SubscriptionController {
   }
 
   @Get()
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Unprotected()
   @ApiQuery({
     name: 'page',
     required: false,

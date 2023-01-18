@@ -8,13 +8,14 @@ import { Repository } from 'typeorm';
 import CreateSubscriptionTypeDTO from './dto/createSubscriptionType.dto';
 import UpdateSubscriptionTypeDTO from './dto/updateSubscriptionType.dto';
 import { SubscriptionTypeStatus } from 'src/common/enums/subscriptionTypeStatus.enum';
+import SearchSubscriptionTypeDTO from './dto/findSubscriptionType.dto';
 
 @Injectable()
 export default class SubscriptionTypeService {
   constructor(
     @InjectRepository(SubscriptionTypeEntity)
     private subscriptionTypeRepo: Repository<SubscriptionTypeEntity>,
-  ) {}
+  ) { }
 
   async findSubscriptionTypeById(
     subscriptionTypeId: number,
@@ -30,14 +31,15 @@ export default class SubscriptionTypeService {
     }
     return subcription;
   }
-  async findSubscriptionTypes(name: string): Promise<SubscriptionTypeEntity[]> {
+  async findSubscriptionTypes(dto: SearchSubscriptionTypeDTO): Promise<SubscriptionTypeEntity[]> {
     const querybuilder = this.subscriptionTypeRepo
       .createQueryBuilder('subscription_type')
-      .orWhere('subscription_type.name like :name', { name: name })
-      .orderBy('subscription_type.created_at', 'DESC')
-      .getMany();
+    console.log(dto.usageTime, "time")
+    if (dto.name) querybuilder.where('subscription_type.name like :name', { name: `%${dto.name}%` }).orderBy('subscription_type.created_at', 'DESC')
+    if (dto.status) querybuilder.andWhere('subscription_type.status like :status', { status: dto.status }).orderBy('subscription_type.created_at', 'DESC')
+    if (dto.usageTime) querybuilder.andWhere('subscription_type.usage_time = :usageTime', { usageTime: dto.usageTime }).orderBy('subscription_type.created_at', 'DESC')
 
-    return querybuilder;
+    return querybuilder.getMany();
   }
 
   async createSubscriptionType(
