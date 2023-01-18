@@ -16,8 +16,9 @@ export class UserController {
   constructor(private userService: UserService) { }
 
   @Get('userList')
+  @Unprotected()
   @ApiOperation({ summary: 'get user list' })
-  @Roles({ roles: [USER_REALM_ROLE.APP_ADMIN] })
+  // @Roles({ roles: [USER_REALM_ROLE.APP_ADMIN] })
   getUserList(@RequestPayload() token: string) {
     return this.userService.getUserList(token);
   }
@@ -26,8 +27,9 @@ export class UserController {
 
 
   @Get('userName')
+  @Unprotected()
   @ApiOperation({ summary: 'find user by name' })
-  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
+  // @Roles({ roles: [USER_CLIENT_ROLE.USER] })
   findUserByName(@Param('username') username: string, @RequestPayload() token: string, ) {
     return this.userService.findUserByName(username, token);
   }
