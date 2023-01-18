@@ -14,6 +14,8 @@ import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
 import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
 import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
+import { ErrorHelper } from '../../helpers/error.helper';
+import { ERROR_MESSAGE } from '../../common/constants/messages.constant';
 
 @ApiTags('Users')
 @Controller('user')
@@ -32,7 +34,7 @@ export class UserController {
   @Get(':username')
   @ApiOperation({ summary: 'find user by name' })
   @Roles({ roles: [USER_CLIENT_ROLE.USER] })
-  findUserByName(
+  async findUserByName(
     @Param('username') username: string,
     @RequestPayload() token: string,
   ) {
