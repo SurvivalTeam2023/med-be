@@ -21,7 +21,7 @@ import { ERROR_MESSAGE } from '../../common/constants/messages.constant';
 @Controller('user')
 @ApiBearerAuth()
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   @Get('userList')
   @Unprotected()
@@ -77,6 +77,13 @@ export class UserController {
       username,
       USER_REALM_ROLE.APP_USER,
       role,
+    );
+  }
+  @Unprotected()
+  @ApiOperation({ summary: 'happy new year message' })
+  @Get()
+  happyNewYear() {
+    return this.userService.happyNewYear(
     );
   }
 }
