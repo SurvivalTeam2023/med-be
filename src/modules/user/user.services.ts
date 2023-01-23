@@ -39,7 +39,7 @@ export class UserService {
     private readonly artistRepository: Repository<ArtistEntity>,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-  ) {}
+  ) { }
 
   getAdminAccount = () => {
     let adminAccount: LoginDTO = {
@@ -374,5 +374,9 @@ export class UserService {
       );
     }
     return access_token;
+  }
+  happyNewYear(): string {
+    return "Khai code đầu năm \n"  +
+      "Chúc anh em code ít bug, fix bug như máy điện, deploy đều như cơm bữa. Sức khỏe dồi dào, apply job 1 phát ăn ngay, gia đình hạnh phúc"
   }
 }
