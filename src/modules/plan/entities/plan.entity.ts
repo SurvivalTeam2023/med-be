@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
-import { PlanStatus } from 'src/common/enums/PlanStatus.enum';
+import { PlanStatus } from 'src/common/enums/planStatus.enum';
 
 
 @Entity('plan')

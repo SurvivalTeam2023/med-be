@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { PlanStatus } from 'src/common/enums/PlanStatus.enum';
+import { PlanStatus } from 'src/common/enums/planStatus.enum';
+
 
 export class SearchPlanDTO {
     @ApiProperty({ required: false })

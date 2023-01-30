@@ -8,7 +8,7 @@ import { PlanEntity } from './entities/plan.entity';
 import SearchPlanDTO from './dto/findPlan.dto';
 import CreatePlanDTO from './dto/createPlan.dto';
 import UpdatePlanDTO from './dto/updatePlan.dto';
-import { PlanStatus } from 'src/common/enums/PlanStatus.enum';
+import { PlanStatus } from 'src/common/enums/planStatus.enum';
 import { lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 
