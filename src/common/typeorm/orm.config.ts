@@ -32,8 +32,8 @@ import { MentalHealthDegreeEntity } from 'src/modules/mentalHealthDegree/entitie
 import { MentalHealthLogEntity } from 'src/modules/mentalHealthLog/entities/mentalHealthLog.entity';
 import { MentalHealthDegreeLogEntity } from 'src/modules/mentalHealthDegreeLog/entities/mentalHealthDegreeLog.entity';
 import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
-import { SubscriptionTypeEntity } from 'src/modules/subscriptionType/entities/subscriptionType.entity';
 import { FavoriteEntity } from 'src/modules/favorite/entities/favorite.entity';
+import { PlanEntity } from 'src/modules/plan/entities/plan.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -60,7 +60,7 @@ const entities = [
   MentalHealthLogEntity,
   MentalHealthDegreeLogEntity,
   SubscriptionEntity,
-  SubscriptionTypeEntity,
+  PlanEntity,
   FavoriteEntity,
 ];
 @Injectable()

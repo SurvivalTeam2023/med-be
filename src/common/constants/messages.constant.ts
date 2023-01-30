@@ -23,7 +23,7 @@ export const ERROR_MESSAGE = {
     DUPLICATE_NAME: 'already Favorite!',
   },
 
-  SUBSCRIPTION_TYPE: {
+  PLAN: {
     NOT_FOUND: 'Subcriptiontype not found!',
     DUPLICATE_NAME: 'Name already exist!',
   },

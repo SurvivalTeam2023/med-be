@@ -32,7 +32,7 @@ export default class SubscriptionController {
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   async getSubscriptionById(
-    @Param('id') id: number,
+    @Param('id') id: string,
   ): Promise<SubscriptionEntity> {
     return this.subscriptionService.findSubscriptionById(id);
   }
@@ -67,11 +67,16 @@ export default class SubscriptionController {
   ): Promise<SubscriptionEntity> {
     return this.subscriptionService.createSubscription(dto);
   }
-
+  @Post(':id')
+  async activateSubscription(
+    @Param('id') id: string,
+  ) {
+    return this.subscriptionService.activateSubscription(id);
+  }
   @Put(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   async updateSubscription(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateSubscriptionDTO: UpdateSubscriptionDTO,
   ): Promise<SubscriptionEntity> {
     return await this.subscriptionService.updateSubscription(
@@ -82,7 +87,7 @@ export default class SubscriptionController {
 
   @Delete(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
-  async deleteSubscription(@Param('id') id: number) {
+  async deleteSubscription(@Param('id') id: string) {
     return await this.subscriptionService.deleteSubscription(id);
   }
 }

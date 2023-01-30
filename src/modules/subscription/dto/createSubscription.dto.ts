@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
+import { CreateDateColumn } from 'typeorm';
 
 export class CreateSubscriptionDTO {
   @ApiProperty()
@@ -11,11 +12,16 @@ export class CreateSubscriptionDTO {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
-  subcriptionTypeId: number;
+  @IsString()
+  planId: string;
 
   @ApiProperty({ enum: SubscriptionStatus, default: SubscriptionStatus.ACTIVE })
   status: SubscriptionStatus;
+
+  @ApiProperty()
+  @CreateDateColumn()
+  @IsDateString()
+  startDate:Date;
 
 }
 export default CreateSubscriptionDTO;

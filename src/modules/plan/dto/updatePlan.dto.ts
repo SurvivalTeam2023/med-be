@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class UpdateSubscriptionTypeDTO {
+export class UpdatePlanDTO {
   @ApiProperty()
   @IsOptional()
   @IsNumber()
@@ -26,4 +26,4 @@ export class UpdateSubscriptionTypeDTO {
   @Type(() => Number)
   cost: number;
 }
-export default UpdateSubscriptionTypeDTO;
+export default UpdatePlanDTO;

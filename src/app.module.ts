@@ -8,8 +8,8 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { GenreModule } from './modules/genre/genre.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
-import { SubscriptionTypeModule } from './modules/subscriptionType/subscriptionType.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
+import { PlanModule } from './modules/plan/plan.module';
 @Module({
   imports: [
     TypeOrmConfigModule,
@@ -20,10 +20,10 @@ import { FavoriteModule } from './modules/favorite/favorite.module';
     AuthModule,
     GenreModule,
     SubscriptionModule,
-    SubscriptionTypeModule,
+    PlanModule,
     FavoriteModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

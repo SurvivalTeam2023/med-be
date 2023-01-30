@@ -1,21 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import {  IsNumber, IsOptional, IsString } from 'class-validator';
-import { SubscriptionTypeStatus } from 'src/common/enums/subscriptionTypeStatus.enum';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { PlanStatus } from 'src/common/enums/PlanStatus.enum';
 
-export class SearchSubscriptionTypeDTO {
+export class SearchPlanDTO {
     @ApiProperty({ required: false })
     @IsOptional()
     @IsString()
     name: string;
 
     @ApiProperty({
-        enum: SubscriptionTypeStatus,
+        enum: PlanStatus,
         required: false,
-        default: SubscriptionTypeStatus.ACTIVE,
+        default: PlanStatus.ACTIVE,
     })
     @IsOptional()
-    status: SubscriptionTypeStatus;
+    status: PlanStatus;
 
     @ApiProperty({ required: false })
     @IsOptional()
@@ -23,4 +23,4 @@ export class SearchSubscriptionTypeDTO {
     @IsNumber()
     usageTime: number;
 }
-export default SearchSubscriptionTypeDTO;
+export default SearchPlanDTO;
