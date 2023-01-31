@@ -11,6 +11,7 @@ import UpdatePlanDTO from './dto/updatePlan.dto';
 import { PlanStatus } from 'src/common/enums/planStatus.enum';
 import { lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { PRODUCT_ID } from 'src/environments';
 
 
 @Injectable()
@@ -54,7 +55,7 @@ export default class PlanService {
       this.httpService.post(
         `https://api-m.sandbox.paypal.com/v1/billing/plans`,
         {
-          product_id: "PROD-6GG98180T5582525W",
+          product_id: PRODUCT_ID,
           name: dto.name,
           description: dto.desc,
           billing_cycles: [
