@@ -12,20 +12,23 @@ import { SubscriptionEntity } from './entities/subscription.entity';
 import { SearchSubscriptionDTO } from './dto/searchSubscription.dto';
 import CreateSubcriptionDTO from './dto/createSubscription.dto';
 import UserEntity from '../user/entities/user.entity';
-import { SubscriptionTypeEntity } from '../subscriptionType/entities/subscriptionType.entity';
 import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
 import * as moment from 'moment';
 import UpdateSubscriptionDTO from './dto/updateSubscription.dto';
+import { PlanEntity } from '../plan/entities/plan.entity';
+import { lastValueFrom, map } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
 @Injectable()
 export default class SubscriptionService {
   constructor(
+    private readonly httpService: HttpService,
     @InjectRepository(SubscriptionEntity)
     private subscriptionRepo: Repository<SubscriptionEntity>,
     private readonly entityManage: EntityManager,
   ) { }
 
   async findSubscriptionById(
-    subscriptionId: number,
+    subscriptionId: string,
   ): Promise<SubscriptionEntity> {
     const subcription = await this.subscriptionRepo
       .createQueryBuilder('subscription')
@@ -46,7 +49,7 @@ export default class SubscriptionService {
     if (dto.status) querybuilder.andWhere('subscription.status = :subscriptionStatus', {
       subscriptionStatus: dto.status,
     })
-    if (dto.subscriptionTypeId) querybuilder.andWhere('subscription.subscription_type_id = :subscriptionTypeId', {
+    if (dto.subscriptionTypeId) querybuilder.andWhere('subscription.plan_id = :subscriptionTypeId', {
       subscriptionTypeId: dto.subscriptionTypeId,
     })
     if (dto.startDate) querybuilder.andWhere('subscription.startDate = :startDate', {
@@ -66,27 +69,78 @@ export default class SubscriptionService {
     if (!user) {
       ErrorHelper.NotFoundExeption(ERROR_MESSAGE.USER.NOT_FOUND);
     }
-    const subscriptionType = await this.entityManage.findOne(
-      SubscriptionTypeEntity,
-      { where: { id: dto.subcriptionTypeId } },
+    const plan = await this.entityManage.findOne(
+      PlanEntity,
+      { where: { id: dto.planId } },
     );
-    if (!subscriptionType) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION_TYPE.NOT_FOUND);
+    if (!plan) {
+      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAN.NOT_FOUND);
     }
+    const subscriptionPaypal = await lastValueFrom(
+      this.httpService.post(
+        `https://api-m.sandbox.paypal.com/v1/billing/subscriptions`,
+        {
+          plan_id: dto.planId,
+          shipping_amount: {
+            currency_code: "USD",
+            value: plan.cost
+          },
+          subscriber: {
+            name: {
+              given_name: user.firstName,
+              surname: user.lastName
+            },
+            email_address: user.email
+          },
+          application_context: {
+            brand_name: "Med",
+            locale: "en-US",
+            user_action: "SUBSCRIBE_NOW",
+            payment_method: {
+              payer_selected: "PAYPAL",
+              payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED"
+            }
+          }
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer A21AAKaKr5Ukst3BSFA7YUsvFgcq2I1BA07iIGhK1jjEet-Dn0bWvjtU-MQINEcl2a6FvwU9-tup2Ha6HO1eJKxYS9JOJDUMg',
+          }
+        }
+      )
+        .pipe(map((response) => response.data)),
+    ).catch((err) => {
+      ErrorHelper.BadRequestException(err.response.data.errorMessage);
+    });
+    const endDate = moment(dto.startDate).add(plan.usageTime, "M").format()
     const subscription = await this.subscriptionRepo.save({
+      id: subscriptionPaypal.id,
       ...dto,
       user: user,
-      subscriptionType: subscriptionType,
-    });
-    const endDate = moment(subscription.createdAt).add(subscriptionType.usageTime, "M").format()
-    await this.subscriptionRepo.save({
-      id: subscription.id,
+      plan: plan,
       endDate: endDate
     });
+
     return subscription;
   }
+
+  async activateSubscription(subcriptionId: string) {
+    await lastValueFrom(
+      this.httpService.post(
+        `api-m.sandbox.paypal.com/v1/billing/subscriptions/${subcriptionId}d/activate`,
+        {},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer A21AAKaKr5Ukst3BSFA7YUsvFgcq2I1BA07iIGhK1jjEet-Dn0bWvjtU-MQINEcl2a6FvwU9-tup2Ha6HO1eJKxYS9JOJDUMg',
+          }
+        }
+      )
+    )
+  }
   async updateSubscription(
-    subscriptionId: number,
+    subscriptionId: string,
     dto: UpdateSubscriptionDTO,
   ): Promise<SubscriptionEntity> {
     const subscription = await this.findSubscriptionById(subscriptionId);
@@ -100,13 +154,13 @@ export default class SubscriptionService {
   }
 
   async deleteSubscription(
-    subscriptionId: number,
+    subscriptionId: string,
   ): Promise<SubscriptionEntity> {
     const subscription = await this.subscriptionRepo.findOne({
       where: { id: subscriptionId },
     });
     if (subscription) {
-      subscription.status = SubscriptionStatus.INACTIVE;
+      subscription.status = SubscriptionStatus.EXPIRED;
       await this.subscriptionRepo.save(subscription);
     }
     return subscription;

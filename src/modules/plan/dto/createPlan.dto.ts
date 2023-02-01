@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class CreateSubscriptionTypeDTO {
+export class CreatePlanDTO {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
@@ -22,4 +22,4 @@ export class CreateSubscriptionTypeDTO {
   @IsNumber()
   cost: number;
 }
-export default CreateSubscriptionTypeDTO;
+export default CreatePlanDTO;

@@ -22,6 +22,8 @@ const KEYCLOAK_ADMIN_ID: string =
 const KEYCLOAK_ADMIN_PASSWORD: string =
   process.env.KEYCLOAK_ADMIN_PASSWORD || '123456';
 
+//paypal config
+const PRODUCT_ID:string = 'PROD-6GG98180T5582525W'
 
 //aws config
 const AWS_ACCESS_KEY_ID: string = process.env.AWS_ACCESS_KEY_ID || 'null';
@@ -48,5 +50,6 @@ export {
   KEYCLOAK_REALM_ClIENT,
   KEYCLOAK_HOST,
   KEYCLOAK_CLIENT_ID,
-  KEYCLOAK_CLIENT_SECRECT
+  KEYCLOAK_CLIENT_SECRECT,
+  PRODUCT_ID
 };

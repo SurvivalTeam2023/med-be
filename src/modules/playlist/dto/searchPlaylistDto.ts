@@ -10,5 +10,10 @@ export class SearchPlaylistDto {
 
   @ApiProperty({ enum: PlaylistStatus, required: false })
   status: PlaylistStatus;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  userId: string;
 }
 export default SearchPlaylistDto;

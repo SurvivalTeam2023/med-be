@@ -39,6 +39,11 @@ export class UserEntity {
   @Column({
     nullable: true,
   })
+  email: string;
+
+  @Column({
+    nullable: true,
+  })
   gender: GENDER;
 
   @Column({
