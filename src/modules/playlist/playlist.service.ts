@@ -38,6 +38,7 @@ export default class PlaylistService {
       .createQueryBuilder('playlist')
     if (dto.name) querybuilder.where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` })
     if (dto.status) querybuilder.andWhere('playlist.status = :playlistStatus', { playlistStatus: dto.status, })
+    if (dto.userId) querybuilder.andWhere('playlist.user_id = :userId', { userId: dto.userId, })
       .orderBy('playlist.created_at', 'DESC');
     return paginate<PlaylistEntity>(querybuilder, option);
   }
