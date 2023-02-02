@@ -9,7 +9,7 @@ import SearchPlanDTO from './dto/findPlan.dto';
 import CreatePlanDTO from './dto/createPlan.dto';
 import UpdatePlanDTO from './dto/updatePlan.dto';
 import { PlanStatus } from 'src/common/enums/planStatus.enum';
-import { catchError, lastValueFrom, map, of } from 'rxjs';
+import { lastValueFrom, map, of } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { PAYPAL_PRODUCT_ID, PAYPAL_URL } from 'src/environments';
 import { AuthService } from '../auth/auth.services';

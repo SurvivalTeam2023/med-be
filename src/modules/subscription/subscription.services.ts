@@ -52,8 +52,8 @@ export default class SubscriptionService {
     if (dto.status) querybuilder.andWhere('subscription.status = :subscriptionStatus', {
       subscriptionStatus: dto.status,
     })
-    if (dto.planId) querybuilder.andWhere('subscription.plan_id = :subscriptionTypeId', {
-      subscriptionTypeId: dto.planId,
+    if (dto.planId) querybuilder.andWhere('subscription.plan_id = :planId', {
+      planId: dto.planId,
     })
     if (dto.startDate) querybuilder.andWhere('subscription.startDate = :startDate', {
       startDate: dto.startDate,
@@ -167,7 +167,7 @@ export default class SubscriptionService {
       where: { id: subscriptionId },
     });
     if (!subscription) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAN.NOT_FOUND);
+      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
     }
     const response = await lastValueFrom(
       this.authService.getPayPalAccessToken(),
