@@ -22,7 +22,7 @@ export class PlaylistEntity extends BaseEntity {
   public description: string;
 
   @Column({name:"user_id"})
-  public userId?: number;
+  public userId?: string;
 
   @OneToMany(() => AudioPlaylistEntity, (audio_playlist) => audio_playlist.playlist,)
   audio_playlist: AudioPlaylistEntity[];

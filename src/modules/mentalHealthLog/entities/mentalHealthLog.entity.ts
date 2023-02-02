@@ -7,7 +7,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 @Entity('mental_health_log')
 export class MentalHealthLogEntity extends BaseEntity {
   @Column({ name: 'user_id' })
-  public userId: number;
+  public userId: string;
 
   @Column({ name: 'question_bank_id' })
   public questionBankId: number;

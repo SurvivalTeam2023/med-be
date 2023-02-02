@@ -17,10 +17,9 @@ import { PlanEntity } from './entities/plan.entity';
 import SearchPlanDTO from './dto/findPlan.dto';
 import CreatePlanDTO from './dto/createPlan.dto';
 import UpdatePlanDTO from './dto/updatePlan.dto';
-import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 
 @ApiTags('Plans')
-@Controller('Plans')
+@Controller('plans')
 @ApiBearerAuth()
 export default class PlanController {
   constructor(
