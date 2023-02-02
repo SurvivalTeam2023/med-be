@@ -41,15 +41,15 @@ export default class PlanController {
     @Query() dto: SearchPlanDTO,
   ): Promise<PlanEntity[]> {
     console.log('time', dto.usageTime)
-    return this.planService.findSubscriptionTypes(dto);
+    return this.planService.findPlan(dto);
   }
 
   @Post()
-  @Unprotected()
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   async createPlan(
     @Body() dto: CreatePlanDTO,
   ): Promise<PlanEntity> {
-    return this.planService.createSubscriptionType(dto);
+    return this.planService.createPlan(dto);
   }
 
   @Put(':id')
@@ -66,7 +66,7 @@ export default class PlanController {
 
   @Delete(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
-  async deletePlan(@Param('id') id: string) {
-    return await this.planService.deletePlan(id);
+  async deactivatePlan(@Param('id') id: string) {
+    return await this.planService.deactivatePlan(id);
   }
 }

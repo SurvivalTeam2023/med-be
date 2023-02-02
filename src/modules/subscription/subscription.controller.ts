@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable prettier/prettier */
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -59,8 +59,8 @@ export default class SubscriptionController {
     });
   }
 
-  @Unprotected()
-  // @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @ApiOperation({ summary: 'create subscription' })
   @Post()
   async createSubscription(
     @Body() dto: CreateSubscriptionDTO,
@@ -68,6 +68,7 @@ export default class SubscriptionController {
     return this.subscriptionService.createSubscription(dto);
   }
   @Post(':id')
+  @ApiOperation({ summary: 'activate subscription' })
   async activateSubscription(
     @Param('id') id: string,
   ) {
@@ -87,7 +88,7 @@ export default class SubscriptionController {
 
   @Delete(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
-  async deleteSubscription(@Param('id') id: string) {
-    return await this.subscriptionService.deleteSubscription(id);
+  async suspendSubscription(@Param('id') id: string) {
+    return await this.subscriptionService.suspendSubscription(id);
   }
 }

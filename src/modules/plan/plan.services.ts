@@ -9,14 +9,16 @@ import SearchPlanDTO from './dto/findPlan.dto';
 import CreatePlanDTO from './dto/createPlan.dto';
 import UpdatePlanDTO from './dto/updatePlan.dto';
 import { PlanStatus } from 'src/common/enums/planStatus.enum';
-import { lastValueFrom, map } from 'rxjs';
+import { catchError, lastValueFrom, map, of } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
-import { PRODUCT_ID } from 'src/environments';
+import { PAYPAL_PRODUCT_ID, PAYPAL_URL } from 'src/environments';
+import { AuthService } from '../auth/auth.services';
 
 
 @Injectable()
 export default class PlanService {
   constructor(
+    private readonly authService: AuthService,
     private readonly httpService: HttpService,
     @InjectRepository(PlanEntity)
     private readonly planRepo: Repository<PlanEntity>,
@@ -37,25 +39,29 @@ export default class PlanService {
     return subcription;
   }
 
-  async findSubscriptionTypes(dto: SearchPlanDTO): Promise<PlanEntity[]> {
+  async findPlan(dto: SearchPlanDTO): Promise<PlanEntity[]> {
     const querybuilder = this.planRepo
       .createQueryBuilder('plan')
     console.log(dto.usageTime, "time")
-    if (dto.name) querybuilder.where('plan.name like :name', { name: `%${dto.name}%` }).orderBy('subscription_type.created_at', 'DESC')
-    if (dto.status) querybuilder.andWhere('plan.status like :status', { status: dto.status }).orderBy('subscription_type.created_at', 'DESC')
-    if (dto.usageTime) querybuilder.andWhere('plan.usage_time = :usageTime', { usageTime: dto.usageTime }).orderBy('subscription_type.created_at', 'DESC')
+    if (dto.name) querybuilder.where('plan.name like :name', { name: `%${dto.name}%` }).orderBy('plan.created_at', 'DESC')
+    if (dto.status) querybuilder.andWhere('plan.status like :status', { status: dto.status }).orderBy('plan.created_at', 'DESC')
+    if (dto.usageTime) querybuilder.andWhere('plan.usage_time = :usageTime', { usageTime: dto.usageTime }).orderBy('plan.created_at', 'DESC')
 
     return querybuilder.getMany();
   }
 
-  async createSubscriptionType(
+  async createPlan(
     dto: CreatePlanDTO,
   ): Promise<PlanEntity> {
+    const response = await lastValueFrom(
+      this.authService.getPayPalAccessToken(),
+    );
+    let token = `Bearer ${response['access_token']}`;
     const planPayPal = await lastValueFrom(
       this.httpService.post(
-        `https://api-m.sandbox.paypal.com/v1/billing/plans`,
+        `${PAYPAL_URL}/v1/billing/plans`,
         {
-          product_id: PRODUCT_ID,
+          product_id: PAYPAL_PRODUCT_ID,
           name: dto.name,
           description: dto.desc,
           billing_cycles: [
@@ -84,7 +90,7 @@ export default class PlanService {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: 'Bearer A21AALZzzOriCavdC3qD-d2yz0S2Msl4hIjxN9v2Upro8TpT19NyiP0O8Og60EyxRsQg-OYJyLQ_xgdZs8l5tDBYsCw6aAJYA',
+            Authorization: token,
           }
         }
       )
@@ -113,16 +119,34 @@ export default class PlanService {
     return updatedSubcription;
   }
 
-  async deletePlan(
-    subscriptionTypeId: string,
+  async deactivatePlan(
+    planId: string,
   ): Promise<PlanEntity> {
-    const subsciptionType = await this.findPlanById(
-      subscriptionTypeId,
+    const plan = await this.findPlanById(
+      planId,
     );
-    if (subsciptionType) {
-      subsciptionType.status = PlanStatus.INACTIVE;
-      await this.planRepo.save(subsciptionType);
+    if (!plan) {
+      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAN.NOT_FOUND);
     }
-    return subsciptionType;
+    const response = await lastValueFrom(
+      this.authService.getPayPalAccessToken(),
+    );
+    let token = `Bearer ${response['access_token']}`;
+    await lastValueFrom(this.httpService.post(
+      `${PAYPAL_URL}/v1/billing/plans/${planId}/deactivate`,
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token,
+        }
+      }
+    ).pipe(map((response) => response.data)),
+    ).catch((err) => {
+      ErrorHelper.BadRequestException(err.response.data.errorMessage);
+    });
+    plan.status = PlanStatus.INACTIVE;
+    await this.planRepo.save(plan);
+    return plan;
   }
 }

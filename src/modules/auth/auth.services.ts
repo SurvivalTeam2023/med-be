@@ -13,6 +13,9 @@ import {
   KEYCLOAK_CLIENT_SECRECT,
   KEYCLOAK_HOST,
   KEYCLOAK_REALM_ClIENT,
+  PAYPAL_CLIENT_ID,
+  PAYPAL_CLIENT_SECRET,
+  PAYPAL_URL,
   REALM_PRODUCTION,
 } from 'src/environments';
 import { LoginDTO } from './dto/login.dto';
@@ -29,7 +32,7 @@ export class AuthService {
     private readonly httpService: HttpService,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   async logout(
     username: string,
@@ -39,9 +42,10 @@ export class AuthService {
     const response = await firstValueFrom(this.getAcessToken(adminAccount));
     let access_token = `Bearer ${response['access_token']}`;
     const user = await this.userService.findUserByName(username, access_token);
+    const userId = user['user_keycloak']['id']
     return this.httpService
       .post(
-        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/logout`,
+        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/logout`,
         {},
         {
           headers: {
@@ -150,7 +154,8 @@ export class AuthService {
     const response = await firstValueFrom(this.getAcessToken(adminAccount));
     let token = `Bearer ${response['access_token']}`;
     const user = await this.userService.findUserByName(name, token);
-    const userId = user[0].id;
+    const userId = user['user_keycloak']['id']
+    console.log(userId, "service")
     return this.httpService
       .put(
         `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/execute-actions-email`,
@@ -175,9 +180,10 @@ export class AuthService {
     const response = await firstValueFrom(this.getAcessToken(adminAccount));
     let token = `Bearer ${response['access_token']}`;
     const user = await this.userService.findUserByName(username, token);
+    const userId = user['user_keycloak']['id']
     return this.httpService
       .put(
-        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${user[0].id}/execute-actions-email`,
+        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/execute-actions-email`,
         [RequiredAction.VERIFY_EMAIL],
         {
           headers: {
@@ -207,6 +213,30 @@ export class AuthService {
           },
         },
       )
+      .pipe(map((response) => response.data))
+      .pipe(
+        catchError((err) =>
+          of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)),
+        ),
+      );
+  }
+
+  getPayPalAccessToken(): Observable<AxiosResponse<[]>> {
+    const form = new URLSearchParams();
+    form.append('grant_type', 'client_credentials');
+    return this.httpService.post(
+      `${PAYPAL_URL}/v1/oauth2/token`,
+      form,
+      {
+        auth: {
+          username: PAYPAL_CLIENT_ID,
+          password: PAYPAL_CLIENT_SECRET
+        },
+        headers: {
+          Content_type: 'application/x-www-form-urlencoded',
+        }
+      },
+    )
       .pipe(map((response) => response.data))
       .pipe(
         catchError((err) =>

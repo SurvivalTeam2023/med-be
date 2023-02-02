@@ -18,10 +18,13 @@ import UpdateSubscriptionDTO from './dto/updateSubscription.dto';
 import { PlanEntity } from '../plan/entities/plan.entity';
 import { lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { AuthService } from '../auth/auth.services';
+import { PAYPAL_URL } from 'src/environments';
 @Injectable()
 export default class SubscriptionService {
   constructor(
     private readonly httpService: HttpService,
+    private readonly authService: AuthService,
     @InjectRepository(SubscriptionEntity)
     private subscriptionRepo: Repository<SubscriptionEntity>,
     private readonly entityManage: EntityManager,
@@ -49,8 +52,8 @@ export default class SubscriptionService {
     if (dto.status) querybuilder.andWhere('subscription.status = :subscriptionStatus', {
       subscriptionStatus: dto.status,
     })
-    if (dto.subscriptionTypeId) querybuilder.andWhere('subscription.plan_id = :subscriptionTypeId', {
-      subscriptionTypeId: dto.subscriptionTypeId,
+    if (dto.planId) querybuilder.andWhere('subscription.plan_id = :subscriptionTypeId', {
+      subscriptionTypeId: dto.planId,
     })
     if (dto.startDate) querybuilder.andWhere('subscription.startDate = :startDate', {
       startDate: dto.startDate,
@@ -63,6 +66,10 @@ export default class SubscriptionService {
   async createSubscription(
     dto: CreateSubcriptionDTO,
   ): Promise<SubscriptionEntity> {
+    const response = await lastValueFrom(
+      this.authService.getPayPalAccessToken(),
+    );
+    let token = `Bearer ${response['access_token']}`;
     const user = await this.entityManage.findOne(UserEntity, {
       where: { id: dto.userId },
     });
@@ -105,7 +112,7 @@ export default class SubscriptionService {
         {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: 'Bearer A21AAKaKr5Ukst3BSFA7YUsvFgcq2I1BA07iIGhK1jjEet-Dn0bWvjtU-MQINEcl2a6FvwU9-tup2Ha6HO1eJKxYS9JOJDUMg',
+            Authorization: token,
           }
         }
       )
@@ -153,16 +160,35 @@ export default class SubscriptionService {
     return updatedSubcription;
   }
 
-  async deleteSubscription(
+  async suspendSubscription(
     subscriptionId: string,
   ): Promise<SubscriptionEntity> {
     const subscription = await this.subscriptionRepo.findOne({
       where: { id: subscriptionId },
     });
-    if (subscription) {
-      subscription.status = SubscriptionStatus.EXPIRED;
-      await this.subscriptionRepo.save(subscription);
+    if (!subscription) {
+      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAN.NOT_FOUND);
     }
+    const response = await lastValueFrom(
+      this.authService.getPayPalAccessToken(),
+    );
+    let token = `Bearer ${response['access_token']}`;
+    await lastValueFrom(this.httpService.post(
+      `${PAYPAL_URL}/v1/billing/subscriptions/${subscriptionId}/suspend`,
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token,
+        }
+      }
+    ).pipe(map((response) => response.data)),
+    ).catch((err) => {
+      ErrorHelper.BadRequestException(err.response.data.errorMessage);
+    });
+    subscription.status = SubscriptionStatus.SUSPENDED;
+    await this.subscriptionRepo.save(subscription);
+
     return subscription;
   }
 }
