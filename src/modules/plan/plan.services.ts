@@ -34,7 +34,7 @@ export default class PlanService {
       })
       .getOne();
     if (!subcription) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAN.NOT_FOUND);
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAN.NOT_FOUND);
     }
     return subcription;
   }
@@ -43,7 +43,7 @@ export default class PlanService {
     const querybuilder = this.planRepo
       .createQueryBuilder('plan')
     console.log(dto.usageTime, "time")
-    if (dto.name) querybuilder.where('plan.name like :name', { name: `%${dto.name}%` }).orderBy('plan.created_at', 'DESC')
+    if (dto.name) querybuilder.where('LOWER(plan.name) like :name', { name: `%${dto.name}%` }).orderBy('plan.created_at', 'DESC')
     if (dto.status) querybuilder.andWhere('plan.status like :status', { status: dto.status }).orderBy('plan.created_at', 'DESC')
     if (dto.usageTime) querybuilder.andWhere('plan.usage_time = :usageTime', { usageTime: dto.usageTime }).orderBy('plan.created_at', 'DESC')
 
@@ -110,7 +110,7 @@ export default class PlanService {
   ): Promise<PlanEntity> {
     const subcription = await this.findPlanById(planId);
     if (!subcription)
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAN.NOT_FOUND);
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAN.NOT_FOUND);
 
     const updatedSubcription = await this.planRepo.save({
       id: subcription.id,
@@ -126,7 +126,7 @@ export default class PlanService {
       planId,
     );
     if (!plan) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAN.NOT_FOUND);
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAN.NOT_FOUND);
     }
     const response = await lastValueFrom(
       this.authService.getPayPalAccessToken(),
