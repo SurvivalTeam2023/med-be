@@ -23,7 +23,10 @@ const KEYCLOAK_ADMIN_PASSWORD: string =
   process.env.KEYCLOAK_ADMIN_PASSWORD || '123456';
 
 //paypal config
-const PRODUCT_ID:string = 'PROD-6GG98180T5582525W'
+const PAYPAL_PRODUCT_ID: string = process.env.PAYPAL_PRODUCT_ID || 'PROD-6GG98180T5582525W'
+const PAYPAL_CLIENT_ID: string = process.env.PAYPAL_CLIENT_ID || 'AfdKKH46rASiapwQ8JMQ8LA7SSdPyCff7-1lsTDPNELBp3Ee1PiQgMgHJI7JP3A7oP_AlXIyfhw3rtNj'
+const PAYPAL_CLIENT_SECRET: string = process.env.PAYPAL_CLIENT_SECRET || 'EOo53067leUlvNEnB1VorpQSFLCWOzzR-iwtST6HSJbzErBisIF1nT3bIojVApypiogqplFmyZm2dBSv'
+const PAYPAL_URL: string = process.env.PAYPAL_URL || 'https://api-m.sandbox.paypal.com'
 
 //aws config
 const AWS_ACCESS_KEY_ID: string = process.env.AWS_ACCESS_KEY_ID || 'null';
@@ -51,5 +54,8 @@ export {
   KEYCLOAK_HOST,
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_CLIENT_SECRECT,
-  PRODUCT_ID
+  PAYPAL_PRODUCT_ID,
+  PAYPAL_CLIENT_ID,
+  PAYPAL_CLIENT_SECRET,
+  PAYPAL_URL
 };

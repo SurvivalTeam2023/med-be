@@ -7,9 +7,9 @@ import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
 export class SearchSubscriptionDTO {
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  userId: number;
+  @IsString()
+  @Type(() => String)
+  userId: string;
 
   @ApiProperty({
     enum: SubscriptionStatus,
@@ -21,9 +21,9 @@ export class SearchSubscriptionDTO {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  subscriptionTypeId: number;
+  @IsString()
+  @Type(() => String)
+  planId: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
