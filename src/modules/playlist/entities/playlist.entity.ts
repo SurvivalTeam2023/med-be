@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { BaseEntity } from 'src/common/base/base.entity';
 import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
 import { AudioPlaylistEntity } from 'src/modules/playlistAudio/entities/audioPlaylist.entity';
@@ -10,21 +11,24 @@ export class PlaylistEntity extends BaseEntity {
   @Column()
   public name: string;
 
-  @Column({name:"image_url"})
+  @Column({ name: 'image_url' })
   public imageUrl: string;
   @Column({
     type: 'enum',
-    enum: PlaylistStatus
+    enum: PlaylistStatus,
   })
   public status: PlaylistStatus;
 
   @Column()
   public description: string;
 
-  @Column({name:"user_id"})
-  public userId?: number;
+  @Column({ name: 'user_id' })
+  public userId?: string;
 
-  @OneToMany(() => AudioPlaylistEntity, (audio_playlist) => audio_playlist.playlist,)
+  @OneToMany(
+    () => AudioPlaylistEntity,
+    (audio_playlist) => audio_playlist.playlist,
+  )
   audio_playlist: AudioPlaylistEntity[];
 
   @ManyToOne(() => PlaylistTypeEntity, (playlistType) => playlistType.playlist)

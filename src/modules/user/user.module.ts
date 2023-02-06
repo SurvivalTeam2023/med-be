@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserController } from './user.controller';
@@ -9,9 +10,14 @@ import { AuthModule } from '../auth/auth.module';
 import UserEntity from './entities/user.entity';
 import ArtistEntity from '../artist/entities/artist.entity';
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, FileEntity, ArtistEntity]), KeycloakModule, HttpModule, forwardRef(() => AuthModule)],
+  imports: [
+    TypeOrmModule.forFeature([UserEntity, FileEntity, ArtistEntity]),
+    KeycloakModule,
+    HttpModule,
+    forwardRef(() => AuthModule),
+  ],
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService]
+  exports: [UserService],
 })
-export class UserModule { }
+export class UserModule {}

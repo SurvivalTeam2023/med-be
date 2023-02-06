@@ -31,9 +31,9 @@ export default class SubscriptionTypeService {
     return subcription;
   }
   async findSubscriptionTypes(name: string): Promise<SubscriptionTypeEntity[]> {
-    const querybuilder = this.subscriptionTypeRepo
+    const querybuilder = await this.subscriptionTypeRepo
       .createQueryBuilder('subscription_type')
-      .orWhere('subscription_type.name like :name', { name: name })
+      .where('subscription_type.name like :name', { name: name })
       .orderBy('subscription_type.created_at', 'DESC')
       .getMany();
 

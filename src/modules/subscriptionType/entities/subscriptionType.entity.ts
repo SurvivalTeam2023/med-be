@@ -20,7 +20,7 @@ export class SubscriptionTypeEntity extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: SubscriptionTypeStatus
+    enum: SubscriptionTypeStatus,
   })
   public status: SubscriptionTypeStatus;
 
