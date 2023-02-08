@@ -5,6 +5,7 @@ import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Unprotected } from 'nest-keycloak-connect';
 import CreateFavoriteDTO from './dto/createFavorite.dto';
 import { FavoriteEntity } from './entities/favorite.entity';
+import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 
 @ApiTags('Favorite')
 @Controller('Favorite')
@@ -16,8 +17,8 @@ export default class FavoriteController {
   @ApiOperation({ summary: 'create Favorite' })
   @Unprotected()
   @Post()
-  async create(@Body() dto: CreateFavoriteDTO): Promise<FavoriteEntity> {
-    return this.Favoriteservice.createfavorite(dto);
+  async create(@Body() dto: CreateFavoriteDTO, @RequestPayload() token: string): Promise<FavoriteEntity> {
+    return this.Favoriteservice.createFavorite(dto, token);
   }
 
   @ApiOperation({ summary: 'delete Favorite' })

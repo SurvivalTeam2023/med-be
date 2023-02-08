@@ -10,6 +10,7 @@ import { GenreModule } from './modules/genre/genre.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
 import { PlanModule } from './modules/plan/plan.module';
+import { HistoryModule } from './modules/history/history.module';
 @Module({
   imports: [
     TypeOrmConfigModule,
@@ -22,6 +23,7 @@ import { PlanModule } from './modules/plan/plan.module';
     SubscriptionModule,
     PlanModule,
     FavoriteModule,
+    HistoryModule
   ],
   controllers: [],
   providers: [],

@@ -2,12 +2,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class CreateFavoriteDTO {
- 
+export class CreateHistoryDTO {
 
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  genreId: number;
+  audioId: number;
+
 }
-export default CreateFavoriteDTO;
+export default CreateHistoryDTO;
