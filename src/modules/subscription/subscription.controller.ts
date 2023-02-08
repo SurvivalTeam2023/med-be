@@ -47,7 +47,7 @@ export default class SubscriptionController {
     name: 'limit',
     required: false,
   })
-  async getSubcriptions(
+  async getSubscriptions(
     @Query() subscription: SearchSubscriptionDTO,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,

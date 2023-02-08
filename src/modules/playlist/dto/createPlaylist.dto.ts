@@ -24,7 +24,7 @@ export class CreatePlaylistDto {
   description: string;
 
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   userId: string;
 }
 export default CreatePlaylistDto;

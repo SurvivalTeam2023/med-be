@@ -10,7 +10,7 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { SubscriptionEntity } from './entities/subscription.entity';
 import { SearchSubscriptionDTO } from './dto/searchSubscription.dto';
-import CreateSubcriptionDTO from './dto/createSubscription.dto';
+import CreateSubscriptionDTO from './dto/createSubscription.dto';
 import UserEntity from '../user/entities/user.entity';
 import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
 import * as moment from 'moment';
@@ -33,14 +33,14 @@ export default class SubscriptionService {
   async findSubscriptionById(
     subscriptionId: string,
   ): Promise<SubscriptionEntity> {
-    const subcription = await this.subscriptionRepo
+    const subscription = await this.subscriptionRepo
       .createQueryBuilder('subscription')
       .where('subscription.id = :subscriptionId', { subscriptionId })
       .getOne();
-    if (!subcription) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
+    if (!subscription) {
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
     }
-    return subcription;
+    return subscription;
   }
   async findSubscriptions(
     dto: SearchSubscriptionDTO,
@@ -64,7 +64,7 @@ export default class SubscriptionService {
   }
 
   async createSubscription(
-    dto: CreateSubcriptionDTO,
+    dto: CreateSubscriptionDTO,
   ): Promise<SubscriptionEntity> {
     const response = await lastValueFrom(
       this.authService.getPayPalAccessToken(),
@@ -74,14 +74,14 @@ export default class SubscriptionService {
       where: { id: dto.userId },
     });
     if (!user) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.USER.NOT_FOUND);
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
     }
     const plan = await this.entityManage.findOne(
       PlanEntity,
       { where: { id: dto.planId } },
     );
     if (!plan) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAN.NOT_FOUND);
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAN.NOT_FOUND);
     }
     const subscriptionPaypal = await lastValueFrom(
       this.httpService.post(
@@ -132,10 +132,10 @@ export default class SubscriptionService {
     return subscription;
   }
 
-  async activateSubscription(subcriptionId: string) {
+  async activateSubscription(subscriptionId: string) {
     await lastValueFrom(
       this.httpService.post(
-        `api-m.sandbox.paypal.com/v1/billing/subscriptions/${subcriptionId}d/activate`,
+        `api-m.sandbox.paypal.com/v1/billing/subscriptions/${subscriptionId}d/activate`,
         {},
         {
           headers: {
@@ -152,12 +152,12 @@ export default class SubscriptionService {
   ): Promise<SubscriptionEntity> {
     const subscription = await this.findSubscriptionById(subscriptionId);
     if (!subscription)
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
-    const updatedSubcription = await this.subscriptionRepo.save({
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
+    const updatedSubscription = await this.subscriptionRepo.save({
       id: subscription.id,
       ...dto,
     });
-    return updatedSubcription;
+    return updatedSubscription;
   }
 
   async suspendSubscription(
@@ -167,7 +167,7 @@ export default class SubscriptionService {
       where: { id: subscriptionId },
     });
     if (!subscription) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
     }
     const response = await lastValueFrom(
       this.authService.getPayPalAccessToken(),

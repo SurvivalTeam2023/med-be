@@ -14,7 +14,7 @@ export const ERROR_MESSAGE = {
   },
   SUBSCRIPTION: {
     INVALID_DATE: 'End date must after start date',
-    NOT_FOUND: 'Subcription not found!',
+    NOT_FOUND: 'Subscription not found!',
     DUPLICATE_NAME: 'Name already exist!',
   },
   FAVORITE: {
@@ -24,10 +24,18 @@ export const ERROR_MESSAGE = {
   },
 
   PLAN: {
-    NOT_FOUND: 'Subcriptiontype not found!',
+    NOT_FOUND: 'Plan not found!',
     DUPLICATE_NAME: 'Name already exist!',
   },
-
+  QUESTION: {
+    NOT_FOUND: 'Question not found!',
+  },
+  OPTION: {
+    NOT_FOUND: 'Option not found!',
+  },
+  MENTAL_HEALTH: {
+    NOT_FOUND: 'Question not found!',
+  },
   USER: {
     NOT_FOUND: 'User not found!',
     UNDER_AGES: 'User must over 12 year old!',

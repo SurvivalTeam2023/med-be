@@ -3,7 +3,7 @@ export class ErrorHelper {
   static BadRequestException(msg: string | string[]) {
     throw new HttpException(msg, HttpStatus.BAD_REQUEST);
   }
-  static NotFoundExeption(msg: string | string[]) {
+  static NotFoundException(msg: string | string[]) {
     throw new HttpException(msg, HttpStatus.NOT_FOUND);
   }
   static UnAuthorizeException(msg: string | string[]) {
@@ -15,5 +15,5 @@ export class ErrorHelper {
   static InternalServerException(msg: string | string[]) {
     throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
   }
-  
+
 }

@@ -7,12 +7,12 @@ import CreateFavoriteDTO from './dto/createFavorite.dto';
 import { FavoriteEntity } from './entities/favorite.entity';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 
-@ApiTags('Favorite')
-@Controller('Favorite')
+@ApiTags('Favorites')
+@Controller('favorite')
 @ApiBearerAuth()
 @Controller('rest/favorite')
 export default class FavoriteController {
-  constructor(private readonly Favoriteservice: FavoriteService) {}
+  constructor(private readonly Favoriteservice: FavoriteService) { }
 
   @ApiOperation({ summary: 'create Favorite' })
   @Unprotected()
