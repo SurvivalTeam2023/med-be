@@ -26,7 +26,7 @@ import { OptionModule } from './modules/option/option.module';
     SubscriptionModule,
     PlanModule,
     FavoriteModule,
-    HistoryModule
+    HistoryModule,
     QuestionModule,
     OptionModule
   ],

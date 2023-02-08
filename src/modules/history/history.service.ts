@@ -24,13 +24,13 @@ export default class HistoryService {
           where: { id: userId },
         });
         if (!user) {
-          ErrorHelper.NotFoundExeption(ERROR_MESSAGE.USER.NOT_FOUND);
+          ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
         }
         const audio = await this.entityManage.findOne(AudioEntity, {
           where: { id: dto.audioId },
         });
         if (!audio) {
-          ErrorHelper.NotFoundExeption(ERROR_MESSAGE.AUDIO.NOT_FOUND);
+          ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND);
         }
         const history = await this.historyRepo.save({
           ...dto,
