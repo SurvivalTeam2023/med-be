@@ -31,7 +31,7 @@ export default class AudioService {
       .where('audio.id = :audioId', { audioId })
       .getOne();
     if (!entity) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.AUDIO.NOT_FOUND);
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND);
     }
 
     return entity;
@@ -54,7 +54,7 @@ export default class AudioService {
     const audioPlaylists = dto.playlistId.map((playlistId) => {
       const audioPlaylist = new AudioPlaylistEntity();
       if (!playlistId) {
-        ErrorHelper.NotFoundExeption(ERROR_MESSAGE.PLAYLIST.NOT_FOUND);
+        ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAYLIST.NOT_FOUND);
       }
       audioPlaylist.playlistId = playlistId;
       return audioPlaylist;
@@ -72,7 +72,7 @@ export default class AudioService {
     const audio = await this.audioRepository.findOneBy({
       id: audioId,
     });
-    if (!audio) ErrorHelper.NotFoundExeption(ERROR_MESSAGE.AUDIO.NOT_FOUND);
+    if (!audio) ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND);
 
     const updatedAudio = await this.audioRepository.save({
       id: audio.id,

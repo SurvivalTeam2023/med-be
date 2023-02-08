@@ -175,7 +175,7 @@ export class UserService {
         ),
     );
     if (user_keycloak.length === 0) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.USER.NOT_FOUND);
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
     }
     const user_db = await this.entityManage.findOneBy(UserEntity, {
       id: user_keycloak[0].id,

@@ -19,7 +19,7 @@ export default class FavoriteService {
     @InjectRepository(FavoriteEntity)
     private favoriteRepo: Repository<FavoriteEntity>,
     private readonly entityManage: EntityManager,
-  ) {}
+  ) { }
   async findAllFavorite(userId: string): Promise<FavoriteEntity[]> {
     const querybuilder = this.favoriteRepo
       .createQueryBuilder('favorite')
@@ -35,13 +35,13 @@ export default class FavoriteService {
       where: { id: dto.userId },
     });
     if (!user) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.USER.NOT_FOUND);
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
     }
     const genre = await this.entityManage.findOne(GenreEntity, {
       where: { id: dto.genreId },
     });
     if (!genre) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.GENRE.NOT_FOUND);
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
     }
     const favorite = await this.favoriteRepo.save({
       ...dto,

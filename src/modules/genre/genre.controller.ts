@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Patch,
+  Query
 } from '@nestjs/common';
 
 import GenreService from './genre.services';
@@ -23,7 +24,7 @@ import AddGenreToAudioDTO from './dto/addGenreToAudio.dto';
 @Controller('genres')
 @ApiBearerAuth()
 export default class GenreController {
-  constructor(private readonly genreService: GenreService) {}
+  constructor(private readonly genreService: GenreService) { }
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
@@ -34,9 +35,13 @@ export default class GenreController {
 
   @Get()
   @Unprotected()
-//   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
-  async getGenres(): Promise<GenreEntity[]> {
-    return this.genreService.findGenres();
+  @ApiQuery({
+    name: "name",
+    type: String,
+    required: false
+  })
+  async getGenres(@Query('name') name: string): Promise<GenreEntity[]> {
+    return this.genreService.findGenres(name);
   }
 
 

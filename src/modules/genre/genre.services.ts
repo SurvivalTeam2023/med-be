@@ -16,7 +16,7 @@ export default class GenreService {
   constructor(
     @InjectRepository(GenreEntity)
     private genreRepo: Repository<GenreEntity>,
-  ) {}
+  ) { }
 
   async createGenre(dto: CreateGenreDTO): Promise<GenreEntity> {
     const newGenre = this.genreRepo.save({
@@ -49,21 +49,18 @@ export default class GenreService {
     return genre;
   }
 
-  async findGenres(): Promise<GenreEntity[]> {
-    const genres = await this.genreRepo.find({
-      
-      order: {
-        name: 'ASC',
-      },
-    });
-    return genres;
+  async findGenres(name: string): Promise<GenreEntity[]> {
+    const queryBuilder = await this.genreRepo.createQueryBuilder('genre')
+    if (name) queryBuilder.where('LOWER(genre.name) like :name', { name: `%${name}%` }).orderBy('genre.name', 'ASC')
+
+    return queryBuilder.orderBy('genre.name', 'ASC').getMany()
   }
   async updateGenre(
     genreId: number,
     dto: UpdateGenreDTO,
   ): Promise<GenreEntity> {
     const genre = await this.findGenreById(genreId);
-    if (!genre) ErrorHelper.NotFoundExeption(ERROR_MESSAGE.GENRE.NOT_FOUND);
+    if (!genre) ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
 
     const updatedGenre = await this.genreRepo.save({
       id: genre.id,
@@ -74,7 +71,7 @@ export default class GenreService {
 
   async deleteGenre(genreId: number): Promise<GenreEntity> {
     const genre = await this.findGenreById(genreId);
-    if (!genre) ErrorHelper.NotFoundExeption(ERROR_MESSAGE.GENRE.NOT_FOUND);
+    if (!genre) ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
     const updatedGenre = this.genreRepo.save({
       id: genre.id,
       status: GenreStatus.INACTIVE,

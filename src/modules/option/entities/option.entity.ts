@@ -1,8 +1,8 @@
-/* eslint-disable prettier/prettier */
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { QuestionEntity } from 'src/modules/question/entities/question.entity';
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
+import { OptionStatus } from 'src/common/enums/optionStatus.enum';
 
 @Entity('option')
 export class OptionEntity extends BaseEntity {
@@ -10,7 +10,13 @@ export class OptionEntity extends BaseEntity {
     public answer: string;
 
     @Column()
-    public points: string;
+    public points: number;
+
+    @Column({
+        type: 'enum',
+        enum: OptionStatus
+    })
+    public status: OptionStatus;
 
     @ManyToOne(() => QuestionEntity, (question) => question.answer)
     @JoinColumn({ name: 'question_id' })
