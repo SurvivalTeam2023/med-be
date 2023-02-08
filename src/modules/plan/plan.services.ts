@@ -27,27 +27,26 @@ export default class PlanService {
   async findPlanById(
     planId: string,
   ): Promise<PlanEntity> {
-    const subcription = await this.planRepo
+    const subscription = await this.planRepo
       .createQueryBuilder('plan')
       .where('plan.id = :planId', {
         planId,
       })
       .getOne();
-    if (!subcription) {
+    if (!subscription) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAN.NOT_FOUND);
     }
-    return subcription;
+    return subscription;
   }
 
   async findPlan(dto: SearchPlanDTO): Promise<PlanEntity[]> {
-    const querybuilder = this.planRepo
+    const queryBuilder = this.planRepo
       .createQueryBuilder('plan')
-    console.log(dto.usageTime, "time")
-    if (dto.name) querybuilder.where('LOWER(plan.name) like :name', { name: `%${dto.name}%` }).orderBy('plan.created_at', 'DESC')
-    if (dto.status) querybuilder.andWhere('plan.status like :status', { status: dto.status }).orderBy('plan.created_at', 'DESC')
-    if (dto.usageTime) querybuilder.andWhere('plan.usage_time = :usageTime', { usageTime: dto.usageTime }).orderBy('plan.created_at', 'DESC')
+    if (dto.name) queryBuilder.where('LOWER(plan.name) like :name', { name: `%${dto.name}%` }).orderBy('plan.created_at', 'DESC')
+    if (dto.status) queryBuilder.andWhere('plan.status like :status', { status: dto.status }).orderBy('plan.created_at', 'DESC')
+    if (dto.usageTime) queryBuilder.andWhere('plan.usage_time = :usageTime', { usageTime: dto.usageTime }).orderBy('plan.created_at', 'DESC')
 
-    return querybuilder.getMany();
+    return queryBuilder.getMany();
   }
 
   async createPlan(

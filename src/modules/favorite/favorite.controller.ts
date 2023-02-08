@@ -6,12 +6,12 @@ import { Unprotected } from 'nest-keycloak-connect';
 import CreateFavoriteDTO from './dto/createFavorite.dto';
 import { FavoriteEntity } from './entities/favorite.entity';
 
-@ApiTags('Favorite')
-@Controller('Favorite')
+@ApiTags('Favorites')
+@Controller('favorite')
 @ApiBearerAuth()
 @Controller('rest/favorite')
 export default class FavoriteController {
-  constructor(private readonly Favoriteservice: FavoriteService) {}
+  constructor(private readonly Favoriteservice: FavoriteService) { }
 
   @ApiOperation({ summary: 'create Favorite' })
   @Unprotected()

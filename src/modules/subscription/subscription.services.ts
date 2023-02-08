@@ -33,14 +33,14 @@ export default class SubscriptionService {
   async findSubscriptionById(
     subscriptionId: string,
   ): Promise<SubscriptionEntity> {
-    const subcription = await this.subscriptionRepo
+    const subscription = await this.subscriptionRepo
       .createQueryBuilder('subscription')
       .where('subscription.id = :subscriptionId', { subscriptionId })
       .getOne();
-    if (!subcription) {
+    if (!subscription) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
     }
-    return subcription;
+    return subscription;
   }
   async findSubscriptions(
     dto: SearchSubscriptionDTO,
@@ -167,7 +167,7 @@ export default class SubscriptionService {
       where: { id: subscriptionId },
     });
     if (!subscription) {
-      ErrorHelper.NotFoundExeption(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.SUBSCRIPTION.NOT_FOUND);
     }
     const response = await lastValueFrom(
       this.authService.getPayPalAccessToken(),

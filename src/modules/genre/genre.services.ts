@@ -49,14 +49,11 @@ export default class GenreService {
     return genre;
   }
 
-  async findGenres(): Promise<GenreEntity[]> {
-    const genres = await this.genreRepo.find({
+  async findGenres(name: string): Promise<GenreEntity[]> {
+    const queryBuilder = await this.genreRepo.createQueryBuilder('genre')
+    if (name) queryBuilder.where('LOWER(genre.name) like :name', { name: `%${name}%` }).orderBy('genre.name', 'ASC')
 
-      order: {
-        name: 'ASC',
-      },
-    });
-    return genres;
+    return queryBuilder.orderBy('genre.name', 'ASC').getMany()
   }
   async updateGenre(
     genreId: number,

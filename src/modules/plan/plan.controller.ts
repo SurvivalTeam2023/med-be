@@ -39,7 +39,6 @@ export default class PlanController {
   async getPlans(
     @Query() dto: SearchPlanDTO,
   ): Promise<PlanEntity[]> {
-    console.log('time', dto.usageTime)
     return this.planService.findPlan(dto);
   }
 

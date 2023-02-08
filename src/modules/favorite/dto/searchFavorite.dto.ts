@@ -3,13 +3,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class SearchFavoriteDTO {
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsNotEmpty()
   @IsString()
   userId: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsNotEmpty()
-  @IsString()
-  genreId: string;
+  genreId: number;
 }
