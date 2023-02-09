@@ -12,20 +12,20 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 @ApiBearerAuth()
 @Controller('rest/favorite')
 export default class FavoriteController {
-  constructor(private readonly Favoriteservice: FavoriteService) { }
+  constructor(private readonly favoriteService: FavoriteService) { }
 
   @ApiOperation({ summary: 'create Favorite' })
   @Unprotected()
   @Post()
   async create(@Body() dto: CreateFavoriteDTO, @RequestPayload() token: string): Promise<FavoriteEntity> {
-    return this.Favoriteservice.createFavorite(dto, token);
+    return this.favoriteService.createFavorite(dto, token);
   }
 
   @ApiOperation({ summary: 'delete Favorite' })
   @Unprotected()
   @Delete(':id')
   async delete(@Param('id') id: number) {
-    await this.Favoriteservice.deleteFavorite(id);
+    await this.favoriteService.deleteFavorite(id);
   }
 
   @ApiOperation({ summary: 'find Favorite by userId' })
@@ -34,6 +34,6 @@ export default class FavoriteController {
   async getAllFavorite(
     @Param('userId') userId: string,
   ): Promise<FavoriteEntity[]> {
-    return this.Favoriteservice.findAllFavorite(userId);
+    return this.favoriteService.findAllFavorite(userId);
   }
 }
