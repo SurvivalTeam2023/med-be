@@ -6,7 +6,7 @@ import { AudioEntity } from "../audio/entities/audio.entity";
 import UserEntity from "../user/entities/user.entity";
 import CreateHistoryDTO from "./dto/createHistory.dto";
 import { HistoryEntity } from "./entities/history.entity";
-import jwt_decode from "jwt-decode";
+import {  getUserId } from "src/utils/decode.utils";
 
 
 
@@ -18,8 +18,7 @@ export default class HistoryService {
       ) {}
 
       async createHistory(dto: CreateHistoryDTO, token: string): Promise<HistoryEntity> {
-        let decoded_token = jwt_decode(token);
-        let userId = decoded_token['sub']
+        let userId = getUserId(token)
         const user = await this.entityManage.findOne(UserEntity, {
           where: { id: userId },
         });

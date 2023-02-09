@@ -12,7 +12,7 @@ import { CreateFavoriteDTO } from './dto/createFavorite.dto';
 import UserEntity from '../user/entities/user.entity';
 import { GenreEntity } from '../genre/entities/genre.entity';
 import { FavoriteStatus } from 'src/common/enums/favoriteStatus.enum';
-import jwt_decode from "jwt-decode";
+import { getUserId } from 'src/utils/decode.utils';
 @Injectable()
 export default class FavoriteService {
   constructor(
@@ -31,8 +31,7 @@ export default class FavoriteService {
   }
 
   async createFavorite(dto: CreateFavoriteDTO, token: string): Promise<FavoriteEntity> {
-    let decoded_token = jwt_decode(token);
-        let userId = decoded_token['sub']
+    let userId = getUserId(token)
     const user = await this.entityManage.findOne(UserEntity, {
       where: { id: userId },
     });

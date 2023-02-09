@@ -12,11 +12,11 @@ import HistoryService from "./history.service";
 @Controller('rest/history')
 
 export default class HistoryController { 
-    constructor(private readonly Historyservice: HistoryService) {}
+    constructor(private readonly historyService: HistoryService) {}
   @ApiOperation({ summary: 'create History' })
   @Unprotected()
   @Post("create")
   async createHistory(@Body() dto: CreateHistoryDTO, @RequestPayload() token: string): Promise<HistoryEntity>  {
-    return this.Historyservice.createHistory(dto, token);
+    return this.historyService.createHistory(dto, token);
   }
 }
