@@ -10,8 +10,10 @@ import { GenreModule } from './modules/genre/genre.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
 import { PlanModule } from './modules/plan/plan.module';
+import { HistoryModule } from './modules/history/history.module';
 import { QuestionModule } from './modules/question/question.module';
 import { OptionModule } from './modules/option/option.module';
+
 @Module({
   imports: [
     TypeOrmConfigModule,
@@ -24,6 +26,7 @@ import { OptionModule } from './modules/option/option.module';
     SubscriptionModule,
     PlanModule,
     FavoriteModule,
+    HistoryModule,
     QuestionModule,
     OptionModule
   ],

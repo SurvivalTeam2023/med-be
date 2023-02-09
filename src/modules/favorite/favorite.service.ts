@@ -12,7 +12,7 @@ import { CreateFavoriteDTO } from './dto/createFavorite.dto';
 import UserEntity from '../user/entities/user.entity';
 import { GenreEntity } from '../genre/entities/genre.entity';
 import { FavoriteStatus } from 'src/common/enums/favoriteStatus.enum';
-
+import { getUserId } from 'src/utils/decode.utils';
 @Injectable()
 export default class FavoriteService {
   constructor(
@@ -30,9 +30,10 @@ export default class FavoriteService {
     return querybuilder;
   }
 
-  async createfavorite(dto: CreateFavoriteDTO): Promise<FavoriteEntity> {
+  async createFavorite(dto: CreateFavoriteDTO, token: string): Promise<FavoriteEntity> {
+    let userId = getUserId(token)
     const user = await this.entityManage.findOne(UserEntity, {
-      where: { id: dto.userId },
+      where: { id: userId },
     });
     if (!user) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
