@@ -33,8 +33,14 @@ export const ERROR_MESSAGE = {
   OPTION: {
     NOT_FOUND: 'Option not found!',
   },
+  RESULT: {
+    NOT_FOUND: 'Result not found'
+  },
+  QUESTION_BANK: {
+    NOT_FOUND: 'Question bank not found'
+  },
   MENTAL_HEALTH: {
-    NOT_FOUND: 'Question not found!',
+    NOT_FOUND: 'Mental health not found!',
   },
   USER: {
     NOT_FOUND: 'User not found!',

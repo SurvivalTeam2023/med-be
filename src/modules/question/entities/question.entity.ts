@@ -33,9 +33,6 @@ export class QuestionEntity extends BaseEntity {
   })
   public status: QuestionStatus;
 
-  @OneToMany(() => ResultEntity, (result) => result.questionId)
-  public result: ResultEntity[];
-
   @OneToMany(
     () => QuestionMentalHealthEntity,
     (questionMentalHealth) => questionMentalHealth.question,

@@ -13,6 +13,7 @@ import { PlanModule } from './modules/plan/plan.module';
 import { HistoryModule } from './modules/history/history.module';
 import { QuestionModule } from './modules/question/question.module';
 import { OptionModule } from './modules/option/option.module';
+import { ResultModule } from './modules/result/result.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { OptionModule } from './modules/option/option.module';
     FavoriteModule,
     HistoryModule,
     QuestionModule,
-    OptionModule
+    OptionModule,
+    ResultModule
   ],
   controllers: [],
   providers: [],
