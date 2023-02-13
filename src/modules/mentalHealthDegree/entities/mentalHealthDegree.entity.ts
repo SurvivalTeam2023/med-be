@@ -1,4 +1,5 @@
 import { BaseEntity } from 'src/common/base/base.entity';
+import { MentalHealthStatus } from 'src/common/enums/mentalHealth.enum';
 import { MentalHealthEntity } from 'src/modules/mentalHealth/entities/mentalHealth.entity';
 import {
   Column,
@@ -7,18 +8,24 @@ import {
   ManyToOne,
 } from 'typeorm';
 
-@Entity('question_mental_health')
+@Entity('mental_health_degree')
 export class MentalHealthDegreeEntity extends BaseEntity {
 
 
   @Column()
   public title: String;
 
-  @Column()
-  public pointStart:number
+  @Column({
+    type: 'enum',
+    enum: MentalHealthStatus
+  })
+  public status: MentalHealthStatus;
 
   @Column()
-  public pointEnd:number
+  public pointStart: number
+
+  @Column()
+  public pointEnd: number
 
   @ManyToOne(() => MentalHealthEntity, (mentalHealth) => mentalHealth.mentalHealthDegree, {
     cascade: true,

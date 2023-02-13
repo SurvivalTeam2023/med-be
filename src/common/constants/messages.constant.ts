@@ -42,6 +42,9 @@ export const ERROR_MESSAGE = {
   MENTAL_HEALTH: {
     NOT_FOUND: 'Mental health not found!',
   },
+  MENTAL_HEALTH_DEGREE: {
+    NOT_FOUND: 'Mental health degree not found!',
+  },
   USER: {
     NOT_FOUND: 'User not found!',
     UNDER_AGES: 'User must over 12 year old!',

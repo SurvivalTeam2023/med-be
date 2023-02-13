@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { AudioEntity } from './entities/audio.entity';
 import { AudioStatus } from '../../common/enums/audioStatus.enum';
 import { CreateAudioDTO } from './dto/createAudio.dto';
@@ -14,11 +14,13 @@ import {
   paginate,
 } from 'nestjs-typeorm-paginate';
 import UpdateAudioDTO from './dto/updateAudio.dto';
+import ArtistEntity from '../artist/entities/artist.entity';
 import { AudioPlaylistEntity } from '../audioPlaylist/entities/audioPlaylist.entity';
 
 @Injectable()
 export default class AudioService {
   constructor(
+    private readonly entityManage: EntityManager,
     @InjectRepository(AudioEntity)
     private audioRepository: Repository<AudioEntity>,
   ) { }
@@ -63,9 +65,16 @@ export default class AudioService {
       audioPlaylist.playlistId = playlistId;
       return audioPlaylist;
     });
+    const artist = await this.entityManage.findOne(ArtistEntity, {
+      where: { id: dto.artistId },
+    });
+    if (!artist) {
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
+    }
     const entity = this.audioRepository.save({
       ...dto,
       audioPlaylist: audioPlaylists,
+      artistId: artist
     });
     return entity;
   }

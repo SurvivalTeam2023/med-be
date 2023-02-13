@@ -4,7 +4,7 @@ import { IPaginationOptions, paginate, Pagination } from "nestjs-typeorm-paginat
 import { ERROR_MESSAGE } from "src/common/constants/messages.constant";
 import { QuestionStatus } from "src/common/enums/questionStatus.enum";
 import { ErrorHelper } from "src/helpers/error.helper";
-import { EntityManager, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { QuestionMentalHealthEntity } from "../questionMentalHealth/entities/questionMentalHealth.entity";
 import CreateQuestionDTO from "./dto/createQuestion.dto";
 import SearchQuestionDTO from "./dto/searchQuestion.dto";
@@ -16,7 +16,6 @@ export default class QuestionService {
     constructor(
         @InjectRepository(QuestionEntity)
         private questionRepo: Repository<QuestionEntity>,
-        private readonly entityManage: EntityManager,
     ) { }
     async findQuestionById(
         questionId: number,
@@ -68,11 +67,11 @@ export default class QuestionService {
         });
         if (!question) ErrorHelper.NotFoundException(ERROR_MESSAGE.QUESTION.NOT_FOUND);
 
-        const updatedAudio = await this.questionRepo.save({
+        const updatedQuestion = await this.questionRepo.save({
             id: question.id,
             ...dto,
         });
-        return updatedAudio;
+        return updatedQuestion;
     }
 
     async deleteQuestion(questionId: number): Promise<QuestionEntity> {
