@@ -26,7 +26,6 @@ export default class FavoriteService {
       .leftJoinAndSelect('favorite.genreId', 'genre')
       .where('favorite.user_id = :user_id', { user_id: userId })
       .getMany();
-    console.log('userid', userId);
     return querybuilder;
   }
 

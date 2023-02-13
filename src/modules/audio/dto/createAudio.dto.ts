@@ -25,5 +25,10 @@ export class CreateAudioDTO {
   @IsOptional()
   @IsArray()
   playlistId?: number[];
+
+  @IsNotEmpty()
+  @ApiProperty()
+  @IsString()
+  artistId: string;
 }
 export default CreateAudioDTO;

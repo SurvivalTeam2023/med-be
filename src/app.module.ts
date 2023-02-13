@@ -14,6 +14,8 @@ import { HistoryModule } from './modules/history/history.module';
 import { QuestionModule } from './modules/question/question.module';
 import { OptionModule } from './modules/option/option.module';
 import { ResultModule } from './modules/result/result.module';
+import { MentalHealthModule } from './modules/mentalHealth/mentalHealth.module';
+import { MentalHealthDegreeModule } from './modules/mentalHealthDegree/mentalHealthDegree.module';
 
 @Module({
   imports: [
@@ -30,7 +32,9 @@ import { ResultModule } from './modules/result/result.module';
     HistoryModule,
     QuestionModule,
     OptionModule,
-    ResultModule
+    ResultModule,
+    MentalHealthModule,
+    MentalHealthDegreeModule
   ],
   controllers: [],
   providers: [],

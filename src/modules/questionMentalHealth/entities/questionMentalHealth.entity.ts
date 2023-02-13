@@ -19,7 +19,7 @@ export class QuestionMentalHealthEntity extends BaseEntity {
   @Column({ name: 'question_id' })
   public questionId!: number;
 
-  @ManyToOne(() => MentalHealthEntity, (mentalHealth) => mentalHealth.questionMentalHealthmental, {
+  @ManyToOne(() => MentalHealthEntity, (mentalHealth) => mentalHealth.questionMentalHealth, {
     cascade: true,
   })
   @JoinColumn({ name: 'mental_health_id' })

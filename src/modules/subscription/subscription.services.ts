@@ -46,21 +46,21 @@ export default class SubscriptionService {
     dto: SearchSubscriptionDTO,
     option: IPaginationOptions,
   ): Promise<Pagination<SubscriptionEntity>> {
-    const querybuilder = this.subscriptionRepo
+    const queryBuilder = this.subscriptionRepo
       .createQueryBuilder('subscription')
-    if (dto.userId) querybuilder.where('subscription.user_id like :userId', { userId: dto.userId })
-    if (dto.status) querybuilder.andWhere('subscription.status = :subscriptionStatus', {
+    if (dto.userId) queryBuilder.where('subscription.user_id like :userId', { userId: dto.userId })
+    if (dto.status) queryBuilder.andWhere('subscription.status = :subscriptionStatus', {
       subscriptionStatus: dto.status,
     })
-    if (dto.planId) querybuilder.andWhere('subscription.plan_id = :planId', {
+    if (dto.planId) queryBuilder.andWhere('subscription.plan_id = :planId', {
       planId: dto.planId,
     })
-    if (dto.startDate) querybuilder.andWhere('subscription.startDate = :startDate', {
+    if (dto.startDate) queryBuilder.andWhere('subscription.startDate = :startDate', {
       startDate: dto.startDate,
     })
-    if (dto.endDate) querybuilder.andWhere('subscription.endDate = :endDate', { endDate: dto.endDate })
+    if (dto.endDate) queryBuilder.andWhere('subscription.endDate = :endDate', { endDate: dto.endDate })
 
-    return paginate<SubscriptionEntity>(querybuilder.orderBy('subscription.created_at', 'DESC'), option);
+    return paginate<SubscriptionEntity>(queryBuilder.orderBy('subscription.created_at', 'DESC'), option);
   }
 
   async createSubscription(
