@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator';
 import { AudioStatus } from '../../../common/enums/audioStatus.enum';
 
 export class SearchAudioDTO {
@@ -18,6 +18,12 @@ export class SearchAudioDTO {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  playlist_id: number;
+  @IsNumberString()
+  playlistId: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  artistId: string;
 }
 export default SearchAudioDTO;
