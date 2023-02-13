@@ -9,11 +9,11 @@ import ArtistEntity from 'src/modules/artist/entities/artist.entity';
 import { AudioStatus } from 'src/common/enums/audioStatus.enum';
 
 @Entity('audio')
-export class  AudioEntity extends BaseEntity {
+export class AudioEntity extends BaseEntity {
   @Column()
   public name: string;
 
-  @Column({name:"image_url"})
+  @Column({ name: "image_url" })
   public imageUrl: string;
 
   @Column({
@@ -45,5 +45,6 @@ export class  AudioEntity extends BaseEntity {
   access: AccessEntity[];
 
   @ManyToOne(() => ArtistEntity, (artist) => artist.audios)
+  @JoinColumn({ name: "artist_id" })
   public artist: ArtistEntity
 }
