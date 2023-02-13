@@ -14,20 +14,24 @@ export class FilesService {
 
   async uploadPublicFile(dataBuffer: Buffer, filename: string) {
     const s3 = new S3();
-    const uploadResult = await s3
-      .upload({
-        Bucket: BUCKET_NAME,
-        Body: dataBuffer,
-        Key: `${uuid()}-${filename}`,
-      })
-      .promise();
-    console.log('upload', uploadResult);
-    const newFile = this.publicFilesRepository.create({
-      key: uploadResult.Key,
-      url: uploadResult.Location,
-    });
-    await this.publicFilesRepository.save(newFile);
-    return newFile;
+    try {
+      const uploadResult = await s3
+        .upload({
+          Bucket: BUCKET_NAME,
+          Body: dataBuffer,
+          Key: `${uuid()}-${filename}`,
+        })
+        .promise();
+      console.log('upload', uploadResult);
+      const newFile = this.publicFilesRepository.create({
+        key: uploadResult.Key,
+        url: uploadResult.Location,
+      });
+      await this.publicFilesRepository.save(newFile);
+      return newFile;
+    } catch (error) {
+      console.log('err', error);
+    }
   }
 
   async getFile(id: any, key: string) {
