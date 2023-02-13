@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { FileEntity } from 'src/modules/files/entities/file.entity';
-import { AudioPlaylistEntity } from '../../playlistAudio/entities/audioPlaylist.entity';
+import { AudioPlaylistEntity } from '../../audioPlaylist/entities/audioPlaylist.entity';
 import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
 import { AccessEntity } from 'src/modules/access/entities/access.entity';

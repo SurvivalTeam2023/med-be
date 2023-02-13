@@ -30,7 +30,8 @@ export default class AudioController {
   constructor(private readonly audioService: AudioService) { }
 
   @Get(':id')
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  // @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @Unprotected()
   async getAudioById(@Param('id') id: number): Promise<AudioEntity> {
     return this.audioService.findAudioById(id);
   }

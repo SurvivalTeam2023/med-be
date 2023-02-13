@@ -14,7 +14,7 @@ import {
   paginate,
 } from 'nestjs-typeorm-paginate';
 import UpdateAudioDTO from './dto/updateAudio.dto';
-import { AudioPlaylistEntity } from '../playlistAudio/entities/audioPlaylist.entity';
+import { AudioPlaylistEntity } from '../audioPlaylist/entities/audioPlaylist.entity';
 
 @Injectable()
 export default class AudioService {
@@ -26,8 +26,8 @@ export default class AudioService {
   async findAudioById(audioId: number): Promise<AudioEntity> {
     const entity = await this.audioRepository
       .createQueryBuilder('audio')
-      .select(['audio', 'audio_playlist.playlist_id'])
-      .leftJoin('audio.audio_playlist', 'audio_playlist')
+      .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
+      .leftJoinAndSelect('audio.files', 'files')
       .where('audio.id = :audioId', { audioId })
       .getOne();
     if (!entity) {
@@ -43,6 +43,7 @@ export default class AudioService {
     const queryBuilder = this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
+      .leftJoinAndSelect('audio.files', 'file')
       .leftJoinAndSelect('audio.artist', 'artist');
     if (dto.name) queryBuilder.where('LOWER(audio.name) like :name', { name: `%${dto.name}%` }).orderBy('audio.created_at', 'DESC').getMany()
 

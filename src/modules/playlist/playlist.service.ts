@@ -23,9 +23,13 @@ export default class PlaylistService {
   ) { }
 
   async findPlaylistById(playlistId: number): Promise<PlaylistEntity> {
-    const playList = await this.playlistRepository.findOneBy({
-      id: playlistId,
-    });
+    const playList = await this.playlistRepository
+      .createQueryBuilder('playlist')
+      .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
+      .leftJoinAndSelect('audio_playlist.audio', 'audio')
+      .leftJoinAndSelect('audio.files', 'files')
+      .where('playlist.id = :playlistId', { playlistId: playlistId })
+      .getOne()
     if (!playList)
       ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAYLIST.NOT_FOUND);
     return playList;
@@ -34,13 +38,13 @@ export default class PlaylistService {
     option: IPaginationOptions,
     dto: SearchPlaylistDto,
   ): Promise<Pagination<PlaylistEntity>> {
-    const querybuilder = await this.playlistRepository
+    const queryBuilder = await this.playlistRepository
       .createQueryBuilder('playlist')
-    if (dto.name) querybuilder.where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` })
-    if (dto.status) querybuilder.andWhere('playlist.status = :playlistStatus', { playlistStatus: dto.status, })
-    if (dto.userId) querybuilder.andWhere('playlist.user_id = :userId', { userId: dto.userId, })
+    if (dto.name) queryBuilder.where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` })
+    if (dto.status) queryBuilder.andWhere('playlist.status = :playlistStatus', { playlistStatus: dto.status, })
+    if (dto.userId) queryBuilder.andWhere('playlist.user_id = :userId', { userId: dto.userId, })
       .orderBy('playlist.created_at', 'DESC');
-    return paginate<PlaylistEntity>(querybuilder, option);
+    return paginate<PlaylistEntity>(queryBuilder, option);
   }
 
   async createPlaylist(dto: CreatePlaylistDto): Promise<PlaylistEntity> {
