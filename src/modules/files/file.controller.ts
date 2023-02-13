@@ -7,21 +7,26 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileEntity } from './entities/file.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileQuery } from './dto/file-query.dto';
-import { FilesService } from './files.service';
 import { PublicFile } from './dto/publicFile.dto';
+import { FileEntity } from './entities/file.entity';
+import { FilesService } from './files.service';
+import { Roles, Unprotected } from 'nest-keycloak-connect';
+import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 
 @ApiTags('Files')
 @Controller('files')
+@ApiBearerAuth()
 export class FilesController {
   constructor(private readonly fileService: FilesService) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  // @Unprotected()
   @ApiBody({
     description: 'Upload image to with file extension jpg or png',
     type: PublicFile,
@@ -30,15 +35,18 @@ export class FilesController {
     @Body() body: FileEntity,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    console.log('file')
     return this.fileService.uploadPublicFile(file.buffer, file.originalname);
   }
 
   @Get('id')
+  @Unprotected()
   async getFiles(@Query() query: FileQuery) {
     return this.fileService.getFile(query.id, query.key);
   }
 
   @Get()
+  @Unprotected()
   async getAllFiles() {
     return this.fileService.getAllFiles();
   }
