@@ -51,7 +51,7 @@ export default class GenreController {
     return this.genreService.createGenre(dto);
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @Unprotected()
   @Patch('audioGenre')
   async addGenreToAudio(@Body() dto: AddGenreToAudioDTO): Promise<GenreEntity> {
     return this.genreService.addGenreToAudio(dto);

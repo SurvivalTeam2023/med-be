@@ -6,18 +6,24 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('follower')
 export class FollowerEntity extends BaseEntity {
-    @Column()
-    point: number
+    @Column({ name: 'user_id' })
+    public userId!: number;
+
+    @Column({ name: 'artist_id' })
+    public artistId!: number;
+
+    @Column({ name: 'playlist_id' })
+    public playlistId!: number;
 
     @ManyToOne(() => UserEntity, (user) => user.follower)
     @JoinColumn({ name: "user_id" })
-    public userId: UserEntity;
+    public user: UserEntity;
 
     @ManyToOne(() => ArtistEntity, (question) => question.follower)
     @JoinColumn({ name: "artist_id" })
-    public artistId: ArtistEntity;
+    public artist: ArtistEntity;
 
     @ManyToOne(() => PlaylistEntity, (playlist) => playlist.follower)
     @JoinColumn({ name: "playlist_id" })
-    public playlistId: PlaylistEntity;
+    public playlist: PlaylistEntity;
 }

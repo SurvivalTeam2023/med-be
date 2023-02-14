@@ -58,7 +58,8 @@ export default class AudioController {
     });
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.SUBSCRIBER] })
+  // @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.SUBSCRIBER] })
+  @Unprotected()
   @Post()
   async createAudio(
     @Body() createAudioDto: CreateAudioDTO,

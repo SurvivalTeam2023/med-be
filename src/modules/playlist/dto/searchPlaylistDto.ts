@@ -15,5 +15,10 @@ export class SearchPlaylistDto {
   @IsString()
   @IsOptional()
   userId: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  artistId: string;
 }
 export default SearchPlaylistDto;

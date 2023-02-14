@@ -19,13 +19,13 @@ export class AudioPlaylistEntity extends BaseEntity {
   public playlistId!: number;
 
   @ManyToOne(() => AudioEntity, (audio) => audio.audioPlaylist, {
-    cascade: true,
+    
   })
   @JoinColumn({ name: 'audio_id' })
   public audio: AudioEntity;
 
   @ManyToOne(() => PlaylistEntity, (playlist) => playlist.audioPlaylist, {
-    cascade: true,
+    
   })
   @JoinColumn({ name: 'playlist_id' })
   public playlist: PlaylistEntity;

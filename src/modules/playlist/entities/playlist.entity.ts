@@ -21,13 +21,13 @@ export class PlaylistEntity extends BaseEntity {
   @Column()
   public description: string;
 
-  @OneToMany(() => AudioPlaylistEntity, (audio_playlist) => audio_playlist.playlist,)
+  @OneToMany(() => AudioPlaylistEntity, (audioPlaylist) => audioPlaylist.playlist,)
   audioPlaylist: AudioPlaylistEntity[];
 
   @ManyToOne(() => PlaylistTypeEntity, (playlistType) => playlistType.playlist)
   public playlistType: PlaylistTypeEntity;
 
-  @OneToMany(() => FollowerEntity, (follower) => follower.playlistId, {
+  @OneToMany(() => FollowerEntity, (follower) => follower.playlist, {
     cascade: true,
   })
   follower: FollowerEntity[];

@@ -16,6 +16,9 @@ import {
 import UpdateAudioDTO from './dto/updateAudio.dto';
 import ArtistEntity from '../artist/entities/artist.entity';
 import { AudioPlaylistEntity } from '../audioPlaylist/entities/audioPlaylist.entity';
+import { PlaylistEntity } from '../playlist/entities/playlist.entity';
+import { GenreEntity } from '../genre/entities/genre.entity';
+import { AudioGenreEntity } from '../audioGenre/entities/audioGenre.entities';
 
 @Injectable()
 export default class AudioService {
@@ -47,21 +50,19 @@ export default class AudioService {
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
       .leftJoinAndSelect('audio.files', 'file')
       .leftJoinAndSelect('audio.artist', 'artist');
-    if (dto.name) queryBuilder.where('LOWER(audio.name) like :name', { name: `%${dto.name}%` }).orderBy('audio.created_at', 'DESC').getMany()
+    if (dto.name) queryBuilder.where('LOWER(audio.name) like :name', { name: `%${dto.name}%` }).orderBy('audio.created_at', 'DESC')
 
     if (dto.status) queryBuilder.andWhere('audio.status = :audioStatus', { audioStatus: dto.status }).orderBy('audio.created_at', 'DESC')
 
     if (dto.playlistId) queryBuilder.andWhere('audio_playlist.playlist_id = :playlistId', { playlistId: dto.playlistId, }).orderBy('audio.created_at', 'DESC')
 
     if (dto.artistId) queryBuilder.andWhere('artist.id = :artistId', { artistId: dto.artistId, }).orderBy('audio.created_at', 'DESC')
+    queryBuilder.orderBy('audio.created_at', 'DESC')
     return paginate<AudioEntity>(queryBuilder, option);
   }
   async createAudio(dto: CreateAudioDTO): Promise<AudioEntity> {
     const audioPlaylists = dto.playlistId.map((playlistId) => {
       const audioPlaylist = new AudioPlaylistEntity();
-      if (!playlistId) {
-        ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAYLIST.NOT_FOUND);
-      }
       audioPlaylist.playlistId = playlistId;
       return audioPlaylist;
     });
@@ -71,10 +72,16 @@ export default class AudioService {
     if (!artist) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
     }
+    const audioGenres = dto.genreId.map((genreId) => {
+      const audioGenre = new AudioGenreEntity();
+      audioGenre.genreId = genreId;
+      return audioGenre;
+    });
     const entity = this.audioRepository.save({
       ...dto,
       audioPlaylist: audioPlaylists,
-      artist:artist
+      artist: artist,
+      audioGenre: audioGenres
     });
     return entity;
   }
