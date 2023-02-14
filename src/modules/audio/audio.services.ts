@@ -74,7 +74,7 @@ export default class AudioService {
     const entity = this.audioRepository.save({
       ...dto,
       audioPlaylist: audioPlaylists,
-      artistId: artist
+      artist:artist
     });
     return entity;
   }

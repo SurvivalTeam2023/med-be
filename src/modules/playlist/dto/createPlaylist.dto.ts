@@ -23,8 +23,5 @@ export class CreatePlaylistDto {
   @ApiProperty()
   description: string;
 
-  @ApiProperty()
-  @IsString()
-  userId: string;
 }
 export default CreatePlaylistDto;
