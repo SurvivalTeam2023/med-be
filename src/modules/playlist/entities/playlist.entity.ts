@@ -21,9 +21,6 @@ export class PlaylistEntity extends BaseEntity {
   @Column()
   public description: string;
 
-  @Column({ name: "user_id" })
-  public userId?: string;
-
   @OneToMany(() => AudioPlaylistEntity, (audio_playlist) => audio_playlist.playlist,)
   audioPlaylist: AudioPlaylistEntity[];
 
