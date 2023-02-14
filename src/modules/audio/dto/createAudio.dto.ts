@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { AudioStatus } from '../../../common/enums/audioStatus.enum';
 
 export class CreateAudioDTO {
@@ -24,11 +24,17 @@ export class CreateAudioDTO {
   @ApiProperty({ type: [Number] })
   @IsOptional()
   @IsArray()
-  playlistId?: number[];
+  playlistId: number[];
 
   @IsNotEmpty()
   @ApiProperty()
   @IsString()
   artistId: string;
+
+  @IsNotEmpty()
+  @ApiProperty()
+  @IsNumber()
+  genreId: number[];
+
 }
 export default CreateAudioDTO;

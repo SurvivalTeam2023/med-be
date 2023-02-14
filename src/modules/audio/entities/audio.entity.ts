@@ -25,7 +25,7 @@ export class AudioEntity extends BaseEntity {
   @Column()
   public length: string;
 
-  @OneToMany(() => AudioPlaylistEntity, (audioPlaylist) => audioPlaylist.audio,)
+  @OneToMany(() => AudioPlaylistEntity, (audioPlaylist) => audioPlaylist.audio, { cascade: true })
   public audioPlaylist: AudioPlaylistEntity[];
 
   @OneToMany(() => AudioGenreEntity, (audioGenre) => audioGenre.audio, {
