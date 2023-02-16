@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable prefer-const */
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable prettier/prettier */
@@ -19,7 +21,7 @@ export default class FavoriteService {
     @InjectRepository(FavoriteEntity)
     private favoriteRepo: Repository<FavoriteEntity>,
     private readonly entityManage: EntityManager,
-  ) { }
+  ) {}
   async findAllFavorite(userId: string): Promise<FavoriteEntity[]> {
     const querybuilder = this.favoriteRepo
       .createQueryBuilder('favorite')
@@ -29,8 +31,11 @@ export default class FavoriteService {
     return querybuilder;
   }
 
-  async createFavorite(dto: CreateFavoriteDTO, token: string): Promise<FavoriteEntity> {
-    let userId = getUserId(token)
+  async createFavorite(
+    dto: CreateFavoriteDTO,
+    token: string,
+  ): Promise<FavoriteEntity> {
+    let userId = getUserId(token);
     const user = await this.entityManage.findOne(UserEntity, {
       where: { id: userId },
     });
