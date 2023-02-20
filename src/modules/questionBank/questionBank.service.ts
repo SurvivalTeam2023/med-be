@@ -21,8 +21,9 @@ export default class QuestionBankService {
             .leftJoinAndSelect('question.option', 'option')
             .select(['question.id', 'question.question','question.status', 'option.id', 'option.option'])
             .where("question.status = 'ACTIVE'")
+            .andWhere("option.option IS NOT NULL")
             .orderBy('RAND()')
-            .take(50)
+            .take(10)
             .getMany()
 
         const questionBankQuestions = questions.map((question) => {
