@@ -19,14 +19,15 @@ export default class QuestionBankService {
             .createQueryBuilder()
             .from(QuestionEntity, 'question')
             .leftJoinAndSelect('question.option', 'option')
-            .select(['question.question', 'option.id', 'option.option'])
+            .select(['question.id', 'question.question','question.status', 'option.id', 'option.option'])
+            .where("question.status = 'ACTIVE'")
             .orderBy('RAND()')
             .take(50)
             .getMany()
 
         const questionBankQuestions = questions.map((question) => {
             const questionBankQuestion = new QuestionBankQuestionEntity()
-            questionBankQuestion.question= question
+            questionBankQuestion.question = question
             return questionBankQuestion
 
         }
