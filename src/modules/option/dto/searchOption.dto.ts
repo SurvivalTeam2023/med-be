@@ -6,7 +6,7 @@ export class SearchOptionDTO {
     @ApiProperty({ required: false })
     @IsOptional()
     @IsString()
-    answer: string;
+    option: string;
 
     @ApiProperty({ enum: OptionStatus, default: OptionStatus.ACTIVE, required: false })
     @IsOptional()

@@ -36,6 +36,8 @@ export default class QuestionService {
     ): Promise<Pagination<QuestionEntity>> {
         const querybuilder = this.questionRepo
             .createQueryBuilder('question')
+            .leftJoinAndSelect('question.option', 'option')
+            .select(['question', 'option.id', 'option.option', 'option.points'])
         if (dto.question) querybuilder.where('LOWER(question.question) like :name', { name: `%${dto.question}%` }).orderBy('question.created_at', 'DESC')
 
         if (dto.status) querybuilder.andWhere('question.status = :questionStatus', { questionStatus: dto.status }).orderBy('question.created_at', 'DESC')

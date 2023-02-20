@@ -7,7 +7,7 @@ import { OptionStatus } from 'src/common/enums/optionStatus.enum';
 @Entity('option')
 export class OptionEntity extends BaseEntity {
     @Column()
-    public answer: string;
+    public option: string;
 
     @Column()
     public points: number;
@@ -18,7 +18,7 @@ export class OptionEntity extends BaseEntity {
     })
     public status: OptionStatus;
 
-    @ManyToOne(() => QuestionEntity, (question) => question.answer)
+    @ManyToOne(() => QuestionEntity, (question) => question.option)
     @JoinColumn({ name: 'question_id' })
     public question: QuestionEntity;
 

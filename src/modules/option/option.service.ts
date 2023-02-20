@@ -41,7 +41,7 @@ export default class OptionService {
     ): Promise<Pagination<OptionEntity>> {
         const queryBuilder = await this.optionRepo
             .createQueryBuilder('option')
-        if (dto.answer) queryBuilder.where('LOWER(option.answer) like :name', { name: `%${dto.answer}%` })
+        if (dto.option) queryBuilder.where('LOWER(option.option) like :name', { name: `%${dto.option}%` })
         if (dto.status) queryBuilder.andWhere('option.status = :optionStatus', { optionStatus: dto.status, })
         if (dto.questionId) queryBuilder.andWhere('option.question_id = :questionId', { questionId: dto.questionId, })
             .orderBy('option.created_at', 'DESC');

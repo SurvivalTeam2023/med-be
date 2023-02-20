@@ -16,7 +16,7 @@ export class QuestionEntity extends BaseEntity {
   @OneToMany(() => OptionEntity, (option) => option.question, {
     cascade: true,
   })
-  public answer: OptionEntity[];
+  public option: OptionEntity[];
 
   @OneToMany(
     () => QuestionBankQuestionEntity,
