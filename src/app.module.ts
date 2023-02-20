@@ -16,6 +16,7 @@ import { OptionModule } from './modules/option/option.module';
 import { ResultModule } from './modules/result/result.module';
 import { MentalHealthModule } from './modules/mentalHealth/mentalHealth.module';
 import { MentalHealthDegreeModule } from './modules/mentalHealthDegree/mentalHealthDegree.module';
+import { QuestionBankModule } from './modules/questionBank/questionBank.modul';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { MentalHealthDegreeModule } from './modules/mentalHealthDegree/mentalHea
     OptionModule,
     ResultModule,
     MentalHealthModule,
-    MentalHealthDegreeModule
+    MentalHealthDegreeModule,
+    QuestionBankModule
   ],
   controllers: [],
   providers: [],

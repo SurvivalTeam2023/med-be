@@ -6,7 +6,7 @@ export class CreateOptionDTO {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    answer: string;
+    option: string;
 
     @ApiProperty({ enum: OptionStatus, default: OptionStatus.ACTIVE })
     status: OptionStatus;
