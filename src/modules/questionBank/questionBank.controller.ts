@@ -11,8 +11,7 @@ import QuestionBankService from "./questionBank.service";
 export default class QuestionBankController {
     constructor(private readonly questionBankService: QuestionBankService) { }
 
-    // @Roles({ roles: [USER_CLIENT_ROLE.ADMIN, USER_CLIENT_ROLE.USER] })
-    @Unprotected()
+    @Roles({ roles: [USER_CLIENT_ROLE.ADMIN, USER_CLIENT_ROLE.USER] })
     @Post()
     async createQuestionBank(
     ): Promise<QuestionBankEntity> {
