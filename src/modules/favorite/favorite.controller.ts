@@ -12,12 +12,15 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 @ApiBearerAuth()
 @Controller('rest/favorite')
 export default class FavoriteController {
-  constructor(private readonly favoriteService: FavoriteService) { }
+  constructor(private readonly favoriteService: FavoriteService) {}
 
   @ApiOperation({ summary: 'create Favorite' })
   @Unprotected()
   @Post()
-  async create(@Body() dto: CreateFavoriteDTO, @RequestPayload() token: string): Promise<FavoriteEntity> {
+  async create(
+    @Body() dto: CreateFavoriteDTO,
+    @RequestPayload() token: string,
+  ): Promise<FavoriteEntity[]> {
     return this.favoriteService.createFavorite(dto, token);
   }
 

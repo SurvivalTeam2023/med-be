@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsArray, IsNotEmpty } from 'class-validator';
 
 export class CreateFavoriteDTO {
-  @ApiProperty()
+  @ApiProperty({ type: [Number] })
   @IsNotEmpty()
-  @IsNumber()
-  genreId: number;
+  @IsArray()
+  genreId: number[];
 }
 export default CreateFavoriteDTO;

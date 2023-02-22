@@ -1,5 +1,12 @@
+/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { AudioStatus } from '../../../common/enums/audioStatus.enum';
 
 export class CreateAudioDTO {
@@ -32,9 +39,8 @@ export class CreateAudioDTO {
   artistId: string;
 
   @IsNotEmpty()
-  @ApiProperty()
-  @IsNumber()
+  @ApiProperty({ type: [Number] })
+  @IsArray()
   genreId: number[];
-
 }
 export default CreateAudioDTO;
