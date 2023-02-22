@@ -5,6 +5,8 @@ import { AudioPlaylistEntity } from 'src/modules/audioPlaylist/entities/audioPla
 import { PlaylistTypeEntity } from 'src/modules/playlistType/entities/playlistType.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { PlaylistStatus } from '../../../common/enums/playlistStatus.enum';
+import UserEntity from 'src/modules/user/entities/user.entity';
+import { JoinColumn } from 'typeorm/decorator/relations/JoinColumn';
 
 @Entity('playlist')
 export class PlaylistEntity extends BaseEntity {
@@ -35,4 +37,8 @@ export class PlaylistEntity extends BaseEntity {
     cascade: true,
   })
   follower: FollowerEntity[];
+
+  @ManyToOne(() => UserEntity, (user) => user.playlist)
+  @JoinColumn({ name: 'user_id' })
+  public user: UserEntity;
 }
