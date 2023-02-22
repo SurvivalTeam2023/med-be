@@ -7,7 +7,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FavoriteEntity } from './entities/favorite.entity';
-import { DeleteResult, EntityManager, Repository } from 'typeorm';
+import { DeleteResult, EntityManager, In, Repository } from 'typeorm';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { CreateFavoriteDTO } from './dto/createFavorite.dto';
@@ -34,7 +34,7 @@ export default class FavoriteService {
   async createFavorite(
     dto: CreateFavoriteDTO,
     token: string,
-  ): Promise<FavoriteEntity> {
+  ): Promise<FavoriteEntity[]> {
     let userId = getUserId(token);
     const user = await this.entityManage.findOne(UserEntity, {
       where: { id: userId },
@@ -42,18 +42,22 @@ export default class FavoriteService {
     if (!user) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
     }
-    const genre = await this.entityManage.findOne(GenreEntity, {
-      where: { id: dto.genreId },
+    const genres = await this.entityManage.find(GenreEntity, {
+      where: { id: In(dto.genreId) },
     });
-    if (!genre) {
+    if (!genres) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
     }
-    const favorite = await this.favoriteRepo.save({
-      ...dto,
-      userId: user,
-      genreId: genre,
-    });
-    return favorite;
+    const favorites: FavoriteEntity[] = [];
+    for (const genre of genres) {
+      const favorite = await this.favoriteRepo.save({
+        ...dto,
+        userId: user,
+        genreId: genre,
+      });
+      favorites.push(favorite);
+    }
+    return favorites;
   }
   async deleteFavorite(favoriteId: number): Promise<FavoriteEntity> {
     const favorite = await this.favoriteRepo.findOne({

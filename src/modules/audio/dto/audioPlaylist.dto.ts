@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
 import PlaylistDto from 'src/modules/playlist/dto/playlist.dto';
