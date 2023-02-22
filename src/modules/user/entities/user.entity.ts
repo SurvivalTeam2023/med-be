@@ -16,6 +16,7 @@ import {
 } from 'typeorm';
 import { FileEntity } from '../../files/entities/file.entity';
 import { FavoriteEntity } from 'src/modules/favorite/entities/favorite.entity';
+import { PlaylistEntity } from 'src/modules/playlist/entities/playlist.entity';
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryColumn()
@@ -101,5 +102,10 @@ export class UserEntity {
     cascade: true,
   })
   favorite: FavoriteEntity[];
+
+  @OneToMany(() => PlaylistEntity, (playList) => playList.user, {
+    cascade: true,
+  })
+  playlist: PlaylistEntity[];
 }
 export default UserEntity;
