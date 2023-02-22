@@ -38,13 +38,13 @@ export default class PlaylistService {
     option: IPaginationOptions,
     dto: SearchPlaylistDto,
   ): Promise<Pagination<PlaylistEntity>> {
-    const queryBuilder = await this.playlistRepository
+    const queryBuilder = this.playlistRepository
       .createQueryBuilder('playlist')
       .leftJoinAndSelect('playlist.follower', 'follower')
       .select(['playlist', 'follower.artistId', 'follower.userId'])
     if (dto.name) queryBuilder.where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` }).orderBy('playlist.created_at', 'DESC').getMany()
     if (dto.status) queryBuilder.andWhere('playlist.status = :playlistStatus', { playlistStatus: dto.status, }).orderBy('playlist.created_at', 'DESC').getMany()
-    if (dto.userId) queryBuilder.andWhere('follower.user_id = :userId', { userId: dto.userId, }).orderBy('playlist.created_at', 'DESC').getMany()
+    if (dto.userId) queryBuilder.andWhere('playlist.user_id = :userId', { userId: dto.userId, }).orderBy('playlist.created_at', 'DESC').getMany()
     if (dto.artistId) queryBuilder.andWhere('follower.artist_id = :artistId', { artistId: dto.artistId, }).orderBy('playlist.created_at', 'DESC').getMany()
     queryBuilder.orderBy('playlist.created_at', 'DESC')
     return paginate<PlaylistEntity>(queryBuilder, option);
