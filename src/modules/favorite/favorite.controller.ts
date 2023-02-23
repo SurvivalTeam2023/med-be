@@ -39,4 +39,15 @@ export default class FavoriteController {
   ): Promise<FavoriteEntity[]> {
     return this.favoriteService.findAllFavorite(userId);
   }
+
+  @ApiOperation({ summary: 'Is favorite existed?' })
+  @Get()
+  @Unprotected()
+  async isFavoriteExisted(
+    @RequestPayload() token: string,
+  ): Promise<{ exists: boolean }> {
+    console.log('Received token:', token);
+    const result = await this.favoriteService.isFavoriteExisted(token);
+    return { exists: result.exists };
+  }
 }

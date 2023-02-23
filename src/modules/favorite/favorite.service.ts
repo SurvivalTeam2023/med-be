@@ -69,4 +69,17 @@ export default class FavoriteService {
     }
     return favorite;
   }
+
+  async isFavoriteExisted(token: string): Promise<{ exists: boolean }> {
+    let userId = getUserId(token);
+    const querybuilder = this.favoriteRepo
+      .createQueryBuilder('favorite')
+      .leftJoinAndSelect('favorite.genreId', 'genre')
+      .where('favorite.user_id = :user_id', { user_id: userId })
+      .getMany();
+    // return querybuilder;
+    const favorites = await querybuilder;
+    const exists = favorites.length > 0;
+    return { exists };
+  }
 }
