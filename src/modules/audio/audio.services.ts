@@ -32,7 +32,7 @@ export default class AudioService {
     const entity = await this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
-      .leftJoinAndSelect('audio.files', 'files')
+      .leftJoinAndSelect('audio.file', 'files')
       .where('audio.id = :audioId', { audioId })
       .getOne();
     if (!entity) {

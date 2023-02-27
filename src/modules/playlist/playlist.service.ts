@@ -27,7 +27,7 @@ export default class PlaylistService {
       .createQueryBuilder('playlist')
       .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
       .leftJoinAndSelect('audio_playlist.audio', 'audio')
-      .leftJoinAndSelect('audio.files', 'files')
+      .leftJoinAndSelect('audio.file', 'files')
       .where('playlist.id = :playlistId', { playlistId: playlistId })
       .getOne()
     if (!playList)
