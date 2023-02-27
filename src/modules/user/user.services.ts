@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable prefer-const */
+/* eslint-disable prettier/prettier */
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
@@ -39,7 +42,7 @@ export class UserService {
     private readonly artistRepository: Repository<ArtistEntity>,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-  ) { }
+  ) {}
 
   getAdminAccount = () => {
     let adminAccount: LoginDTO = {
@@ -78,7 +81,7 @@ export class UserService {
     let token = `Bearer ${response['access_token']}`;
     const user = await this.findUserByName(username, token);
     const role = await this.findRoleByName(roleName, token);
-    const userId = user['user_keycloak']['id']
+    const userId = user['user_keycloak']['id'];
     return this.httpService
       .post(
         `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/role-mappings/realm`,
@@ -120,7 +123,7 @@ export class UserService {
     let token = `Bearer ${response['access_token']}`;
     const user = await this.findUserByName(username, token);
     const role = await this.findRoleByName(deleteRole, token);
-    const userId = user['user_keycloak']['id']
+    const userId = user['user_keycloak']['id'];
     lastValueFrom(await this.assignRole(username, addRole));
     return this.httpService
       .delete(
@@ -260,7 +263,7 @@ export class UserService {
       await this.assignRole(createUserDTO.username, USER_REALM_ROLE.APP_USER),
     );
     const user = await this.findUserByName(createUserDTO.username, token);
-    const userId = user['user_keycloak']['id']
+    const userId = user['user_keycloak']['id'];
     await firstValueFrom(
       await this.authService.verifyEmail(createUserDTO.username),
     );
@@ -333,7 +336,7 @@ export class UserService {
     await firstValueFrom(
       await this.authService.verifyEmail(createArtistDTO.username),
     );
-    const artistId = artist['user_keycloak']['id']
+    const artistId = artist['user_keycloak']['id'];
     const artistInfor = await this.artistRepository.save({
       id: artistId,
       status: USER_STATUS.ACTIVE,
@@ -362,7 +365,7 @@ export class UserService {
     );
     let token = `Bearer ${response['access_token']}`;
     const user = await this.findUserByName(loginGmailDTO.username, token);
-    const userId = user['user_keycloak']['id']
+    const userId = user['user_keycloak']['id'];
     const existedUser = await this.entityManage.findOne(UserEntity, {
       where: { id: userId },
     });
@@ -379,7 +382,9 @@ export class UserService {
     return access_token;
   }
   happyNewYear(): string {
-    return "Khai code đầu năm \n" +
-      "Chúc anh em code ít bug, fix bug như máy điện, deploy đều như cơm bữa. Sức khỏe dồi dào, apply job 1 phát ăn ngay, gia đình hạnh phúc"
+    return (
+      'Khai code đầu năm \n' +
+      'Chúc anh em code ít bug, fix bug như máy điện, deploy đều như cơm bữa. Sức khỏe dồi dào, apply job 1 phát ăn ngay, gia đình hạnh phúc'
+    );
   }
 }
