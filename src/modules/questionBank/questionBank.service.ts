@@ -68,9 +68,6 @@ export default class QuestionBankService {
             .andWhere('is_finished = true')
             .andWhere('NOW() - created_at > 3')
             .getMany();
-        // return querybuilder;
-        // console.log(questionBankQueryResult)
-
         const isValid = questionBankQueryResult.length > 0;
         return { isValid };
     }
