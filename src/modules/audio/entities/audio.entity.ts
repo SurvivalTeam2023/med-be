@@ -1,5 +1,12 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { FileEntity } from 'src/modules/files/entities/file.entity';
 import { AudioPlaylistEntity } from '../../audioPlaylist/entities/audioPlaylist.entity';
@@ -38,10 +45,11 @@ export class AudioEntity extends BaseEntity {
   })
   public audioGenre: AudioGenreEntity[];
 
-  @OneToMany(() => FileEntity, (file) => file.audio, {
+  @OneToOne(() => FileEntity, (file) => file.audio, {
     cascade: true,
   })
-  public files: FileEntity[];
+  @JoinColumn({ name: 'file_id' })
+  public file: FileEntity;
 
   @OneToMany(() => HistoryEntity, (history) => history.audioId, {
     cascade: true,

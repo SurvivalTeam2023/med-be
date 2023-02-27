@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { AudioEntity } from 'src/modules/audio/entities/audio.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('file')
 export class FileEntity {
@@ -13,6 +13,6 @@ export class FileEntity {
   @Column()
   public key: string;
 
-  @ManyToOne(() => AudioEntity, (audio) => audio.files)
+  @OneToOne(() => AudioEntity, (audio) => audio.file)
   audio: AudioEntity;
 }

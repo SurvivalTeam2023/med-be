@@ -32,7 +32,7 @@ export default class AudioService {
     const entity = await this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
-      .leftJoinAndSelect('audio.files', 'files')
+      .leftJoinAndSelect('audio.file', 'files')
       .where('audio.id = :audioId', { audioId })
       .getOne();
     if (!entity) {
@@ -48,7 +48,7 @@ export default class AudioService {
     const queryBuilder = this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
-      .leftJoinAndSelect('audio.files', 'file')
+      .leftJoinAndSelect('audio.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist');
     if (dto.name) queryBuilder.where('LOWER(audio.name) like :name', { name: `%${dto.name}%` }).orderBy('audio.created_at', 'DESC')
 
