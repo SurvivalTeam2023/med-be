@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { FileEntity } from 'src/modules/files/entities/file.entity';
@@ -13,19 +14,23 @@ export class AudioEntity extends BaseEntity {
   @Column()
   public name: string;
 
-  @Column({ name: "image_url" })
+  @Column({ name: 'image_url' })
   public imageUrl: string;
 
   @Column({
     type: 'enum',
-    enum: AudioStatus
+    enum: AudioStatus,
   })
   public status: AudioStatus;
 
   @Column()
   public length: string;
 
-  @OneToMany(() => AudioPlaylistEntity, (audioPlaylist) => audioPlaylist.audio, { cascade: true })
+  @OneToMany(
+    () => AudioPlaylistEntity,
+    (audioPlaylist) => audioPlaylist.audio,
+    { cascade: true },
+  )
   public audioPlaylist: AudioPlaylistEntity[];
 
   @OneToMany(() => AudioGenreEntity, (audioGenre) => audioGenre.audio, {
@@ -38,13 +43,15 @@ export class AudioEntity extends BaseEntity {
   })
   public files: FileEntity[];
 
-  @OneToMany(() => HistoryEntity, (history) => history.audioId, { cascade: true })
+  @OneToMany(() => HistoryEntity, (history) => history.audioId, {
+    cascade: true,
+  })
   history: HistoryEntity[];
 
   @OneToMany(() => AccessEntity, (access) => access.audioId, { cascade: true })
   access: AccessEntity[];
 
   @ManyToOne(() => ArtistEntity, (artist) => artist.audios)
-  @JoinColumn({ name: "artist_id" })
-  public artist: ArtistEntity
+  @JoinColumn({ name: 'artist_id' })
+  public artist: ArtistEntity;
 }

@@ -18,5 +18,5 @@ export class AudioGenreEntity extends BaseEntity {
 
   @ManyToOne(() => GenreEntity, (genre) => genre.audioGenre)
   @JoinColumn({ name: 'genre_id' })
-  public genre!: GenreEntity;
+  public genre: GenreEntity;
 }

@@ -17,6 +17,7 @@ import { ResultModule } from './modules/result/result.module';
 import { MentalHealthModule } from './modules/mentalHealth/mentalHealth.module';
 import { MentalHealthDegreeModule } from './modules/mentalHealthDegree/mentalHealthDegree.module';
 import { QuestionBankModule } from './modules/questionBank/questionBank.modul';
+import { AudioGenreModule } from './modules/audioGenre/audioGenre.module';
 
 @Module({
   imports: [
@@ -36,9 +37,10 @@ import { QuestionBankModule } from './modules/questionBank/questionBank.modul';
     ResultModule,
     MentalHealthModule,
     MentalHealthDegreeModule,
-    QuestionBankModule
+    QuestionBankModule,
+    AudioGenreModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
