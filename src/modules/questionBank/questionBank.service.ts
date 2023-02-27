@@ -1,8 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import moment from "moment";
+import { ERROR_MESSAGE } from "src/common/constants/messages.constant";
+import { ErrorHelper } from "src/helpers/error.helper";
 import { QuestionEntity } from "src/modules/question/entities/question.entity";
 import { QuestionBankQuestionEntity } from "src/modules/questionBankQuestion/entities/questionBankQuestion.entity";
+import { getUserId } from "src/utils/decode.utils";
 import { EntityManager, Repository } from "typeorm";
+import UserEntity from "../user/entities/user.entity";
 import { QuestionBankEntity } from "./entities/questionBank.entity";
 
 @Injectable()
@@ -14,12 +19,19 @@ export default class QuestionBankService {
 
     ) { }
 
-    async createQuestionBank(): Promise<QuestionBankEntity> {
+    async createQuestionBank(token: string): Promise<QuestionBankEntity> {
+        let userId = getUserId(token);
+        const user = await this.entityManage.findOne(UserEntity, {
+            where: { id: userId },
+        });
+        if (!user) {
+            ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
+        }
         const questions = await this.entityManage
             .createQueryBuilder()
             .from(QuestionEntity, 'question')
             .leftJoinAndSelect('question.option', 'option')
-            .select(['question.id', 'question.question','question.status', 'option.id', 'option.option'])
+            .select(['question.id', 'question.question', 'question.status', 'option.id', 'option.option'])
             .where("question.status = 'ACTIVE'")
             .andWhere("option.option IS NOT NULL")
             .orderBy('RAND()')
@@ -40,9 +52,27 @@ export default class QuestionBankService {
                 isFinished: false,
                 numberOfQuestion: 50,
                 questionBankQuestion: questionBankQuestions,
+                userId: user
             }
         )
         return questionBank;
+    }
+    async isLastQuizValid(token: string): Promise<{ isValid: boolean }> {
+        let userId = getUserId(token);
+        const questionBankQueryResult = await this.entityManage
+            .createQueryBuilder()
+            .from(QuestionBankEntity, 'question_bank')
+            .select('question_bank')
+            .orderBy('created_at', 'DESC')
+            .where('user_id = :user_id', { user_id: userId })
+            .andWhere('is_finished = true')
+            .andWhere('NOW() - created_at > 3')
+            .getMany();
+        // return querybuilder;
+        // console.log(questionBankQueryResult)
+
+        const isValid = questionBankQueryResult.length > 0;
+        return { isValid };
     }
 
 }
