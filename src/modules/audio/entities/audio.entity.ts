@@ -36,7 +36,8 @@ export class AudioEntity extends BaseEntity {
   @OneToOne(() => FileEntity, (file) => file.audio, {
     cascade: true,
   })
-  public files: FileEntity;
+  @JoinColumn({ name: "file_id" })
+  public file: FileEntity;
 
   @OneToMany(() => HistoryEntity, (history) => history.audioId, { cascade: true })
   history: HistoryEntity[];

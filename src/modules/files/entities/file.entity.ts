@@ -13,6 +13,6 @@ export class FileEntity {
   @Column()
   public key: string;
 
-  @OneToOne(() => AudioEntity, (audio) => audio.files)
+  @OneToOne(() => AudioEntity, (audio) => audio.file)
   audio: AudioEntity;
 }
