@@ -37,7 +37,8 @@ export const ERROR_MESSAGE = {
     NOT_FOUND: 'Result not found'
   },
   QUESTION_BANK: {
-    NOT_FOUND: 'Question bank not found'
+    NOT_FOUND: 'Question bank not found',
+    IS_FINISHED: "Question bank already finish by this user"
   },
   MENTAL_HEALTH: {
     NOT_FOUND: 'Mental health not found!',
