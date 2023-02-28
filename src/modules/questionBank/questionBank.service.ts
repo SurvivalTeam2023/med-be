@@ -71,5 +71,18 @@ export default class QuestionBankService {
         const isValid = questionBankQueryResult.length > 0;
         return { isValid };
     }
+    async updateIsFinished(id: number): Promise<QuestionBankEntity> {
+        const questionBank = await this.questionBankRepo.findOne({
+            where: {
+                id: id
+            }
+        })
+        if (!questionBank) ErrorHelper.NotFoundException(ERROR_MESSAGE.QUESTION_BANK.NOT_FOUND);
+        if (questionBank.isFinished == true) ErrorHelper.NotFoundException(ERROR_MESSAGE.QUESTION_BANK.IS_FINISHED);
 
+        questionBank.isFinished = true;
+        await this.questionBankRepo.save(questionBank)
+
+        return questionBank
+    }
 }

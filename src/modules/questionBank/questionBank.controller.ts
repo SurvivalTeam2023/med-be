@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from "@nestjs/common";
+import { Controller, Get, Param, Patch, Post } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Roles, Unprotected } from "nest-keycloak-connect";
 import { USER_CLIENT_ROLE } from "src/common/enums/userClientRole.enum";
@@ -13,7 +13,6 @@ import QuestionBankService from "./questionBank.service";
 export default class QuestionBankController {
     constructor(private readonly questionBankService: QuestionBankService) { }
 
-    // @Roles({ roles: [USER_CLIENT_ROLE.ADMIN, USER_CLIENT_ROLE.USER, USER_REALM_ROLE.APP_ADMIN, USER_REALM_ROLE.APP_USER] })
     @Unprotected()
     @Post()
     async createQuestionBank(@RequestPayload() token: string,
@@ -29,5 +28,11 @@ export default class QuestionBankController {
     ): Promise<{ isValid: boolean }> {
         const result = await this.questionBankService.isLastQuizValid(token);
         return { isValid: result.isValid };
+    }
+
+    @Roles({ roles: [USER_CLIENT_ROLE.USER] })
+    @Patch(":id")
+    async updateIsFinished(@Param('id') id: number): Promise<QuestionBankEntity> {
+        return this.questionBankService.updateIsFinished(id)
     }
 }
