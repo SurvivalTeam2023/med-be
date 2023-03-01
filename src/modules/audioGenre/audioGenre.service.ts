@@ -17,6 +17,7 @@ export class AudioGenreService {
       .createQueryBuilder('audio_genre')
       .leftJoinAndSelect('audio_genre.genre', 'genre')
       .leftJoinAndSelect('audio_genre.audio', 'audio')
+      .leftJoinAndSelect('audio.artist', 'artist')
       .where('audio_genre.genre = :genre_id', { genre_id: genreId })
       .getMany();
 
