@@ -33,6 +33,7 @@ export default class AudioService {
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
       .leftJoinAndSelect('audio.file', 'files')
+      .leftJoinAndSelect('audio.artist', 'artist')
       .where('audio.id = :audioId', { audioId })
       .getOne();
     if (!entity) {
