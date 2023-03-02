@@ -35,6 +35,7 @@ export default class SubscriptionService {
   ): Promise<SubscriptionEntity> {
     const subscription = await this.subscriptionRepo
       .createQueryBuilder('subscription')
+      .leftJoinAndSelect('subscription.user', 'user')
       .where('subscription.id = :subscriptionId', { subscriptionId })
       .getOne();
     if (!subscription) {
@@ -48,6 +49,7 @@ export default class SubscriptionService {
   ): Promise<Pagination<SubscriptionEntity>> {
     const queryBuilder = this.subscriptionRepo
       .createQueryBuilder('subscription')
+      .leftJoinAndSelect('subscription.user', 'user')
     if (dto.userId) queryBuilder.where('subscription.user_id like :userId', { userId: dto.userId })
     if (dto.status) queryBuilder.andWhere('subscription.status = :subscriptionStatus', {
       subscriptionStatus: dto.status,
@@ -65,7 +67,7 @@ export default class SubscriptionService {
 
   async createSubscription(
     dto: CreateSubscriptionDTO,
-  ): Promise<SubscriptionEntity> {
+  ): Promise<any> {
     const response = await lastValueFrom(
       this.authService.getPayPalAccessToken(),
     );
@@ -88,10 +90,6 @@ export default class SubscriptionService {
         `https://api-m.sandbox.paypal.com/v1/billing/subscriptions`,
         {
           plan_id: dto.planId,
-          shipping_amount: {
-            currency_code: "USD",
-            value: plan.cost
-          },
           subscriber: {
             name: {
               given_name: user.firstName,
@@ -129,7 +127,7 @@ export default class SubscriptionService {
       endDate: endDate
     });
 
-    return subscription;
+    return subscriptionPaypal;
   }
 
   async activateSubscription(subscriptionId: string) {
