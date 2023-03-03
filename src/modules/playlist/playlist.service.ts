@@ -61,7 +61,7 @@ export default class PlaylistService {
     if (!user) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
     }
-    const entity = await this.playlistRepository.save({ ...dto, user: user });
+    const entity = await this.playlistRepository.save({ ...dto, user: user, status: PlaylistStatus.ACTIVE });
     return entity;
   }
 
