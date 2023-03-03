@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { PlaylistStatus } from '../../../common/enums/playlistStatus.enum';
 
 export class CreatePlaylistDto {
@@ -15,7 +15,7 @@ export class CreatePlaylistDto {
   @IsString()
   imageUrl: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @ApiProperty()
   description: string;
