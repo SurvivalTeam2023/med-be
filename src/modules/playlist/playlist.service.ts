@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { ErrorHelper } from 'src/helpers/error.helper';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import CreatePlaylistDto from './dto/createPlaylist.dto';
 import SearchPlaylistDto from './dto/searchPlaylistDto';
 import UpdatePlaylistDto from './dto/updatePlaylist.dto';
@@ -14,10 +14,13 @@ import {
   Pagination,
   paginate,
 } from 'nestjs-typeorm-paginate';
+import { getUserId } from 'src/utils/decode.utils';
+import UserEntity from '../user/entities/user.entity';
 
 @Injectable()
 export default class PlaylistService {
   constructor(
+    private readonly entityManage: EntityManager,
     @InjectRepository(PlaylistEntity)
     private playlistRepository: Repository<PlaylistEntity>,
   ) { }
@@ -50,8 +53,15 @@ export default class PlaylistService {
     return paginate<PlaylistEntity>(queryBuilder, option);
   }
 
-  async createPlaylist(dto: CreatePlaylistDto): Promise<PlaylistEntity> {
-    const entity = await this.playlistRepository.save({ ...dto });
+  async createPlaylist(dto: CreatePlaylistDto, token: string): Promise<PlaylistEntity> {
+    let userId = getUserId(token);
+    const user = await this.entityManage.findOne(UserEntity, {
+      where: { id: userId },
+    });
+    if (!user) {
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
+    }
+    const entity = await this.playlistRepository.save({ ...dto, user: user });
     return entity;
   }
 

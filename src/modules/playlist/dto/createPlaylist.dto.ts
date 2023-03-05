@@ -4,6 +4,7 @@ import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { PlaylistStatus } from '../../../common/enums/playlistStatus.enum';
 
 export class CreatePlaylistDto {
+
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
