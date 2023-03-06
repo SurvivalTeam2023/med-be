@@ -30,6 +30,7 @@ import UserEntity from './entities/user.entity';
 import ArtistEntity from '../artist/entities/artist.entity';
 import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
 import { TokenDTO } from '../auth/dto/token.dto';
+import { UpdateUserDTO } from './dto/updateUser.dto';
 
 @Injectable()
 export class UserService {
@@ -110,6 +111,26 @@ export class UserService {
           ),
         ),
       );
+  }
+
+  async updateUser(
+    username: string,
+    dto: UpdateUserDTO,
+  ): Promise<Observable<AxiosResponse<[]>>> {
+    const response = await lastValueFrom(
+      this.authService.getAcessToken(this.getAdminAccount()),
+    );
+    let token = `Bearer ${response['access_token']}`;
+    const user = await this.findUserByName(username, token);
+    const userId = user['user_keycloak']['id'];
+    if (!username)
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
+
+    const updatedUser = await this.userRepository.save({
+      id: user.id,
+      ...dto,
+    });
+    return this.httpService;
   }
 
   async changeRole(
