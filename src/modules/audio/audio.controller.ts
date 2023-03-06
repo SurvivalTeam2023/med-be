@@ -22,6 +22,7 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
+import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 
 @ApiTags('Audios')
 @Controller('audio')
@@ -58,13 +59,12 @@ export default class AudioController {
     });
   }
 
-  // @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.SUBSCRIBER] })
-  @Unprotected()
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   @Post()
   async createAudio(
-    @Body() createAudioDto: CreateAudioDTO,
+    @Body() createAudioDto: CreateAudioDTO, @RequestPayload() token: string
   ): Promise<AudioEntity> {
-    return this.audioService.createAudio(createAudioDto);
+    return this.audioService.createAudio(createAudioDto, token);
   }
 
   @Put(':id')

@@ -34,11 +34,6 @@ export class CreateAudioDTO {
   playlistId: number[];
 
   @IsNotEmpty()
-  @ApiProperty()
-  @IsString()
-  artistId: string;
-
-  @IsNotEmpty()
   @ApiProperty({ type: [Number] })
   @IsArray()
   genreId: number[];
