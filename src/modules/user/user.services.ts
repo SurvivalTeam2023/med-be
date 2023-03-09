@@ -116,21 +116,41 @@ export class UserService {
   async updateUser(
     username: string,
     dto: UpdateUserDTO,
-  ): Promise<Observable<AxiosResponse<[]>>> {
-    const response = await lastValueFrom(
+  ): Promise<UserEntity> {
+    const response = await firstValueFrom(
       this.authService.getAcessToken(this.getAdminAccount()),
     );
     let token = `Bearer ${response['access_token']}`;
     const user = await this.findUserByName(username, token);
     const userId = user['user_keycloak']['id'];
+    await firstValueFrom(
+      this.httpService
+      .put(
+        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}`,
+        [
+          {
+            createdTimeStamp: null,
+            username: dto.username,
+            enabled: true
+          },
+        ]
+      )
+      .pipe(map((response) => response.data))
+        .pipe(
+          catchError((err) =>
+            of(
+              ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEYCLOAK.ROLE_ASSIGN),
+            ),
+          ),
+        )
+    );
     if (!username)
       ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
-
     const updatedUser = await this.userRepository.save({
       id: user.id,
       ...dto,
-    });
-    return this.httpService;
+    })
+    return updatedUser
   }
 
   async changeRole(

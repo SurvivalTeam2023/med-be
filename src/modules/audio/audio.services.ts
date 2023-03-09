@@ -19,6 +19,7 @@ import { AudioPlaylistEntity } from '../audioPlaylist/entities/audioPlaylist.ent
 import { PlaylistEntity } from '../playlist/entities/playlist.entity';
 import { GenreEntity } from '../genre/entities/genre.entity';
 import { AudioGenreEntity } from '../audioGenre/entities/audioGenre.entities';
+import { getUserId } from 'src/utils/decode.utils';
 
 @Injectable()
 export default class AudioService {
@@ -61,14 +62,15 @@ export default class AudioService {
     queryBuilder.orderBy('audio.created_at', 'DESC')
     return paginate<AudioEntity>(queryBuilder, option);
   }
-  async createAudio(dto: CreateAudioDTO): Promise<AudioEntity> {
+  async createAudio(dto: CreateAudioDTO, token: string): Promise<AudioEntity> {
     const audioPlaylists = dto.playlistId.map((playlistId) => {
       const audioPlaylist = new AudioPlaylistEntity();
       audioPlaylist.playlistId = playlistId;
       return audioPlaylist;
     });
+    let userId = getUserId(token);
     const artist = await this.entityManage.findOne(ArtistEntity, {
-      where: { id: dto.artistId },
+      where: { id: userId },
     });
     if (!artist) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);

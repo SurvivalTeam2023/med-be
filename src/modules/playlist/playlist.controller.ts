@@ -22,6 +22,7 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 import PlaylistService from './playlist.service';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
+import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 
 @ApiTags('Playlists')
 @Controller('playlist')
@@ -61,11 +62,11 @@ export default class PlaylistController {
   }
 
   @Post()
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.USER] })
   async createPlaylist(
-    @Body() createPlaylistDto: CreatePlaylistDto,
+    @Body() createPlaylistDto: CreatePlaylistDto, @RequestPayload() token: string
   ): Promise<PlaylistEntity> {
-    return await this.playlistService.createPlaylist(createPlaylistDto);
+    return await this.playlistService.createPlaylist(createPlaylistDto, token);
   }
 
   @Put(':id')
