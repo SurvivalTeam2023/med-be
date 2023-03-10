@@ -16,10 +16,14 @@ import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
 import * as moment from 'moment';
 import UpdateSubscriptionDTO from './dto/updateSubscription.dto';
 import { PlanEntity } from '../plan/entities/plan.entity';
-import { lastValueFrom, map } from 'rxjs';
+import { lastValueFrom, map, Observable, firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { AuthService } from '../auth/auth.services';
 import { PAYPAL_URL } from 'src/environments';
+import { AxiosResponse } from 'axios';
+import { getUserId } from 'src/utils/decode.utils';
+import { Cron } from '@nestjs/schedule';
+import { CronExpression } from '@nestjs/schedule/dist';
 @Injectable()
 export default class SubscriptionService {
   constructor(
@@ -66,14 +70,15 @@ export default class SubscriptionService {
   }
 
   async createSubscription(
-    dto: CreateSubscriptionDTO,
-  ): Promise<any> {
+    dto: CreateSubscriptionDTO, userToken: string
+  ): Promise<Observable<AxiosResponse<[]>>> {
     const response = await lastValueFrom(
       this.authService.getPayPalAccessToken(),
     );
     let token = `Bearer ${response['access_token']}`;
+    let userId = getUserId(userToken);
     const user = await this.entityManage.findOne(UserEntity, {
-      where: { id: dto.userId },
+      where: { id: userId },
     });
     if (!user) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
@@ -85,7 +90,7 @@ export default class SubscriptionService {
     if (!plan) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAN.NOT_FOUND);
     }
-    const subscriptionPaypal = await lastValueFrom(
+    const subscriptionPaypal = await firstValueFrom(
       this.httpService.post(
         `https://api-m.sandbox.paypal.com/v1/billing/subscriptions`,
         {
@@ -114,21 +119,84 @@ export default class SubscriptionService {
           }
         }
       )
-        .pipe(map((response) => response.data)),
+        .pipe(map((response) => response.data))
     ).catch((err) => {
       ErrorHelper.BadRequestException(err.response.data.errorMessage);
     });
-    const endDate = moment(dto.startDate).add(plan.usageTime, "M").format()
-    const subscription = await this.subscriptionRepo.save({
-      id: subscriptionPaypal.id,
+    await this.subscriptionRepo.save({
+      id: subscriptionPaypal['id'],
       ...dto,
       user: user,
+      status: SubscriptionStatus.APPROVAL_PENDING,
       plan: plan,
-      endDate: endDate
     });
 
     return subscriptionPaypal;
   }
+  @Cron(CronExpression.EVERY_HOUR)
+  async handlePendingStatusCron() {
+    const subList = await this.subscriptionRepo.find(
+      { where: { status: SubscriptionStatus.APPROVAL_PENDING } }
+    )
+    const response = await lastValueFrom(
+      this.authService.getPayPalAccessToken(),
+    );
+    let token = `Bearer ${response['access_token']}`;
+    subList.map(async sub => {
+      const subPayPal = await lastValueFrom(this.httpService.get(`https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${sub.id}`,
+        {
+          headers: {
+            Authorization: token,
+          }
+        }
+      )
+        .pipe(map((response) => response.data))
+      )
+      if (subPayPal['status'] == SubscriptionStatus.ACTIVE) {
+        sub.status = SubscriptionStatus.ACTIVE
+        sub.endDate = moment(subPayPal['next_billing_time']).toDate()
+        await this.subscriptionRepo.save(sub)
+      }
+      else if (subPayPal['status'] == SubscriptionStatus.APPROVAL_PENDING || !subPayPal) {
+        sub.status = SubscriptionStatus.EXPIRED
+        await this.subscriptionRepo.save(sub)
+      }
+    })
+  }
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async handleActiveStatusCron() {
+    const subList = await this.subscriptionRepo.find(
+      { where: { status: SubscriptionStatus.ACTIVE } }
+    )
+    const response = await lastValueFrom(
+      this.authService.getPayPalAccessToken(),
+    );
+    let token = `Bearer ${response['access_token']}`;
+    subList.map(async sub => {
+      const subPayPal = await lastValueFrom(this.httpService.get(`https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${sub.id}`,
+        {
+          headers: {
+            Authorization: token,
+          }
+        }
+      )
+        .pipe(map((response) => response.data))
+      )
+      if (subPayPal['status'] == SubscriptionStatus.ACTIVE) {
+        sub.endDate = moment(subPayPal['next_billing_time']).toDate()
+        await this.subscriptionRepo.save(sub)
+      }
+      else if (subPayPal['status'] == SubscriptionStatus.SUSPENDED || !subPayPal) {
+        sub.status = SubscriptionStatus.SUSPENDED
+        await this.subscriptionRepo.save(sub)
+      }
+      else if (subPayPal['status'] == SubscriptionStatus.CANCELLED || !subPayPal) {
+        sub.status = SubscriptionStatus.CANCELLED
+        await this.subscriptionRepo.save(sub)
+      }
+    })
+  }
+
 
   async activateSubscription(subscriptionId: string) {
     await lastValueFrom(

@@ -16,7 +16,7 @@ export class SubscriptionEntity {
   @UpdateDateColumn({ type: 'timestamp', name: 'last_updated_at' })
   public lastUpdatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.subcription)
+  @ManyToOne(() => UserEntity, (user) => user.subscription)
   @JoinColumn({ name: 'user_id' })
   public user: UserEntity;
 

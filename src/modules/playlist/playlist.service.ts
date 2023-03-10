@@ -16,6 +16,7 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { getUserId } from 'src/utils/decode.utils';
 import UserEntity from '../user/entities/user.entity';
+import { FollowerEntity } from '../follower/entities/follower.entity';
 
 @Injectable()
 export default class PlaylistService {
@@ -44,25 +45,20 @@ export default class PlaylistService {
     const queryBuilder = this.playlistRepository
       .createQueryBuilder('playlist')
       .leftJoinAndSelect('playlist.follower', 'follower')
-      .select(['playlist', 'follower.artistId', 'follower.userId'])
-    if (dto.name) queryBuilder.where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` }).orderBy('playlist.created_at', 'DESC').getMany()
-    if (dto.status) queryBuilder.andWhere('playlist.status = :playlistStatus', { playlistStatus: dto.status, }).orderBy('playlist.created_at', 'DESC').getMany()
-    if (dto.userId) queryBuilder.andWhere('playlist.user_id = :userId', { userId: dto.userId, }).orderBy('playlist.created_at', 'DESC').getMany()
-    if (dto.artistId) queryBuilder.andWhere('follower.artist_id = :artistId', { artistId: dto.artistId, }).orderBy('playlist.created_at', 'DESC').getMany()
+      .select(['playlist', 'follower.author_id'])
+    if (dto.name) queryBuilder.where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` }).orderBy('playlist.created_at', 'DESC')
+    if (dto.status) queryBuilder.andWhere('playlist.status = :playlistStatus', { playlistStatus: dto.status, }).orderBy('playlist.created_at', 'DESC')
+    if (dto.authorId) queryBuilder.andWhere('follower.author_id = :authorId', { authorId: dto.authorId, }).orderBy('playlist.created_at', 'DESC')
     queryBuilder.orderBy('playlist.created_at', 'DESC')
     return paginate<PlaylistEntity>(queryBuilder, option);
   }
 
   async createPlaylist(dto: CreatePlaylistDto, token: string): Promise<PlaylistEntity> {
-    let userId = getUserId(token);
-    const user = await this.entityManage.findOne(UserEntity, {
-      where: { id: userId },
-    });
-    if (!user) {
-      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
-    }
-    const entity = await this.playlistRepository.save({ ...dto, user: user, status: PlaylistStatus.ACTIVE });
-    return entity;
+    let authorId = getUserId(token);
+    const follower = new FollowerEntity()
+    follower.authorId = authorId
+    const playlist = await this.playlistRepository.save({ ...dto, status: PlaylistStatus.ACTIVE, follower: follower });
+    return playlist;
   }
 
   async updatePlaylist(
