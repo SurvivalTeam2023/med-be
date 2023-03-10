@@ -22,6 +22,7 @@ import SearchSubscriptionDTO from './dto/searchSubscription.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import CreateSubscriptionDTO from './dto/createSubscription.dto';
 import UpdateSubscriptionDTO from './dto/updateSubscription.dto';
+import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 
 @ApiTags('Subscriptions')
 @Controller('subscriptions')
@@ -59,13 +60,13 @@ export default class SubscriptionController {
     });
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
   @ApiOperation({ summary: 'create subscription' })
   @Post()
   async createSubscription(
-    @Body() dto: CreateSubscriptionDTO,
-  ): Promise<SubscriptionEntity> {
-    return this.subscriptionService.createSubscription(dto);
+    @Body() dto: CreateSubscriptionDTO, @RequestPayload() token: string
+  ): Promise<any> {
+    return this.subscriptionService.createSubscription(dto, token);
   }
   @Post(':id')
   @ApiOperation({ summary: 'activate subscription' })

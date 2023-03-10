@@ -18,6 +18,7 @@ import { MentalHealthModule } from './modules/mentalHealth/mentalHealth.module';
 import { MentalHealthDegreeModule } from './modules/mentalHealthDegree/mentalHealthDegree.module';
 import { QuestionBankModule } from './modules/questionBank/questionBank.modul';
 import { AudioGenreModule } from './modules/audioGenre/audioGenre.module';
+import { ScheduleModule } from '@nestjs/schedule/dist';
 
 @Module({
   imports: [
@@ -39,8 +40,9 @@ import { AudioGenreModule } from './modules/audioGenre/audioGenre.module';
     MentalHealthDegreeModule,
     QuestionBankModule,
     AudioGenreModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

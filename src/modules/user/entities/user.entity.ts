@@ -43,7 +43,8 @@ export class UserEntity {
   email: string;
 
   @Column({
-    nullable: true,
+    type: 'enum',
+    enum: GENDER,
   })
   gender: GENDER;
 
@@ -83,15 +84,10 @@ export class UserEntity {
   })
   questionBank: QuestionBankEntity[];
 
-  @OneToMany(() => FollowerEntity, (follower) => follower.userId, {
-    cascade: true,
-  })
-  follower: FollowerEntity[];
-
   @OneToMany(() => SubscriptionEntity, (subcription) => subcription.user, {
     cascade: true,
   })
-  subcription: SubscriptionEntity[];
+  subscription: SubscriptionEntity[];
 
   @OneToMany(() => HistoryEntity, (history) => history.userId, {
     cascade: true,
@@ -103,9 +99,5 @@ export class UserEntity {
   })
   favorite: FavoriteEntity[];
 
-  @OneToMany(() => PlaylistEntity, (playList) => playList.user, {
-    cascade: true,
-  })
-  playlist: PlaylistEntity[];
 }
 export default UserEntity;
