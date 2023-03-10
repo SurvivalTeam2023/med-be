@@ -16,6 +16,8 @@ import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
 import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
 import { ErrorHelper } from '../../helpers/error.helper';
 import { ERROR_MESSAGE } from '../../common/constants/messages.constant';
+import { UpdateUserDTO } from './dto/updateUser.dto';
+import UserEntity from './entities/user.entity';
 
 @ApiTags('Users')
 @Controller('user')
@@ -78,6 +80,18 @@ export class UserController {
       role,
     );
   }
+
+  @Unprotected()
+  @ApiOperation({ summary: 'update user' })
+  @ApiBody({ type: CreateUserDTO })
+  @Put(':username')
+  async updateUser(
+    @Param('username') username: string,
+    @Body() updateUserDto: UpdateUserDTO,
+  ): Promise<UserEntity>{
+    return await this.userService.updateUser(username, updateUserDto);
+  }
+
   @Unprotected()
   @ApiOperation({ summary: 'happy new year message' })
   @Get()
