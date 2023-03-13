@@ -26,8 +26,4 @@ export class UpdateUserDTO {
   @IsOptional()
   lastName: string;
 
-  @ApiProperty({ enum: USER_STATUS })
-  @IsEnum(USER_STATUS)
-  status: USER_STATUS;
-
 }
