@@ -8,4 +8,26 @@ export class UpdateUserDTO {
   @IsBoolean()
   status: boolean;
 
+  @IsString()
+  @ApiProperty()
+  @IsOptional()
+  username: string;
+  
+  @ApiProperty()
+  @IsOptional()
+  @IsEmail()
+  email: string;
+
+  @ApiProperty()
+  @IsOptional()
+  firstName: string;
+
+  @ApiProperty()
+  @IsOptional()
+  lastName: string;
+
+  @ApiProperty({ enum: USER_STATUS })
+  @IsEnum(USER_STATUS)
+  status: USER_STATUS;
+
 }

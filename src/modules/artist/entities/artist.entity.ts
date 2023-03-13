@@ -53,10 +53,6 @@ export class ArtistEntity {
   @CreateDateColumn({ type: 'timestamp' })
   public created_at: Date;
 
-  @OneToMany(() => FollowerEntity, (follower) => follower.artistId, {
-    cascade: true,
-  })
-  follower: FollowerEntity[];
 }
 
 export default ArtistEntity;
