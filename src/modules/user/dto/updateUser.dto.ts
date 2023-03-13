@@ -3,6 +3,11 @@ import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'cl
 import { USER_STATUS } from 'src/common/enums/userStatus.enum';
 
 export class UpdateUserDTO {
+
+  @ApiProperty()
+  @IsBoolean()
+  status: boolean;
+
   @IsString()
   @ApiProperty()
   @IsOptional()
@@ -20,9 +25,5 @@ export class UpdateUserDTO {
   @ApiProperty()
   @IsOptional()
   lastName: string;
-
-  @ApiProperty({ enum: USER_STATUS })
-  @IsEnum(USER_STATUS)
-  status: USER_STATUS;
 
 }
