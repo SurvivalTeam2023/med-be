@@ -13,6 +13,9 @@ export class PlaylistEntity extends BaseEntity {
   @Column()
   public name: string;
 
+  @Column({ name: 'author_id' })
+  public authorId!: string;
+
   @Column({ name: 'image_url' })
   public imageUrl: string;
   @Column({
