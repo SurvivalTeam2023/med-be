@@ -19,6 +19,7 @@ import { MentalHealthDegreeModule } from './modules/mentalHealthDegree/mentalHea
 import { QuestionBankModule } from './modules/questionBank/questionBank.modul';
 import { AudioGenreModule } from './modules/audioGenre/audioGenre.module';
 import { ScheduleModule } from '@nestjs/schedule/dist';
+import { FollowerModule } from './modules/follower/follower.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ScheduleModule } from '@nestjs/schedule/dist';
     MentalHealthDegreeModule,
     QuestionBankModule,
     AudioGenreModule,
+    FollowerModule,
     ScheduleModule.forRoot()
   ],
   controllers: [],

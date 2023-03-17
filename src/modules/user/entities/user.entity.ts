@@ -99,5 +99,9 @@ export class UserEntity {
   })
   favorite: FavoriteEntity[];
 
+  @OneToMany(() => FollowerEntity, (follower) => follower.user, {
+    cascade: true,
+  })
+  follower: FollowerEntity[];
 }
 export default UserEntity;
