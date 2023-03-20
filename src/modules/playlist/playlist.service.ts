@@ -22,7 +22,7 @@ export default class PlaylistService {
     private readonly entityManage: EntityManager,
     @InjectRepository(PlaylistEntity)
     private playlistRepository: Repository<PlaylistEntity>,
-  ) { }
+  ) {}
 
   async findPlaylistById(playlistId: number): Promise<PlaylistEntity> {
     const playList = await this.playlistRepository
@@ -30,8 +30,9 @@ export default class PlaylistService {
       .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
       .leftJoinAndSelect('audio_playlist.audio', 'audio')
       .leftJoinAndSelect('audio.file', 'files')
+      .leftJoinAndSelect('audio.artist', 'artist')
       .where('playlist.id = :playlistId', { playlistId: playlistId })
-      .getOne()
+      .getOne();
     if (!playList)
       ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAYLIST.NOT_FOUND);
     return playList;
@@ -49,7 +50,10 @@ export default class PlaylistService {
     return paginate<PlaylistEntity>(queryBuilder, option);
   }
 
-  async createPlaylist(dto: CreatePlaylistDto, token: string): Promise<PlaylistEntity> {
+  async createPlaylist(
+    dto: CreatePlaylistDto,
+    token: string,
+  ): Promise<PlaylistEntity> {
     let authorId = getUserId(token);
     const playlist = await this.playlistRepository.save({ ...dto, status: PlaylistStatus.ACTIVE, authorId: authorId });
     return playlist;
