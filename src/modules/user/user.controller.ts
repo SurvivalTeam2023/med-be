@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import {
   ApiBearerAuth,
@@ -14,6 +14,7 @@ import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
 import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
 import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
+import { USER_STATUS } from 'src/common/enums/userStatus.enum';
 import { ErrorHelper } from '../../helpers/error.helper';
 import { ERROR_MESSAGE } from '../../common/constants/messages.constant';
 import { UpdateUserDTO } from './dto/updateUser.dto';
@@ -81,22 +82,17 @@ export class UserController {
     );
   }
 
-  @Unprotected()
-  @ApiOperation({ summary: 'update user' })
-  @ApiBody({ type: CreateUserDTO })
-  @Put(':username')
-  async updateUser(
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @ApiOperation({ summary: 'update user status' })
+  @Patch(':username')
+  async updateUserStatus(
     @Param('username') username: string,
-    @Body() updateUserDto: UpdateUserDTO,
+    @RequestPayload() token: string
   ): Promise<UserEntity>{
-    return await this.userService.updateUser(username, updateUserDto);
+    return await this.userService.updateUserStatus(
+      username,
+      token,
+      );
   }
 
-  @Unprotected()
-  @ApiOperation({ summary: 'happy new year message' })
-  @Get()
-  happyNewYear() {
-    return this.userService.happyNewYear(
-    );
-  }
 }
