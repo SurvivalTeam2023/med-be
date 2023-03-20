@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Unprotected } from "nest-keycloak-connect";
 import { RequestPayload } from "src/decorator/requestPayload.decorator";
@@ -13,7 +13,7 @@ export default class FollowerController {
 
     @Get()
     @Unprotected()
-    async getPlaylistById(@RequestPayload() token: string): Promise<FollowerEntity[]> {
-        return await this.followerService.findPlaylistByAuthorId(token);
+    async followPlaylist(@RequestPayload() token: string, @Param() id: number): Promise<FollowerEntity> {
+        return await this.followerService.followPlaylist(id, token);
     }
 }

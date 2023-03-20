@@ -36,7 +36,7 @@ export class PlaylistEntity extends BaseEntity {
   @ManyToOne(() => PlaylistTypeEntity, (playlistType) => playlistType.playlist)
   public playlistType: PlaylistTypeEntity;
 
-  @ManyToOne(() => FollowerEntity, (follower) => follower.playlist, {
+  @OneToMany(() => FollowerEntity, (follower) => follower.playlist, {
     cascade: true,
   })
   follower: FollowerEntity;
