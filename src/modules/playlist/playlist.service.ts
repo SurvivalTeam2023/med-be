@@ -24,7 +24,7 @@ export default class PlaylistService {
     private readonly entityManage: EntityManager,
     @InjectRepository(PlaylistEntity)
     private playlistRepository: Repository<PlaylistEntity>,
-  ) { }
+  ) {}
 
   async findPlaylistById(playlistId: number): Promise<PlaylistEntity> {
     const playList = await this.playlistRepository
@@ -32,8 +32,9 @@ export default class PlaylistService {
       .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
       .leftJoinAndSelect('audio_playlist.audio', 'audio')
       .leftJoinAndSelect('audio.file', 'files')
+      .leftJoinAndSelect('audio.artist', 'artist')
       .where('playlist.id = :playlistId', { playlistId: playlistId })
-      .getOne()
+      .getOne();
     if (!playList)
       ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAYLIST.NOT_FOUND);
     return playList;
@@ -45,19 +46,37 @@ export default class PlaylistService {
     const queryBuilder = this.playlistRepository
       .createQueryBuilder('playlist')
       .leftJoinAndSelect('playlist.follower', 'follower')
-      .select(['playlist', 'follower.author_id'])
-    if (dto.name) queryBuilder.where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` }).orderBy('playlist.created_at', 'DESC')
-    if (dto.status) queryBuilder.andWhere('playlist.status = :playlistStatus', { playlistStatus: dto.status, }).orderBy('playlist.created_at', 'DESC')
-    if (dto.authorId) queryBuilder.andWhere('follower.author_id = :authorId', { authorId: dto.authorId, }).orderBy('playlist.created_at', 'DESC')
-    queryBuilder.orderBy('playlist.created_at', 'DESC')
+      .select(['playlist', 'follower.author_id']);
+    if (dto.name)
+      queryBuilder
+        .where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` })
+        .orderBy('playlist.created_at', 'DESC');
+    if (dto.status)
+      queryBuilder
+        .andWhere('playlist.status = :playlistStatus', {
+          playlistStatus: dto.status,
+        })
+        .orderBy('playlist.created_at', 'DESC');
+    if (dto.authorId)
+      queryBuilder
+        .andWhere('follower.author_id = :authorId', { authorId: dto.authorId })
+        .orderBy('playlist.created_at', 'DESC');
+    queryBuilder.orderBy('playlist.created_at', 'DESC');
     return paginate<PlaylistEntity>(queryBuilder, option);
   }
 
-  async createPlaylist(dto: CreatePlaylistDto, token: string): Promise<PlaylistEntity> {
+  async createPlaylist(
+    dto: CreatePlaylistDto,
+    token: string,
+  ): Promise<PlaylistEntity> {
     let authorId = getUserId(token);
-    const follower = new FollowerEntity()
-    follower.authorId = authorId
-    const playlist = await this.playlistRepository.save({ ...dto, status: PlaylistStatus.ACTIVE, follower: follower });
+    const follower = new FollowerEntity();
+    follower.authorId = authorId;
+    const playlist = await this.playlistRepository.save({
+      ...dto,
+      status: PlaylistStatus.ACTIVE,
+      follower: follower,
+    });
     return playlist;
   }
 
