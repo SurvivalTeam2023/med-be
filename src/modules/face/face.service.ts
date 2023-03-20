@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BUCKET_NAME } from 'src/environments';
 import { FilesService } from '../files/files.service';
 import { InjectAws } from 'aws-sdk-v3-nest/dist/index';
-import { DetectFacesCommandOutput, Emotion, Rekognition } from '@aws-sdk/client-rekognition';
+import { DetectFacesCommandOutput, Emotion, FaceDetail, Rekognition } from '@aws-sdk/client-rekognition';
 @Injectable()
 export class FaceService {
     constructor(
@@ -22,16 +22,9 @@ export class FaceService {
             },
             Attributes: ['ALL']
         }
-        let emotions: Emotion[]
-        this.rekognition.detectFaces(params, function (err, response: DetectFacesCommandOutput) {
-            if (err) {
-                console.log(err, err.stack);
-            } else {
-
-                response.FaceDetails.forEach(data => {
-                    emotions = data.Emotions
-                })
-            }
+        const response = await this.rekognition.detectFaces(params)
+        const emotions = response.FaceDetails.map(data => {
+            return data.Emotions
         })
         return emotions
     }
