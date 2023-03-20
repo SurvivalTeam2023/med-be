@@ -21,7 +21,6 @@ export class FaceController {
     async faceDetect(
         @UploadedFile() file: Express.Multer.File,
     ) {
-        console.log('file')
         return this.faceService.faceDetect(file.buffer, file.originalname);
     }
 }
