@@ -2,8 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
-  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -20,7 +20,7 @@ import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 @Controller('files')
 @ApiBearerAuth()
 export class FilesController {
-  constructor(private readonly fileService: FilesService) {}
+  constructor(private readonly fileService: FilesService) { }
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
@@ -35,14 +35,13 @@ export class FilesController {
     @Body() body: FileEntity,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log('file')
     return this.fileService.uploadPublicFile(file.buffer, file.originalname);
   }
 
   @Get('id')
   @Unprotected()
-  async getFiles(@Query() query: FileQuery) {
-    return this.fileService.getFile(query.id, query.key);
+  async getFiles(@Param() query: FileQuery) {
+    return this.fileService.getFile(query.id);
   }
 
   @Get()

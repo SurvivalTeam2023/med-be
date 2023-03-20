@@ -1,51 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { S3 } from 'aws-sdk';
+import { Upload } from "@aws-sdk/lib-storage";
+import { S3 } from "@aws-sdk/client-s3";
 import { BUCKET_NAME } from 'src/environments';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { FileEntity } from './entities/file.entity';
+import { InjectAws } from 'aws-sdk-v3-nest/dist/index';
 @Injectable()
 export class FilesService {
   constructor(
     @InjectRepository(FileEntity)
     private publicFilesRepository: Repository<FileEntity>,
-  ) {}
+    @InjectAws(S3) private readonly s3: S3
+  ) { }
 
   async uploadPublicFile(dataBuffer: Buffer, filename: string) {
-    const s3 = new S3();
+
     try {
-      const uploadResult = await s3
-        .upload({
+      const uploadResult = await new Upload({
+        client: this.s3,
+
+        params: {
           Bucket: BUCKET_NAME,
           Body: dataBuffer,
           Key: `${uuid()}-${filename}`,
-        })
-        .promise();
-      console.log('upload', uploadResult);
+        }
+      }).on("httpUploadProgress", (progress) => {
+      }).done();
       const newFile = this.publicFilesRepository.create({
-        key: uploadResult.Key,
-        url: uploadResult.Location,
+        key: uploadResult['Key'],
+        url: uploadResult['Location'],
       });
       await this.publicFilesRepository.save(newFile);
       return newFile;
     } catch (error) {
-      console.log('err', error);
     }
   }
 
-  async getFile(id: any, key: string) {
-    console.log('id', typeof id);
-    const s3 = new S3();
-    const url = await s3.getSignedUrlPromise('putObject', {
-      Bucket: BUCKET_NAME,
-      Key: key,
-    });
+  async getFile(id: any) {
     const file = await this.publicFilesRepository.findOneBy({
       id: parseInt(id),
     });
-    console.log('url', url);
-    return { file: file, url: url };
+    return file;
   }
 
   async getAllFiles() {

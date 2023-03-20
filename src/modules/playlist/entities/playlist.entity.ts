@@ -13,6 +13,9 @@ export class PlaylistEntity extends BaseEntity {
   @Column()
   public name: string;
 
+  @Column({ name: 'author_id' })
+  public authorId!: string;
+
   @Column({ name: 'image_url' })
   public imageUrl: string;
   @Column({
@@ -33,7 +36,7 @@ export class PlaylistEntity extends BaseEntity {
   @ManyToOne(() => PlaylistTypeEntity, (playlistType) => playlistType.playlist)
   public playlistType: PlaylistTypeEntity;
 
-  @ManyToOne(() => FollowerEntity, (follower) => follower.playlist, {
+  @OneToMany(() => FollowerEntity, (follower) => follower.playlist, {
     cascade: true,
   })
   follower: FollowerEntity;
