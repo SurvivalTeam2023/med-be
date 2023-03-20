@@ -26,7 +26,6 @@ export class FilesService {
           Body: dataBuffer,
           Key: `${uuid()}-${filename}`,
         }
-      }).on("httpUploadProgress", (progress) => {
       }).done();
       const newFile = this.publicFilesRepository.create({
         key: uploadResult['Key'],
