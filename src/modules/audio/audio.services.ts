@@ -114,4 +114,7 @@ export default class AudioService {
     }
     return entity;
   }
+  async countAudio(): Promise<number> {
+    return this.audioRepository.count()
+  }
 }
