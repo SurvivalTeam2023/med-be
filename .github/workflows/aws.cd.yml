@@ -71,32 +71,25 @@ jobs:
 
       - name: Build, tag, and push docker image to Amazon ECR Public
         env:
-          REGISTRY: ${{ secrets.REGISTRY }}
-          REGISTRY_ALIAS: ${{ secrets.REGISTRY_ALIAS }}
           REPOSITORY: ${{ secrets.REPOSITORY }}
           IMAGE_TAG: "banhsbao-${{ steps.format-time.outputs.replaced }}"
         run: |
-          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+          docker build -t $REPOSITORY:$IMAGE_TAG .
+          docker push $REPOSITORY:$IMAGE_TAG
 
       - name: Executing remote ssh EC2
         uses: appleboy/ssh-action@master
         env: 
-          REGISTRY: ${{ secrets.REGISTRY }}
-          REGISTRY_ALIAS: ${{ secrets.REGISTRY_ALIAS }}
           REPOSITORY: ${{ secrets.REPOSITORY }}
           IMAGE_TAG: "banhsbao-${{ steps.format-time.outputs.replaced }}"
           EKS_DEPLOYMENT: ${{ secrets.EKS_DEPLOYMENT }}
           APP_NAME: ${{ secrets.APP_NAME }}
         with:
-          host: ${{ secrets.HOST_EC2 }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
           envs: REGISTRY, REGISTRY_ALIAS, REPOSITORY, IMAGE_TAG, EKS_DEPLOYMENT, APP_NAME
           script: |
               echo "$IMAGE_TAG"
-              kubectl set image deployment/$EKS_DEPLOYMENT $APP_NAME=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
-          
-      - name: say Oye
-        run: echo Done :3   
+              kubectl set image deployment/$EKS_DEPLOYMENT $APP_NAME=$REPOSITORY:$IMAGE_TAG 
 
