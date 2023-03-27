@@ -17,6 +17,7 @@ import {
 import { FileEntity } from '../../files/entities/file.entity';
 import { FavoriteEntity } from 'src/modules/favorite/entities/favorite.entity';
 import { PlaylistEntity } from 'src/modules/playlist/entities/playlist.entity';
+import { UpdateDateColumn } from 'typeorm/decorator/columns/UpdateDateColumn';
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryColumn()
@@ -76,8 +77,11 @@ export class UserEntity {
   })
   public avatar?: FileEntity;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   public created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', name: 'last_updated_at' })
+  public lastUpdatedAt: Date;
 
   @OneToMany(() => QuestionBankEntity, (questionBank) => questionBank.userId, {
     cascade: true,

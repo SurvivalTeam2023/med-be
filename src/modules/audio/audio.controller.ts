@@ -81,4 +81,10 @@ export default class AudioController {
   async deleteAudio(@Param('id') id: number) {
     return await this.audioService.deleteAudio(id);
   }
+
+  @Get('countAudios')
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  async getCountAudio(): Promise<number> {
+    return await this.audioService.countAudio();
+  }
 }

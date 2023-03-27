@@ -88,11 +88,17 @@ export class UserController {
   async updateUserStatus(
     @Param('username') username: string,
     @RequestPayload() token: string
-  ): Promise<UserEntity>{
+  ): Promise<UserEntity> {
     return await this.userService.updateUserStatus(
       username,
       token,
-      );
+    );
   }
-
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @ApiOperation({ summary: 'get number of user' })
+  @ApiQuery({ name: 'status', enum: USER_STATUS, required: false, })
+  @Get()
+  async getCountUser(@Query('status') status: USER_STATUS): Promise<number> {
+    return await this.userService.countUser(status)
+  }
 }

@@ -43,7 +43,7 @@ export class UserService {
     private readonly artistRepository: Repository<ArtistEntity>,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-  ) {}
+  ) { }
 
   getAdminAccount = () => {
     let adminAccount: LoginDTO = {
@@ -122,10 +122,9 @@ export class UserService {
     );
     const user = await this.findUserByName(username, token);
     const userId = user['user_keycloak']['id'];
-    const user_db = await this.userRepository.findOne({where: {id:userId}})
-    let status:boolean
-    if(user_db.status == USER_STATUS.ACTIVE)
-    {
+    const user_db = await this.userRepository.findOne({ where: { id: userId } })
+    let status: boolean
+    if (user_db.status == USER_STATUS.ACTIVE) {
       user_db.status = USER_STATUS.INACTIVE
       status = false
       await this.userRepository.save(
@@ -140,8 +139,8 @@ export class UserService {
     }
     await firstValueFrom(
       this.httpService
-      .put(
-        `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}`,
+        .put(
+          `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}`,
           {
             id: userId,
             enabled: status
@@ -152,8 +151,8 @@ export class UserService {
               Authorization: token,
             },
           },
-      )
-      .pipe(map((response) => response.data))
+        )
+        .pipe(map((response) => response.data))
         .pipe(
           catchError((err) =>
             of(
@@ -437,10 +436,11 @@ export class UserService {
     }
     return access_token;
   }
-  happyNewYear(): string {
-    return (
-      'Khai code đầu năm \n' +
-      'Chúc anh em code ít bug, fix bug như máy điện, deploy đều như cơm bữa. Sức khỏe dồi dào, apply job 1 phát ăn ngay, gia đình hạnh phúc'
-    );
+  async countUser(status: USER_STATUS): Promise<number> {
+
+    const queryBuilder = this.userRepository
+      .createQueryBuilder('user')
+    if (status) queryBuilder.where('user.status = :status', { status: status })
+    return queryBuilder.getCount()
   }
 }

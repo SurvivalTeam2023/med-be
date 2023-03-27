@@ -34,6 +34,7 @@ import { MentalHealthDegreeLogEntity } from 'src/modules/mentalHealthDegreeLog/e
 import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
 import { FavoriteEntity } from 'src/modules/favorite/entities/favorite.entity';
 import { PlanEntity } from 'src/modules/plan/entities/plan.entity';
+import { UserStatusLogEntity } from 'src/modules/userStatusLog/entity/userStatusLog.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -62,6 +63,7 @@ const entities = [
   SubscriptionEntity,
   PlanEntity,
   FavoriteEntity,
+  UserStatusLogEntity
 ];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {
