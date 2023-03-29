@@ -1,25 +1,29 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { EmotionEnum } from 'src/common/enums/emotion.enum';
 import { GenreStatus } from 'src/common/enums/genreStatus.enum';
 
 export class UpdateGenreDTO {
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   name: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   desc: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   image: string;
 
   @ApiProperty({ enum: GenreStatus, default: GenreStatus.ACTIVE })
   status: GenreStatus;
+
+  @ApiProperty({ enum: EmotionEnum, })
+  emotion: EmotionEnum;
 }
 export default UpdateGenreDTO;

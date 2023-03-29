@@ -13,6 +13,7 @@ export class FaceService {
 
     async faceDetect(dataBuffer: Buffer, filename: string) {
         const img = await this.fileService.uploadPublicFile(dataBuffer, filename)
+        let emotions:Emotion[]
         const params = {
             Image: {
                 S3Object: {
@@ -23,8 +24,8 @@ export class FaceService {
             Attributes: ['ALL']
         }
         const response = await this.rekognition.detectFaces(params)
-        const emotions = response.FaceDetails.map(data => {
-            return data.Emotions
+        response.FaceDetails.forEach(data => {
+            emotions= data.Emotions
         })
         return emotions
     }

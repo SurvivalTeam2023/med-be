@@ -1,7 +1,9 @@
 /* eslint-disable prettier/prettier */
+import { Emotion } from '@aws-sdk/client-rekognition';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
+import { EmotionEnum } from 'src/common/enums/emotion.enum';
 import { GenreStatus } from 'src/common/enums/genreStatus.enum';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { Repository } from 'typeorm';
@@ -25,23 +27,6 @@ export default class GenreService {
     return newGenre;
   }
 
-  async addGenreToAudio(dto: AddGenreToAudioDTO): Promise<GenreEntity> {
-    const genre = await this.genreRepo.findOneBy({
-      id: dto.genreId,
-    });
-    const audioGenres = dto.audioIds.map((audioId) => {
-      const audioGenre = new AudioGenreEntity();
-      audioGenre.audioId = audioId;
-      return audioGenre;
-    });
-
-    const updatedGenre = this.genreRepo.save({
-      id: genre.id,
-      audioGenre: audioGenres,
-    });
-    return updatedGenre;
-  }
-
   async findGenreById(genreId: number): Promise<GenreEntity> {
     const genre = await this.genreRepo.findOneBy({
       id: genreId,
@@ -49,9 +34,10 @@ export default class GenreService {
     return genre;
   }
 
-  async findGenres(name: string): Promise<GenreEntity[]> {
+  async findGenres(name?: string): Promise<GenreEntity[]> {
     const queryBuilder = await this.genreRepo.createQueryBuilder('genre')
     if (name) queryBuilder.where('LOWER(genre.name) like :name', { name: `%${name}%` }).orderBy('genre.name', 'ASC')
+
 
     return queryBuilder.orderBy('genre.name', 'ASC').getMany()
   }
@@ -77,5 +63,10 @@ export default class GenreService {
       status: GenreStatus.INACTIVE,
     });
     return updatedGenre;
+  }
+  async getGenreByEmotion(emotions: Emotion[]): Promise<GenreEntity[]> {
+    const genre = await this.genreRepo.createQueryBuilder('genre')
+     .where('genre.emotion like :emotion', { emotion: `%${emotions[0].Type}%` }).orderBy('genre.name', 'ASC').getMany()
+    return genre
   }
 }

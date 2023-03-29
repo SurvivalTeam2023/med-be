@@ -18,7 +18,7 @@ import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import { GenreEntity } from './entities/genre.entity';
 import CreateGenreDTO from './dto/createGenre.dto';
 import UpdateGenreDTO from './dto/updateGenre.dto';
-import AddGenreToAudioDTO from './dto/addGenreToAudio.dto';
+import { Emotion } from '@aws-sdk/client-rekognition';
 
 @ApiTags('Genres')
 @Controller('genres')
@@ -32,7 +32,6 @@ export default class GenreController {
     return this.genreService.findGenreById(id);
   }
 
-
   @Get()
   @Unprotected()
   @ApiQuery({
@@ -44,17 +43,16 @@ export default class GenreController {
     return this.genreService.findGenres(name);
   }
 
+  @Post('emotion')
+  @Unprotected()
+  async getGenreByEmotion(@Body() emotions: Emotion[]) {
+    return await this.genreService.getGenreByEmotion(emotions)
+  }
 
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @Post()
   async createGenre(@Body() dto: CreateGenreDTO): Promise<GenreEntity> {
     return this.genreService.createGenre(dto);
-  }
-
-  @Unprotected()
-  @Patch('audioGenre')
-  async addGenreToAudio(@Body() dto: AddGenreToAudioDTO): Promise<GenreEntity> {
-    return this.genreService.addGenreToAudio(dto);
   }
 
   @Put(':id')
@@ -71,4 +69,5 @@ export default class GenreController {
   async deleteAudio(@Param('id') id: number) {
     return await this.genreService.deleteGenre(id);
   }
+
 }
