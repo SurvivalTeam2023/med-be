@@ -117,9 +117,6 @@ export class UserService {
     username: string,
     token: string
   ): Promise<UserEntity> {
-    const response = await firstValueFrom(
-      this.authService.getAcessToken(this.getAdminAccount()),
-    );
     const user = await this.findUserByName(username, token);
     const userId = user['user_keycloak']['id'];
     const user_db = await this.userRepository.findOne({ where: { id: userId } })
