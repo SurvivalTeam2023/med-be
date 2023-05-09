@@ -31,7 +31,7 @@ export default class PlaylistController {
   constructor(private readonly playlistService: PlaylistService) { }
 
   @Get(':id')
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.ADMIN] })
+  @Unprotected()
   async getPlaylistById(@Param('id') id: number): Promise<PlaylistEntity> {
     return await this.playlistService.findPlaylistById(id);
   }

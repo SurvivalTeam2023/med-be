@@ -20,6 +20,9 @@ export class AudioDTO {
   length: string;
 
   @ApiProperty()
+  liked: number;
+
+  @ApiProperty()
   audio_playlist: AudioPlaylistDto[];
 }
 export default AudioDTO;

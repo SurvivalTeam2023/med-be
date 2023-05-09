@@ -11,7 +11,6 @@ import {
 import { FileEntity } from 'src/modules/files/entities/file.entity';
 import { AudioPlaylistEntity } from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
 import { PlaylistEntity } from 'src/modules/playlist/entities/playlist.entity';
-import { PlaylistTypeEntity } from 'src/modules/playlistType/entities/playlistType.entity';
 import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
 import { GenreEntity } from 'src/modules/genre/entities/genre.entity';
 import { WalletEntity } from 'src/modules/wallet/entities/wallet.entity';
@@ -42,7 +41,6 @@ const entities = [
   UserEntity,
   FileEntity,
   ArtistEntity,
-  PlaylistTypeEntity,
   AudioGenreEntity,
   GenreEntity,
   WalletEntity,

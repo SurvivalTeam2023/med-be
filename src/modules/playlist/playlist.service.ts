@@ -22,7 +22,7 @@ export default class PlaylistService {
     private readonly entityManage: EntityManager,
     @InjectRepository(PlaylistEntity)
     private playlistRepository: Repository<PlaylistEntity>,
-  ) {}
+  ) { }
 
   async findPlaylistById(playlistId: number): Promise<PlaylistEntity> {
     const playList = await this.playlistRepository

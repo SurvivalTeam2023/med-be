@@ -23,6 +23,7 @@ import { FollowerModule } from './modules/follower/follower.module';
 import { FaceModule } from './modules/face/face.module';
 import { ArtistModule } from './modules/artist/artist.module';
 import { UserLogModule } from './modules/userStatusLog/userStatusLog.module';
+import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.module';
 
 
 @Module({
@@ -48,6 +49,7 @@ import { UserLogModule } from './modules/userStatusLog/userStatusLog.module';
     FollowerModule,
     ScheduleModule.forRoot(),
     FaceModule,
+    AudioPlaylistModule,
     ArtistModule,
     UserLogModule
   ],

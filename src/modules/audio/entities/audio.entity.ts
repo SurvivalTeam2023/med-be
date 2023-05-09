@@ -33,6 +33,10 @@ export class AudioEntity extends BaseEntity {
   @Column()
   public length: string;
 
+  @Column({ default: 0 })
+  public liked: number;
+
+
   @OneToMany(
     () => AudioPlaylistEntity,
     (audioPlaylist) => audioPlaylist.audio,
