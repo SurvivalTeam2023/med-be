@@ -31,7 +31,7 @@ export class ArtistEntity {
 
   @Column()
   dob: Date;
-
+  
   @Column({
     type: 'enum',
     enum: USER_STATUS

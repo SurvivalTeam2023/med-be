@@ -12,7 +12,7 @@ import HistoryService from './history.service';
 @ApiBearerAuth()
 @Controller('rest/history')
 export default class HistoryController {
-  constructor(private readonly historyService: HistoryService) {}
+  constructor(private readonly historyService: HistoryService) { }
   @ApiOperation({ summary: 'create History' })
   @Unprotected()
   @Post('create')
@@ -30,5 +30,14 @@ export default class HistoryController {
     @Param('userId') userId: string,
   ): Promise<HistoryEntity[]> {
     return this.historyService.findHistory(userId);
+  }
+
+  @ApiOperation({ summary: 'total listener of an artist' })
+  @Get('count/:artistId')
+  @Unprotected()
+  async getListener(
+    @Param('artistId') artistId: string,
+  ): Promise<HistoryEntity[]> {
+    return this.historyService.countArtistListened(artistId);
   }
 }

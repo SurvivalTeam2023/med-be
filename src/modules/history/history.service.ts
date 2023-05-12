@@ -17,7 +17,7 @@ export default class HistoryService {
     @InjectRepository(HistoryEntity)
     private historyRepo: Repository<HistoryEntity>,
     private readonly entityManage: EntityManager,
-  ) {}
+  ) { }
 
   async findHistory(userId: string): Promise<HistoryEntity[]> {
     const querybuilder = await this.historyRepo
@@ -46,11 +46,34 @@ export default class HistoryService {
     if (!audio) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND);
     }
-    const history = await this.historyRepo.save({
-      ...dto,
-      userId: user,
-      audioId: audio,
+    const history = await this.entityManage.findOne(HistoryEntity, {
+      where: {
+        audioId: dto.audioId,
+        userId: userId
+      },
     });
-    return history;
+    if (history) {
+      history.count++
+      await this.historyRepo.save(history)
+    }
+    else return await this.historyRepo.save({
+      audio: audio,
+      user: user
+    });
+
+  }
+
+  async countArtistListened(artistId: string): Promise<any> {
+
+    const history = await this.historyRepo
+      .createQueryBuilder('history')
+      .leftJoin('history.audio', 'audio')
+      .where('audio.artist_id =:artistId', { artistId })
+      .select('history.user')
+      .distinct(true)
+      .getRawMany()
+
+
+    return history.length
   }
 }

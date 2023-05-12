@@ -20,6 +20,7 @@ import { PlaylistEntity } from '../playlist/entities/playlist.entity';
 import { GenreEntity } from '../genre/entities/genre.entity';
 import { AudioGenreEntity } from '../audioGenre/entities/audioGenre.entities';
 import { getUserId } from 'src/utils/decode.utils';
+import { PlaylistType } from 'src/common/enums/playlistType.enum';
 
 @Injectable()
 export default class AudioService {
@@ -103,7 +104,7 @@ export default class AudioService {
     });
     return updatedAudio;
   }
-
+  
   async deleteAudio(audioId: number): Promise<AudioEntity> {
     const entity = await this.audioRepository.findOne({
       where: { id: audioId },
