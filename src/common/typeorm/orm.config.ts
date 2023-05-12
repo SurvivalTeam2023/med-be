@@ -34,6 +34,7 @@ import { SubscriptionEntity } from 'src/modules/subscription/entities/subscripti
 import { FavoriteEntity } from 'src/modules/favorite/entities/favorite.entity';
 import { PlanEntity } from 'src/modules/plan/entities/plan.entity';
 import { UserStatusLogEntity } from 'src/modules/userStatusLog/entity/userStatusLog.entity';
+import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/followedArtist.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -61,7 +62,8 @@ const entities = [
   SubscriptionEntity,
   PlanEntity,
   FavoriteEntity,
-  UserStatusLogEntity
+  UserStatusLogEntity,
+  FollowedArtistEntity
 ];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {

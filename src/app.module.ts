@@ -24,6 +24,7 @@ import { FaceModule } from './modules/face/face.module';
 import { ArtistModule } from './modules/artist/artist.module';
 import { UserLogModule } from './modules/userStatusLog/userStatusLog.module';
 import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.module';
+import { FollowedArtistModule } from './modules/followedArtist/followedArtist.module';
 
 
 @Module({
@@ -51,6 +52,7 @@ import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.modul
     FaceModule,
     AudioPlaylistModule,
     ArtistModule,
+    FollowedArtistModule,
     UserLogModule
   ],
   controllers: [],
