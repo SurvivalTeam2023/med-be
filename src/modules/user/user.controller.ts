@@ -101,4 +101,11 @@ export class UserController {
   async getCountUser(@Query('status') status: USER_STATUS): Promise<number> {
     return await this.userService.countUser(status)
   }
+
+
+  @Unprotected()
+  @Get('getProfile/:userId')
+  async getUserProfile(@Param('userId') userId: string): Promise<any> {
+    return await this.userService.getUserProfile(userId)
+  }
 }

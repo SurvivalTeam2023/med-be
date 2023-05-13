@@ -31,12 +31,16 @@ import ArtistEntity from '../artist/entities/artist.entity';
 import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
 import { TokenDTO } from '../auth/dto/token.dto';
 import { UpdateUserDTO } from './dto/updateUser.dto';
+import { FavoriteEntity } from '../favorite/entities/favorite.entity';
+import { PlaylistEntity } from '../playlist/entities/playlist.entity';
+import { FollowedArtistEntity } from '../followedArtist/entities/followedArtist.entity';
+import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly httpService: HttpService,
-    private readonly entityManage: EntityManager,
+    private readonly entityManager: EntityManager,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(ArtistEntity)
@@ -232,7 +236,7 @@ export class UserService {
     if (user_keycloak.length === 0) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
     }
-    const user_db = await this.entityManage.findOneBy(UserEntity, {
+    const user_db = await this.entityManager.findOneBy(UserEntity, {
       id: user_keycloak[0].id,
     });
     return { user_keycloak: user_keycloak[0], user_db: user_db };
@@ -418,7 +422,7 @@ export class UserService {
     let token = `Bearer ${response['access_token']}`;
     const user = await this.findUserByName(loginGmailDTO.username, token);
     const userId = user['user_keycloak']['id'];
-    const existedUser = await this.entityManage.findOne(UserEntity, {
+    const existedUser = await this.entityManager.findOne(UserEntity, {
       where: { id: userId },
     });
     if (!existedUser) {
@@ -427,8 +431,8 @@ export class UserService {
         firstName: user[0].firstName,
         username: loginGmailDTO.username,
       };
-      await this.entityManage.save(
-        this.entityManage.create(UserEntity, newUser),
+      await this.entityManager.save(
+        this.entityManager.create(UserEntity, newUser),
       );
     }
     return access_token;
@@ -439,5 +443,38 @@ export class UserService {
       .createQueryBuilder('user')
     if (status) queryBuilder.where('user.status = :status', { status: status })
     return queryBuilder.getCount()
+  }
+  async getUserProfile(userId: string): Promise<any> {
+    const countFavorite = await this.entityManager.count(FavoriteEntity, {
+      where: {
+        userId: userId
+      }
+    })
+    const countPlaylist = await this.entityManager.count(PlaylistEntity, {
+      where: {
+        authorId: userId
+      }
+    })
+    const countFollowing = await this.entityManager.count(FollowedArtistEntity, {
+      where: {
+        userId: userId
+      }
+    })
+    const publicPlaylist = await this.entityManager.find(PlaylistEntity, {
+      where: {
+        authorId: userId,
+        isPublic: PlaylistPublic.PUBLIC
+      }
+    })
+    const followingArtist = await this.entityManager.find(ArtistEntity, {
+      where: {
+        follower: {
+          userId: userId
+        }
+      },
+    })
+    console.log(followingArtist);
+
+    return { favorite: countFavorite, playlist: countPlaylist, following: countFollowing, publicPlaylist: publicPlaylist, followingArtist: followingArtist }
   }
 }
