@@ -13,11 +13,17 @@ export class FavoriteEntity extends BaseEntity {
   })
   public status: FavoriteStatus;
 
+  @Column({ name: 'genre_id' })
+  public genreId!: number;
+
+  @Column({ name: 'user_id' })
+  public userId!: string;
+
   @ManyToOne(() => GenreEntity, (genre) => genre.favorite)
   @JoinColumn({ name: 'genre_id' })
-  public genreId: GenreEntity;
+  public genre: GenreEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.favorite)
   @JoinColumn({ name: 'user_id' })
-  public userId: UserEntity;
+  public user: UserEntity;
 }

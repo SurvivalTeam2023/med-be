@@ -21,7 +21,7 @@ export default class FavoriteService {
     @InjectRepository(FavoriteEntity)
     private favoriteRepo: Repository<FavoriteEntity>,
     private readonly entityManage: EntityManager,
-  ) {}
+  ) { }
   async findAllFavorite(userId: string): Promise<FavoriteEntity[]> {
     const querybuilder = this.favoriteRepo
       .createQueryBuilder('favorite')
@@ -51,9 +51,8 @@ export default class FavoriteService {
     const favorites: FavoriteEntity[] = [];
     for (const genre of genres) {
       const favorite = await this.favoriteRepo.save({
-        ...dto,
-        userId: user,
-        genreId: genre,
+        user: user,
+        genre: genre,
       });
       favorites.push(favorite);
     }
@@ -74,7 +73,7 @@ export default class FavoriteService {
     let userId = getUserId(token);
     const querybuilder = this.favoriteRepo
       .createQueryBuilder('favorite')
-      .leftJoinAndSelect('favorite.genreId', 'genre')
+      .leftJoinAndSelect('favorite.genre', 'genre')
       .where('favorite.user_id = :user_id', { user_id: userId })
       .getMany();
     // return querybuilder;

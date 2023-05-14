@@ -1,6 +1,5 @@
 import { USER_STATUS } from 'src/common/enums/userStatus.enum';
 import { AudioEntity } from 'src/modules/audio/entities/audio.entity';
-import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
 import { WalletEntity } from 'src/modules/wallet/entities/wallet.entity';
 import {
   Column,
@@ -12,6 +11,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { FileEntity } from '../../files/entities/file.entity';
+import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/followedArtist.entity';
 @Entity({ name: 'artist' })
 export class ArtistEntity {
   @PrimaryColumn()
@@ -31,7 +31,7 @@ export class ArtistEntity {
 
   @Column()
   dob: Date;
-  
+
   @Column({
     type: 'enum',
     enum: USER_STATUS
@@ -49,6 +49,9 @@ export class ArtistEntity {
     cascade: true,
   })
   public wallet: WalletEntity[];
+
+  @OneToMany(() => FollowedArtistEntity, (follower) => follower.artist, { cascade: true, })
+  public follower: FollowedArtistEntity[];
 
   @CreateDateColumn({ type: 'timestamp' })
   public created_at: Date;

@@ -15,6 +15,7 @@ import {
   paginate,
 } from 'nestjs-typeorm-paginate';
 import { getUserId } from 'src/utils/decode.utils';
+import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
 
 @Injectable()
 export default class PlaylistService {
@@ -76,14 +77,23 @@ export default class PlaylistService {
     return updatedPlaylist;
   }
 
-  async deletePlaylist(PlaylistId: number): Promise<PlaylistEntity> {
+  async deletePlaylist(playlistId: number): Promise<PlaylistEntity> {
     const entity = await this.playlistRepository.findOne({
-      where: { id: PlaylistId },
+      where: { id: playlistId },
     });
     if (entity) {
       entity.status = PlaylistStatus.INACTIVE;
       await this.playlistRepository.save(entity);
     }
     return entity;
+  }
+
+  async setPublicPlaylist(playlistId: number, publicStatus: PlaylistPublic): Promise<PlaylistEntity> {
+    const playlist = await this.playlistRepository.findOne({
+      where: { id: playlistId },
+    });
+    playlist.isPublic = publicStatus;
+    await this.playlistRepository.save(playlist)
+    return playlist
   }
 }
