@@ -25,6 +25,7 @@ import { ArtistModule } from './modules/artist/artist.module';
 import { UserLogModule } from './modules/userStatusLog/userStatusLog.module';
 import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.module';
 import { FollowedArtistModule } from './modules/followedArtist/followedArtist.module';
+import { WalletModule } from './modules/wallet/wallet.module';
 
 
 @Module({
@@ -53,7 +54,8 @@ import { FollowedArtistModule } from './modules/followedArtist/followedArtist.mo
     AudioPlaylistModule,
     ArtistModule,
     FollowedArtistModule,
-    UserLogModule
+    UserLogModule,
+    WalletModule
   ],
   controllers: [],
   providers: [],
