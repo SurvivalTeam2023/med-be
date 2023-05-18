@@ -1,29 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { USER_STATUS } from 'src/common/enums/userStatus.enum';
+import { IsBoolean, IsDateString, IsISO8601, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDTO {
 
-  @ApiProperty()
-  @IsBoolean()
-  status: boolean;
-
+  @ApiProperty({ required: false })
   @IsString()
-  @ApiProperty()
   @IsOptional()
-  username: string;
-  
-  @ApiProperty()
-  @IsOptional()
-  @IsEmail()
-  email: string;
+  city: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
+  @IsString()
   @IsOptional()
-  firstName: string;
+  address: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false})
+  @IsISO8601()
   @IsOptional()
-  lastName: string;
+  dob: Date ;
 
+  @ApiProperty({ type: 'string', format: 'binary', required: false, })
+  avatar: Express.Multer.File;
 }

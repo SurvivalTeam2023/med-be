@@ -35,10 +35,14 @@ import { FavoriteEntity } from '../favorite/entities/favorite.entity';
 import { PlaylistEntity } from '../playlist/entities/playlist.entity';
 import { FollowedArtistEntity } from '../followedArtist/entities/followedArtist.entity';
 import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
+import { FilesService } from '../files/files.service';
+import { getUserId } from 'src/utils/decode.utils';
+import { FileEntity } from '../files/entities/file.entity';
 
 @Injectable()
 export class UserService {
   constructor(
+    private readonly fileService: FilesService,
     private readonly httpService: HttpService,
     private readonly entityManager: EntityManager,
     @InjectRepository(UserEntity)
@@ -473,8 +477,28 @@ export class UserService {
         }
       },
     })
-    console.log(followingArtist);
-
     return { favorite: countFavorite, playlist: countPlaylist, following: countFollowing, publicPlaylist: publicPlaylist, followingArtist: followingArtist }
+  }
+  async updateUser(token: string, dto: UpdateUserDTO, file: Express.Multer.File): Promise<UserEntity> {
+    let avatar: FileEntity
+    const userId = getUserId(token)
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId
+      }
+    })
+    if (!user) {
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
+    }
+    if (dto.dob) {
+      this.validateAge(dto.dob);
+    }
+    if (file) { avatar = await this.fileService.uploadPublicFile(file.buffer, file.originalname) }
+    const updatedUser = await this.userRepository.save({
+      ...dto,
+      id: userId,
+      avatar: avatar,
+    })
+    return updatedUser
   }
 }
