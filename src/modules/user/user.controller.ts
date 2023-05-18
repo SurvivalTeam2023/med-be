@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiConsumes,
   ApiOperation,
   ApiQuery,
   ApiTags,
@@ -19,6 +20,8 @@ import { ErrorHelper } from '../../helpers/error.helper';
 import { ERROR_MESSAGE } from '../../common/constants/messages.constant';
 import { UpdateUserDTO } from './dto/updateUser.dto';
 import UserEntity from './entities/user.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import Avatar from 'antd/lib/avatar/avatar';
 
 @ApiTags('Users')
 @Controller('user')
@@ -108,4 +111,13 @@ export class UserController {
   async getUserProfile(@Param('userId') userId: string): Promise<any> {
     return await this.userService.getUserProfile(userId)
   }
+
+  @Roles({ roles: [USER_CLIENT_ROLE.USER, USER_CLIENT_ROLE.SUBSCRIBER] })
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiConsumes('multipart/form-data')
+  @Put(':userId')
+  async updateUser(@Body() dto: UpdateUserDTO, @UploadedFile() avatar: Express.Multer.File, @RequestPayload() token: string): Promise<UserEntity> {
+    return await this.userService.updateUser(token, dto, avatar)
+  }
+
 }
