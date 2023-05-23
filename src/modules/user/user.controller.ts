@@ -38,7 +38,7 @@ export class UserController {
 
   @Get(':username')
   @ApiOperation({ summary: 'find user by name' })
-  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Unprotected()
   async findUserByName(
     @Param('username') username: string,
     @RequestPayload() token: string,
