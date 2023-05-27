@@ -25,7 +25,7 @@ export default class FavoriteService {
   async findAllFavorite(userId: string): Promise<FavoriteEntity[]> {
     const querybuilder = this.favoriteRepo
       .createQueryBuilder('favorite')
-      .leftJoinAndSelect('favorite.genreId', 'genre')
+      .leftJoinAndSelect('favorite.genre', 'genre')
       .where('favorite.user_id = :user_id', { user_id: userId })
       .getMany();
     return querybuilder;
