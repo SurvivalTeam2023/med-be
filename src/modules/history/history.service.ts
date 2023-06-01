@@ -22,7 +22,7 @@ export default class HistoryService {
   async findHistory(userId: string): Promise<HistoryEntity[]> {
     const querybuilder = await this.historyRepo
       .createQueryBuilder('history')
-      .leftJoinAndSelect('history.audioId', 'audio')
+      .leftJoinAndSelect('history.audio', 'audio')
       .where('history.user_id = :user_id', { user_id: userId })
       .orderBy('history.last_updated_at', 'DESC')
       .getMany();
