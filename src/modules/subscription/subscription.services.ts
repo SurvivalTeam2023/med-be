@@ -24,11 +24,15 @@ import { AxiosResponse } from 'axios';
 import { getUserId } from 'src/utils/decode.utils';
 import { Cron } from '@nestjs/schedule';
 import { CronExpression } from '@nestjs/schedule/dist';
+import { UserService } from '../user/user.services';
+import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
+import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
 @Injectable()
 export default class SubscriptionService {
   constructor(
     private readonly httpService: HttpService,
     private readonly authService: AuthService,
+    private readonly userService: UserService,
     @InjectRepository(SubscriptionEntity)
     private subscriptionRepo: Repository<SubscriptionEntity>,
     private readonly entityManage: EntityManager,
@@ -123,14 +127,17 @@ export default class SubscriptionService {
     ).catch((err) => {
       ErrorHelper.BadRequestException(err.response.data.errorMessage);
     });
+    const endDate = moment(subscriptionPaypal['start_time']).add(plan.usageTime, "M").toDate()
+    console.log(endDate, "log");
+
     await this.subscriptionRepo.save({
       id: subscriptionPaypal['id'],
-      ...dto,
       user: user,
       status: SubscriptionStatus.APPROVAL_PENDING,
       plan: plan,
-    });
-
+      endDate: endDate
+    })
+    await firstValueFrom(await this.userService.assignRole(user.username, USER_REALM_ROLE.APP_SUBSCRIBER))
     return subscriptionPaypal;
   }
   @Cron(CronExpression.EVERY_HOUR)
