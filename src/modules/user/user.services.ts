@@ -426,18 +426,18 @@ export class UserService {
     let token = `Bearer ${response['access_token']}`;
     const user = await this.findUserByName(loginGmailDTO.username, token);
     const userId = user['user_keycloak']['id'];
+    await lastValueFrom(
+      await this.assignRole(loginGmailDTO.username, USER_REALM_ROLE.APP_USER),
+    );
     const existedUser = await this.entityManager.findOne(UserEntity, {
       where: { id: userId },
     });
     if (!existedUser) {
       const newUser: DeepPartial<UserEntity> = {
         id: userId,
-        firstName: user[0].firstName,
         username: loginGmailDTO.username,
       };
-      await this.entityManager.save(
-        this.entityManager.create(UserEntity, newUser),
-      );
+      await this.userRepository.save(newUser);
     }
     return access_token;
   }
