@@ -436,6 +436,8 @@ export class UserService {
       const newUser: DeepPartial<UserEntity> = {
         id: userId,
         username: loginGmailDTO.username,
+        email: loginGmailDTO.email,
+
       };
       await this.userRepository.save(newUser);
     }
