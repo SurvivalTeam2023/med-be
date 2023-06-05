@@ -232,7 +232,7 @@ export class UserService {
         .pipe(
           catchError((err) =>
             of(
-              ErrorHelper.BadGatewayException(ERROR_MESSAGE.KEYCLOAK.USER_NAME),
+              ErrorHelper.BadRequestException(ERROR_MESSAGE.KEYCLOAK.SOMETHING_WRONG),
             ),
           ),
         ),
@@ -316,7 +316,7 @@ export class UserService {
         )
         .pipe(map((response) => response.data)),
     ).catch((err) => {
-      ErrorHelper.BadRequestException(err.response.data.errorMessage);
+      ErrorHelper.BadRequestException(ERROR_MESSAGE.KEYCLOAK.SOMETHING_WRONG);
     });
 
     await lastValueFrom(
@@ -384,7 +384,7 @@ export class UserService {
         )
         .pipe(map((response) => response.data)),
     ).catch((err) => {
-      ErrorHelper.BadRequestException(err.response.data.errorMessage);
+      ErrorHelper.BadRequestException(ERROR_MESSAGE.KEYCLOAK.SOMETHING_WRONG);
     });
     await firstValueFrom(
       await this.assignRole(
@@ -397,12 +397,12 @@ export class UserService {
       await this.authService.verifyEmail(createArtistDTO.username),
     );
     const artistId = artist['user_keycloak']['id'];
-    const artistInfor = await this.artistRepository.save({
+    const artistInfo = await this.artistRepository.save({
       id: artistId,
       status: USER_STATUS.ACTIVE,
       ...createArtistDTO,
     });
-    return artistInfor;
+    return artistInfo;
   }
 
   validateAge = (ageInput: Date): void => {

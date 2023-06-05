@@ -27,6 +27,7 @@ import { RequiredAction } from 'src/common/enums/userAction.enum';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { UserService } from '../user/user.services';
 import { LoginGmailDTO } from './dto/loginGmail.dto';
+import { MESSAGES } from '@nestjs/core/constants';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +35,7 @@ export class AuthService {
     private readonly httpService: HttpService,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   async logout(
     username: string,
@@ -86,8 +87,14 @@ export class AuthService {
           },
         },
       )
-      .pipe(map((response) => response.data))
-      .pipe(catchError((err) => of(ErrorHelper.BadRequestException(err))));
+      .pipe(map((response) => response.data),
+        catchError((err) => {
+          if (err.message == "Request failed with status code 400")
+            return of(ErrorHelper.BadRequestException(ERROR_MESSAGE.KEYCLOAK.NOT_VERIFY_EMAIL))
+          if (err.message == "Request failed with status code 401")
+            return of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.USER.NOT_FOUND))
+        }),
+      );
   }
 
   getRefreshToken(loginDTO: LoginDTO): Observable<AxiosResponse<TokenDTO[]>> {
@@ -108,11 +115,13 @@ export class AuthService {
           },
         },
       )
-      .pipe(map((response) => response.data.refresh_token))
-      .pipe(
-        catchError((err) =>
-          of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)),
-        ),
+      .pipe(map((response) => response.data.refresh_token),
+        catchError((err) => {
+          if (err.message == "Request failed with status code 400")
+            return of(ErrorHelper.BadRequestException(ERROR_MESSAGE.USER.UNVERIFIED_EMAIL))
+          if (err.message == "Request failed with status code 401")
+            return of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.USER.NOT_FOUND))
+        }),
       );
   }
 
@@ -145,7 +154,7 @@ export class AuthService {
         },
       )
       .pipe(map((response) => response.data))
-      .pipe(catchError((err) => of(ErrorHelper.BadRequestException(err))));
+      .pipe(catchError((err) => of(ErrorHelper.BadRequestException(ERROR_MESSAGE.USER.SOMETHING_WRONG))));
   }
 
   async changePassword(name: string): Promise<Observable<AxiosResponse<[]>>> {
@@ -157,7 +166,6 @@ export class AuthService {
     let token = `Bearer ${response['access_token']}`;
     const user = await this.userService.findUserByName(name, token);
     const userId = user['user_keycloak']['id'];
-    console.log(userId, 'service');
     return this.httpService
       .put(
         `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}/execute-actions-email`,
@@ -172,7 +180,7 @@ export class AuthService {
       .pipe(map((response) => response.data))
       .pipe(
         catchError((err) =>
-          of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)),
+          of(ErrorHelper.BadRequestException(ERROR_MESSAGE.USER.SOMETHING_WRONG)),
         ),
       );
   }
@@ -197,12 +205,15 @@ export class AuthService {
       .pipe(map((response) => response.data))
       .pipe(
         catchError((err) =>
-          of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)),
+          of(ErrorHelper.BadRequestException(err.response.data.errorMessage)),
         ),
       );
   }
 
-  forgetPassword(userId: string, token: string): Observable<AxiosResponse<[]>> {
+  async forgetPassword(userId: string): Promise<Observable<AxiosResponse<[]>>> {
+    const adminAccount = this.userService.getAdminAccount();
+    const response = await firstValueFrom(this.getAcessToken(adminAccount));
+    let token = `Bearer ${response['access_token']}`;
     return this.httpService
       .put(
         `${KEYCLOAK_HOST}/auth/admin/realms/${REALM_PRODUCTION}/users/${userId}/reset-password-email`,

@@ -49,6 +49,8 @@ export const ERROR_MESSAGE = {
   USER: {
     NOT_FOUND: 'User not found!',
     UNDER_AGES: 'User must over 12 year old!',
+    UNVERIFIED_EMAIL: 'Please verify your email',
+    SOMETHING_WRONG: "Something went wrong"
   },
   KEYCLOAK: {
     SERVER_DEAD: 'Something went wrong, Keycloaks server',
@@ -57,5 +59,6 @@ export const ERROR_MESSAGE = {
     ROLE_ASSIGN: 'Unable to assign role to user',
     ROLE_NAME: 'Unable to find role name',
     USER_NAME: 'Unable to find username',
+    SOMETHING_WRONG: "Something went wrong"
   },
 };

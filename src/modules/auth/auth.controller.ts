@@ -12,7 +12,7 @@ import { LoginGmailDTO } from './dto/loginGmail.dto';
 @Controller('auth')
 @ApiBearerAuth()
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Post('token')
   @ApiOperation({ summary: 'api login to med-app' })
@@ -61,8 +61,7 @@ export class AuthController {
   @Unprotected()
   async forgetPassword(
     @Param('username') username: string,
-    @RequestPayload() token: string,
   ) {
-    return this.authService.forgetPassword(username, token);
+    return this.authService.forgetPassword(username);
   }
 }
