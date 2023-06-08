@@ -27,7 +27,6 @@ import { RequiredAction } from 'src/common/enums/userAction.enum';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { UserService } from '../user/user.services';
 import { LoginGmailDTO } from './dto/loginGmail.dto';
-import { MESSAGES } from '@nestjs/core/constants';
 
 @Injectable()
 export class AuthService {
@@ -89,10 +88,10 @@ export class AuthService {
       )
       .pipe(map((response) => response.data),
         catchError((err) => {
-          if (err.message == "Request failed with status code 400")
-            return of(ErrorHelper.BadRequestException(ERROR_MESSAGE.KEYCLOAK.NOT_VERIFY_EMAIL))
-          if (err.message == "Request failed with status code 401")
-            return of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.USER.NOT_FOUND))
+          if (err.response.status == "400")
+            return of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.KEYCLOAK.NOT_VERIFY_EMAIL))
+          if (err.response.status == "401")
+            return of(ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND))
         }),
       );
   }
@@ -117,10 +116,10 @@ export class AuthService {
       )
       .pipe(map((response) => response.data.refresh_token),
         catchError((err) => {
-          if (err.message == "Request failed with status code 400")
-            return of(ErrorHelper.BadRequestException(ERROR_MESSAGE.USER.UNVERIFIED_EMAIL))
-          if (err.message == "Request failed with status code 401")
-            return of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.USER.NOT_FOUND))
+          if (err.response.status == "400")
+            return of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.KEYCLOAK.NOT_VERIFY_EMAIL))
+          if (err.response.status == "401")
+            return of(ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND))
         }),
       );
   }
@@ -229,7 +228,7 @@ export class AuthService {
       .pipe(map((response) => response.data))
       .pipe(
         catchError((err) =>
-          of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)),
+          of(ErrorHelper.BadGatewayException(err.response.data)),
         ),
       );
   }
@@ -250,7 +249,7 @@ export class AuthService {
       .pipe(map((response) => response.data))
       .pipe(
         catchError((err) =>
-          of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)),
+          of(ErrorHelper.BadGatewayException(err.response.data)),
         ),
       );
   }
