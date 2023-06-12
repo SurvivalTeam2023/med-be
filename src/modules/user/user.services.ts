@@ -217,6 +217,7 @@ export class UserService {
   }
 
   async findUserByName(username: string, token?: string | null): Promise<any> {
+    console.log(username);
     const user_keycloak = await lastValueFrom(
       this.httpService
         .get(
@@ -489,7 +490,9 @@ export class UserService {
         id: userId
       }
     })
-    if (!user) {
+    console.log(user);
+
+    if (user == null) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
     }
     if (dto.dob) {
@@ -532,9 +535,11 @@ export class UserService {
       avatar: avatar,
     })
     if (dto.email)
-      await firstValueFrom(
-        await this.authService.verifyEmail(updatedUser.username),
-      );
+      console.log(updatedUser.username);
+
+    await firstValueFrom(
+      await this.authService.verifyEmail(user.username),
+    );
     return updatedUser
   }
 }

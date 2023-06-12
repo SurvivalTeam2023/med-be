@@ -190,6 +190,7 @@ export class AuthService {
     const response = await firstValueFrom(this.getAcessToken(adminAccount));
     let token = `Bearer ${response['access_token']}`;
     const user = await this.userService.findUserByName(username, token);
+
     const userId = user['user_keycloak']['id'];
     return this.httpService
       .put(
