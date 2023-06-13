@@ -217,6 +217,7 @@ export class UserService {
   }
 
   async findUserByName(username: string, token?: string | null): Promise<any> {
+    console.log(username);
     const user_keycloak = await lastValueFrom(
       this.httpService
         .get(
@@ -336,7 +337,7 @@ export class UserService {
   }
 
   async createArtist(createArtistDTO: CreateArtistDTO): Promise<ArtistEntity> {
-    if (!createArtistDTO.dob) {
+    if (createArtistDTO.dob) {
       this.validateAge(createArtistDTO.dob);
     }
     const response = await firstValueFrom(
@@ -489,18 +490,56 @@ export class UserService {
         id: userId
       }
     })
-    if (!user) {
+    console.log(user);
+
+    if (user == null) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
     }
     if (dto.dob) {
       this.validateAge(dto.dob);
     }
+    const response = await lastValueFrom(
+      this.authService.getAcessToken(this.getAdminAccount()),
+    );
+    let adminToken = `Bearer ${response['access_token']}`;
+    await firstValueFrom(
+      this.httpService
+        .put(
+          `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}`,
+          {
+            id: userId,
+            ...(dto.firstName && { firstName: dto.firstName }), // Add firstName if not null
+            ...(dto.lastName && { lastName: dto.lastName }),   // Add lastName if not null
+            ...(dto.email ? { email: dto.email, emailVerified: false } : {}),
+          },
+          {
+            headers: {
+              Accept: 'application/json',
+              Authorization: adminToken
+            },
+          },
+        )
+        .pipe(map((response) => response.data))
+        .pipe(
+          catchError((err) =>
+            of(
+              ErrorHelper.BadGatewayException(err.response.data),
+            ),
+          ),
+        )
+    );
     if (file) { avatar = await this.fileService.uploadPublicFile(file.buffer, file.originalname) }
     const updatedUser = await this.userRepository.save({
       ...dto,
       id: userId,
       avatar: avatar,
     })
+    if (dto.email)
+      console.log(updatedUser.username);
+
+    await firstValueFrom(
+      await this.authService.verifyEmail(user.username),
+    );
     return updatedUser
   }
 }
