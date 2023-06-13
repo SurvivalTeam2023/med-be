@@ -31,25 +31,32 @@ export default class ResultService {
     }
 
     async createResult(dto: CreateResultDTO): Promise<ResultEntity> {
-        const option = await this.entityManage.findOne(OptionEntity, {
-            where: { id: dto.optionId },
-        });
-        if (!option) {
-            ErrorHelper.NotFoundException(ERROR_MESSAGE.QUESTION_BANK.NOT_FOUND)
-        }
+
         const questionBank = await this.entityManage.findOne(QuestionBankEntity, {
             where: { id: dto.questionBankId },
         });
 
         if (!questionBank) {
-            ErrorHelper.NotFoundException(ERROR_MESSAGE.OPTION.NOT_FOUND)
+            ErrorHelper.NotFoundException(ERROR_MESSAGE.QUESTION_BANK.NOT_FOUND)
         }
+        let entity: ResultEntity
+        for (const id of dto.optionId) {
 
-        const entity = this.resultRepo.save({
-            optionId: option,
-            questionBankId: questionBank,
-            status: dto.status
-        });
+
+            const option = await this.entityManage.findOne(OptionEntity, {
+                where: { id: id },
+            });
+            if (!option) {
+                ErrorHelper.NotFoundException(ERROR_MESSAGE.QUESTION_BANK.NOT_FOUND)
+            }
+            entity = await this.resultRepo.save({
+                option: option,
+                questionBank: questionBank,
+                status: dto.status
+            });
+            questionBank.isFinished = true;
+            await this.entityManage.save(questionBank)
+        }
         return entity;
     }
 
