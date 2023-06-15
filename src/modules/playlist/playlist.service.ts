@@ -47,6 +47,7 @@ export default class PlaylistService {
     if (dto.name) queryBuilder.where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` }).orderBy('playlist.created_at', 'DESC')
     if (dto.status) queryBuilder.andWhere('playlist.status = :playlistStatus', { playlistStatus: dto.status, }).orderBy('playlist.created_at', 'DESC')
     if (dto.authorId) queryBuilder.andWhere('playlist.author_id = :authorId', { authorId: dto.authorId, }).orderBy('playlist.created_at', 'DESC')
+    if (dto.playListType) queryBuilder.andWhere('playlist.playlist_type = :playlistType', { playlistType: dto.playListType, }).orderBy('playlist.created_at', 'DESC')
     queryBuilder.orderBy('playlist.created_at', 'DESC')
     return paginate<PlaylistEntity>(queryBuilder, option);
   }

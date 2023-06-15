@@ -79,7 +79,7 @@ export default class PlaylistController {
   }
 
   @Delete(':id')
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.USER] })
   async deletePlaylist(@Param('id') id: number) {
     return await this.playlistService.deletePlaylist(id);
   }

@@ -1,9 +1,11 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { Unprotected } from "nest-keycloak-connect";
+import { Roles, Unprotected } from "nest-keycloak-connect";
 import { RequestPayload } from "src/decorator/requestPayload.decorator";
 import { FollowerEntity } from "./entities/follower.entity";
 import FollowerService from "./follower.service";
+import { USER_CLIENT_ROLE } from "src/common/enums/userClientRole.enum";
+import CreateFollowerDTO from "./dto/createFollower.dto";
 
 @ApiTags('Follower')
 @Controller('followers')
@@ -11,9 +13,9 @@ import FollowerService from "./follower.service";
 export default class FollowerController {
     constructor(private readonly followerService: FollowerService) { }
 
-    @Get()
+    @Post()
     @Unprotected()
-    async followPlaylist(@RequestPayload() token: string, @Param() id: number): Promise<FollowerEntity> {
-        return await this.followerService.followPlaylist(id, token);
+    async followPlaylist(@RequestPayload() token: string, @Body() dto: CreateFollowerDTO): Promise<FollowerEntity> {
+        return await this.followerService.followPlaylist(dto, token);
     }
 }
