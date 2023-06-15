@@ -69,5 +69,9 @@ export default class GenreController {
   async deleteAudio(@Param('id') id: number) {
     return await this.genreService.deleteGenre(id);
   }
-
+  @Get('/questionBank/:id')
+  @Unprotected()
+  async getGenreByResult(@Param('id') questionBankId: number): Promise<GenreEntity[]> {
+    return await this.genreService.getGenreByResult(questionBankId)
+  }
 }

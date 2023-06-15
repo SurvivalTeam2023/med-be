@@ -50,7 +50,7 @@ export default class QuestionBankService {
         const questionBank = await this.questionBankRepo.save(
             {
                 isFinished: false,
-                numberOfQuestion: 50,
+                numberOfQuestion: 10,
                 questionBankQuestion: questionBankQuestions,
                 userId: user
             }

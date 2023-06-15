@@ -7,8 +7,12 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('result')
 export class ResultEntity extends BaseEntity {
-  @Column()
-  point: number;
+  @Column({ name: "question_bank_id" })
+  questionBankId: number;
+
+  @Column({ name: "option_id" })
+  optionId: number;
+
   @Column({
     type: 'enum',
     enum: ResultStatus
@@ -17,9 +21,9 @@ export class ResultEntity extends BaseEntity {
 
   @ManyToOne(() => QuestionBankEntity, (questionBank) => questionBank.result)
   @JoinColumn({ name: 'question_bank_id' })
-  public questionBankId: QuestionBankEntity
+  public questionBank: QuestionBankEntity
 
   @ManyToOne(() => OptionEntity, (option) => option.result)
   @JoinColumn({ name: 'option_id' })
-  public optionId: OptionEntity;
+  public option: OptionEntity;
 }
