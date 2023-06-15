@@ -2,6 +2,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 import { PlaylistStatus } from '../../../common/enums/playlistStatus.enum';
+import { PlaylistType } from 'src/common/enums/playlistType.enum';
 
 export class SearchPlaylistDto {
   @ApiProperty({ required: false })
@@ -16,5 +17,8 @@ export class SearchPlaylistDto {
   @IsString()
   @IsOptional()
   authorId: string;
+
+  @ApiProperty({ enum: PlaylistType, required: false })
+  playListType: PlaylistType;
 }
 export default SearchPlaylistDto;

@@ -59,6 +59,7 @@ export const ERROR_MESSAGE = {
     ROLE_ASSIGN: 'Unable to assign role to user',
     ROLE_NAME: 'Unable to find role name',
     USER_NAME: 'Unable to find username',
-    SOMETHING_WRONG: "Something went wrong"
+    SOMETHING_WRONG: "Something went wrong",
+    INVALID_TOKEN:"Invalid Token"
   },
 };

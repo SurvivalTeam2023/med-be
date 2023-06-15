@@ -8,6 +8,7 @@ import { EntityManager } from "typeorm/entity-manager/EntityManager";
 import { PlaylistEntity } from "../playlist/entities/playlist.entity";
 import UserEntity from "../user/entities/user.entity";
 import { FollowerEntity } from "./entities/follower.entity";
+import CreateFollowerDTO from "./dto/createFollower.dto";
 
 @Injectable()
 export default class FollowerService {
@@ -17,7 +18,7 @@ export default class FollowerService {
         private followerRepo: Repository<FollowerEntity>,
     ) { }
 
-    async followPlaylist(playlistId: number, token: string): Promise<FollowerEntity> {
+    async followPlaylist(dto: CreateFollowerDTO, token: string): Promise<FollowerEntity> {
         let subscriberId = getUserId(token);
         const user = await this.entityManage.findOne(UserEntity, {
             where: {
@@ -26,7 +27,7 @@ export default class FollowerService {
         })
         const playList = await this.entityManage.findOne(PlaylistEntity, {
             where: {
-                id: playlistId
+                id: dto.playlistId
             }
         })
         const follower = await this.followerRepo.save({

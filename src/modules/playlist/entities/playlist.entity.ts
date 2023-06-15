@@ -29,6 +29,7 @@ export class PlaylistEntity extends BaseEntity {
   @Column({
     type: 'enum',
     enum: PlaylistPublic,
+    name: "is_public"
   })
   public isPublic: PlaylistPublic;
 
@@ -41,6 +42,7 @@ export class PlaylistEntity extends BaseEntity {
   @Column({
     type: 'enum',
     enum: PlaylistType,
+    name: "playlist_type"
   })
   public playlistType: PlaylistType;
 
