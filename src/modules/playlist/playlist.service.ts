@@ -44,6 +44,8 @@ export default class PlaylistService {
   ): Promise<Pagination<PlaylistEntity>> {
     const queryBuilder = this.playlistRepository
       .createQueryBuilder('playlist')
+      .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
+      .leftJoinAndSelect('audio_playlist.audio', 'audio')
     if (dto.name) queryBuilder.where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` }).orderBy('playlist.created_at', 'DESC')
     if (dto.status) queryBuilder.andWhere('playlist.status = :playlistStatus', { playlistStatus: dto.status, }).orderBy('playlist.created_at', 'DESC')
     if (dto.authorId) queryBuilder.andWhere('playlist.author_id = :authorId', { authorId: dto.authorId, }).orderBy('playlist.created_at', 'DESC')
