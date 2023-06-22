@@ -31,13 +31,14 @@ import ArtistEntity from '../artist/entities/artist.entity';
 import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
 import { TokenDTO } from '../auth/dto/token.dto';
 import { UpdateUserDTO } from './dto/updateUser.dto';
-import { FavoriteEntity } from '../favorite/entities/favorite.entity';
+import { FavoriteGenreEntity } from '../favorite/entities/favorite.entity';
 import { PlaylistEntity } from '../playlist/entities/playlist.entity';
 import { FollowedArtistEntity } from '../followedArtist/entities/followedArtist.entity';
 import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
 import { FilesService } from '../files/files.service';
 import { getUserId } from 'src/utils/decode.utils';
 import { FileEntity } from '../files/entities/file.entity';
+import { SubscriptionEntity } from '../subscription/entities/subscription.entity';
 
 @Injectable()
 export class UserService {
@@ -452,7 +453,7 @@ export class UserService {
     return queryBuilder.getCount()
   }
   async getUserProfile(userId: string): Promise<any> {
-    const countFavorite = await this.entityManager.count(FavoriteEntity, {
+    const countFavorite = await this.entityManager.count(FavoriteGenreEntity, {
       where: {
         userId: userId
       }
@@ -480,7 +481,17 @@ export class UserService {
         }
       },
     })
-    return { favorite: countFavorite, playlist: countPlaylist, following: countFollowing, publicPlaylist: publicPlaylist, followingArtist: followingArtist }
+    const latestSub = await this.entityManager.findOne(SubscriptionEntity, {
+      where: {
+        user: {
+          id: userId
+        }
+      },
+      order: {
+        createdAt: 'DESC'
+      }
+    })
+    return { favorite: countFavorite, playlist: countPlaylist, following: countFollowing, publicPlaylist: publicPlaylist, followingArtist: followingArtist, lastestSub: latestSub }
   }
   async updateUser(token: string, dto: UpdateUserDTO, file: Express.Multer.File): Promise<UserEntity> {
     let avatar: FileEntity
