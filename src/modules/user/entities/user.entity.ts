@@ -15,7 +15,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { FileEntity } from '../../files/entities/file.entity';
-import { FavoriteEntity } from 'src/modules/favorite/entities/favorite.entity';
+import { FavoriteGenreEntity } from 'src/modules/favorite/entities/favorite.entity';
 import { PlaylistEntity } from 'src/modules/playlist/entities/playlist.entity';
 import { UpdateDateColumn } from 'typeorm/decorator/columns/UpdateDateColumn';
 import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/followedArtist.entity';
@@ -99,10 +99,10 @@ export class UserEntity {
   })
   history: HistoryEntity[];
 
-  @OneToMany(() => FavoriteEntity, (favorite) => favorite.userId, {
+  @OneToMany(() => FavoriteGenreEntity, (favorite) => favorite.userId, {
     cascade: true,
   })
-  favorite: FavoriteEntity[];
+  favorite: FavoriteGenreEntity[];
 
   @OneToMany(() => FollowerEntity, (follower) => follower.user, {
     cascade: true,
