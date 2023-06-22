@@ -4,7 +4,7 @@ import { BaseEntity } from '../../../common/base/base.entity';
 import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
 import { MentalHealthGenreEntity } from 'src/modules/mentalHealthGenre/entities/mentalHealthGenre.entity';
 import { GenreStatus } from 'src/common/enums/genreStatus.enum';
-import { FavoriteEntity } from 'src/modules/favorite/entities/favorite.entity';
+import { FavoriteGenreEntity } from 'src/modules/favorite/entities/favorite.entity';
 import { EmotionEnum } from 'src/common/enums/emotion.enum';
 
 @Entity('genre')
@@ -38,10 +38,10 @@ export class GenreEntity extends BaseEntity {
   )
   public mentalHealthGenre: MentalHealthGenreEntity[];
 
-  @OneToMany(() => FavoriteEntity, (favorite) => favorite.genreId, {
+  @OneToMany(() => FavoriteGenreEntity, (favorite) => favorite.genreId, {
     cascade: true,
   })
-  public favorite: FavoriteEntity[];
+  public favorite: FavoriteGenreEntity[];
 
   @Column({
     type: 'enum',
