@@ -13,7 +13,7 @@ export default class WalletController {
 
     @Get(':artistId')
     @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
-    async getSubscriptionById(
+    async findWallet(
         @Param('artistId') artistId: string,
     ): Promise<WalletEntity[]> {
         return this.walletService.findWallet(artistId);

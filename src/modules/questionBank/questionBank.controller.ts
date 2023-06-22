@@ -15,6 +15,7 @@ export default class QuestionBankController {
 
     @Unprotected()
     @Post()
+    @ApiOperation({ summary: 'create questionBank for user ' })
     async createQuestionBank(@RequestPayload() token: string,
     ): Promise<QuestionBankEntity> {
         return this.questionBankService.createQuestionBank(token);
@@ -23,7 +24,7 @@ export default class QuestionBankController {
     @ApiOperation({ summary: 'Is question bank valid ?' })
     @Get()
     @Unprotected()
-    async isFavoriteExisted(
+    async isLastQuizValid(
         @RequestPayload() token: string,
     ): Promise<{ isValid: boolean }> {
         const result = await this.questionBankService.isLastQuizValid(token);
@@ -31,6 +32,7 @@ export default class QuestionBankController {
     }
 
     @Roles({ roles: [USER_CLIENT_ROLE.USER] })
+    @ApiOperation({ summary: 'set finish for questionBank for user ' })
     @Patch(":id")
     async updateIsFinished(@Param('id') id: number): Promise<QuestionBankEntity> {
         return this.questionBankService.updateIsFinished(id)

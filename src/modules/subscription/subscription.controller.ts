@@ -69,11 +69,12 @@ export default class SubscriptionController {
     return this.subscriptionService.createSubscription(dto, token);
   }
   @Post(':id')
+  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
   @ApiOperation({ summary: 'activate subscription' })
   async activateSubscription(
-    @Param('id') id: string,
+    @Param('id') id: string, @RequestPayload() token: string
   ) {
-    return this.subscriptionService.activateSubscription(id);
+    return this.subscriptionService.activateSubscription(id, token);
   }
   @Put(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
@@ -89,6 +90,7 @@ export default class SubscriptionController {
 
   @Delete(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @ApiOperation({ summary: 'suspend subscription' })
   async suspendSubscription(@Param('id') id: string) {
     return await this.subscriptionService.suspendSubscription(id);
   }

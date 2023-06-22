@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -28,12 +28,14 @@ export default class GenreController {
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @ApiOperation({ summary: 'get genre by id' })
   async getGenreById(@Param('id') id: number): Promise<GenreEntity> {
     return this.genreService.findGenreById(id);
   }
 
   @Get()
   @Unprotected()
+  @ApiOperation({ summary: 'get genre list' })
   @ApiQuery({
     name: "name",
     type: String,
@@ -45,19 +47,22 @@ export default class GenreController {
 
   @Post('emotion')
   @Unprotected()
+  @ApiOperation({ summary: 'get genre by emotion' })
   async getGenreByEmotion(@Body() emotions: Emotion[]) {
     return await this.genreService.getGenreByEmotion(emotions)
   }
 
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @Post()
+  @ApiOperation({ summary: 'create genre' })
   async createGenre(@Body() dto: CreateGenreDTO): Promise<GenreEntity> {
     return this.genreService.createGenre(dto);
   }
 
   @Put(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
-  async updateAudio(
+  @ApiOperation({ summary: 'update genre ' })
+  async updateGenre(
     @Param('id') id: number,
     @Body() updateGenreDto: UpdateGenreDTO,
   ): Promise<GenreEntity> {
@@ -66,11 +71,13 @@ export default class GenreController {
 
   @Delete(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @ApiOperation({ summary: 'delete genre ' })
   async deleteAudio(@Param('id') id: number) {
     return await this.genreService.deleteGenre(id);
   }
   @Get('/questionBank/:id')
   @Unprotected()
+  @ApiOperation({ summary: 'get genre by result from quiz' })
   async getGenreByResult(@Param('id') questionBankId: number): Promise<GenreEntity[]> {
     return await this.genreService.getGenreByResult(questionBankId)
   }

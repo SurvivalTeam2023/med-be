@@ -6,7 +6,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FavoriteEntity } from './entities/favorite.entity';
+import { FavoriteGenreEntity } from './entities/favorite.entity';
 import { DeleteResult, EntityManager, In, Repository } from 'typeorm';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { ErrorHelper } from 'src/helpers/error.helper';
@@ -18,11 +18,11 @@ import { getUserId } from 'src/utils/decode.utils';
 @Injectable()
 export default class FavoriteService {
   constructor(
-    @InjectRepository(FavoriteEntity)
-    private favoriteRepo: Repository<FavoriteEntity>,
+    @InjectRepository(FavoriteGenreEntity)
+    private favoriteRepo: Repository<FavoriteGenreEntity>,
     private readonly entityManage: EntityManager,
   ) { }
-  async findAllFavorite(userId: string): Promise<FavoriteEntity[]> {
+  async findAllFavorite(userId: string): Promise<FavoriteGenreEntity[]> {
     const querybuilder = this.favoriteRepo
       .createQueryBuilder('favorite')
       .leftJoinAndSelect('favorite.genre', 'genre')
@@ -34,7 +34,7 @@ export default class FavoriteService {
   async createFavorite(
     dto: CreateFavoriteDTO,
     token: string,
-  ): Promise<FavoriteEntity[]> {
+  ): Promise<FavoriteGenreEntity[]> {
     let userId = getUserId(token);
     const user = await this.entityManage.findOne(UserEntity, {
       where: { id: userId },
@@ -48,7 +48,7 @@ export default class FavoriteService {
     if (!genres) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
     }
-    const favorites: FavoriteEntity[] = [];
+    const favorites: FavoriteGenreEntity[] = [];
     for (const genre of genres) {
       const favorite = await this.favoriteRepo.save({
         user: user,
@@ -58,7 +58,7 @@ export default class FavoriteService {
     }
     return favorites;
   }
-  async deleteFavorite(favoriteId: number): Promise<FavoriteEntity> {
+  async deleteFavorite(favoriteId: number): Promise<FavoriteGenreEntity> {
     const favorite = await this.favoriteRepo.findOne({
       where: { id: favoriteId },
     });

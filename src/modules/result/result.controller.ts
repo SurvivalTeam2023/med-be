@@ -13,7 +13,7 @@ import {
     Put,
     Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
@@ -28,6 +28,7 @@ export default class ResultController {
     constructor(private readonly resultService: ResultService) { }
 
     @Get(':id')
+    @ApiOperation({ summary: 'get result by id' })
     @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.ADMIN] })
     async getResultById(@Param('id') id: number): Promise<ResultEntity> {
         return await this.resultService.findResultById(id);
@@ -35,6 +36,7 @@ export default class ResultController {
 
     @Post()
     @Unprotected()
+    @ApiOperation({ summary: 'create result after finish quiz' })
     async createResult(
         @Body() dto: CreateResultDTO,
     ): Promise<ResultEntity> {
@@ -42,6 +44,7 @@ export default class ResultController {
     }
 
     @Delete(':id')
+    @ApiOperation({ summary: 'delete result' })
     @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
     async deleteResult(@Param('id') id: number) {
         return await this.resultService.deleteResult(id);

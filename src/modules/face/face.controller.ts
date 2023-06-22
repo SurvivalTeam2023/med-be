@@ -1,6 +1,6 @@
-import { Post, UploadedFile, UseInterceptors,Controller } from "@nestjs/common/decorators";
+import { Post, UploadedFile, UseInterceptors, Controller } from "@nestjs/common/decorators";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Unprotected } from "nest-keycloak-connect";
 import { PublicFile } from "../files/dto/publicFile.dto";
 import { FaceService } from "./face.service";
@@ -13,6 +13,7 @@ export class FaceController {
     @Post()
     @UseInterceptors(FileInterceptor('file'))
     @ApiConsumes('multipart/form-data')
+    @ApiOperation({ summary: 'emotion detect by image' })
     @Unprotected()
     @ApiBody({
         description: 'Upload image to with file extension jpg or png',

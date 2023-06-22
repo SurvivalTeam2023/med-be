@@ -4,7 +4,7 @@ import FavoriteService from './favorite.service';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Unprotected } from 'nest-keycloak-connect';
 import CreateFavoriteDTO from './dto/createFavorite.dto';
-import { FavoriteEntity } from './entities/favorite.entity';
+import { FavoriteGenreEntity } from './entities/favorite.entity';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 
 @ApiTags('Favorites')
@@ -12,7 +12,7 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 @ApiBearerAuth()
 @Controller('rest/favorite')
 export default class FavoriteController {
-  constructor(private readonly favoriteService: FavoriteService) {}
+  constructor(private readonly favoriteService: FavoriteService) { }
 
   @ApiOperation({ summary: 'create Favorite' })
   @Unprotected()
@@ -20,7 +20,7 @@ export default class FavoriteController {
   async create(
     @Body() dto: CreateFavoriteDTO,
     @RequestPayload() token: string,
-  ): Promise<FavoriteEntity[]> {
+  ): Promise<FavoriteGenreEntity[]> {
     return this.favoriteService.createFavorite(dto, token);
   }
 
@@ -36,7 +36,7 @@ export default class FavoriteController {
   @Unprotected()
   async getAllFavorite(
     @Param('userId') userId: string,
-  ): Promise<FavoriteEntity[]> {
+  ): Promise<FavoriteGenreEntity[]> {
     return this.favoriteService.findAllFavorite(userId);
   }
 
