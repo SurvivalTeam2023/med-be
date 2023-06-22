@@ -318,7 +318,7 @@ export class UserService {
         )
         .pipe(map((response) => response.data)),
     ).catch((err) => {
-      ErrorHelper.BadRequestException(ERROR_MESSAGE.KEYCLOAK.SOMETHING_WRONG);
+      ErrorHelper.BadRequestException(err.response.data);
     });
 
     await lastValueFrom(
