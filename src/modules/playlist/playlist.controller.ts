@@ -13,7 +13,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import CreatePlaylistDto from './dto/createPlaylist.dto';
 import SearchPlaylistDto from './dto/searchPlaylistDto';
 import UpdatePlaylistDto from './dto/updatePlaylist.dto';
@@ -32,6 +32,8 @@ export default class PlaylistController {
 
   @Get(':id')
   @Unprotected()
+  @ApiOperation({ summary: 'get playlist by id' })
+
   async getPlaylistById(@Param('id') id: number): Promise<PlaylistEntity> {
     return await this.playlistService.findPlaylistById(id);
   }
@@ -46,6 +48,8 @@ export default class PlaylistController {
     name: 'limit',
     required: false,
   })
+  @ApiOperation({ summary: 'get playlist list' })
+
   async getPlaylists(
     @Query() playlist: SearchPlaylistDto,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
@@ -62,6 +66,7 @@ export default class PlaylistController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'create playlist' })
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.USER] })
   async createPlaylist(
     @Body() createPlaylistDto: CreatePlaylistDto, @RequestPayload() token: string
@@ -71,6 +76,7 @@ export default class PlaylistController {
 
   @Put(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @ApiOperation({ summary: 'update playlist' })
   async updatePlaylist(
     @Param('id') id: number,
     @Body() updatePlaylistDto: UpdatePlaylistDto,
@@ -79,6 +85,7 @@ export default class PlaylistController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'delete playlist' })
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.USER] })
   async deletePlaylist(@Param('id') id: number) {
     return await this.playlistService.deletePlaylist(id);

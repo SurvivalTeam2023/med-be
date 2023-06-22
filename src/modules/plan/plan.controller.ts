@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -28,6 +28,7 @@ export default class PlanController {
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @ApiOperation({ summary: 'get plan by id' })
   async getPlanById(
     @Param('id') id: string,
   ): Promise<PlanEntity> {
@@ -36,6 +37,7 @@ export default class PlanController {
 
   @Get()
   @Unprotected()
+  @ApiOperation({ summary: 'get plan list' })
   async getPlans(
     @Query() dto: SearchPlanDTO,
   ): Promise<PlanEntity[]> {
@@ -44,6 +46,7 @@ export default class PlanController {
 
   @Post()
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @ApiOperation({ summary: 'create plan' })
   async createPlan(
     @Body() dto: CreatePlanDTO,
   ): Promise<PlanEntity> {
@@ -52,6 +55,8 @@ export default class PlanController {
 
   @Put(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @ApiOperation({ summary: 'update plan' })
+
   async updatePlan(
     @Param('id') id: string,
     @Body() updateSubscriptionDTO: UpdatePlanDTO,
@@ -64,6 +69,7 @@ export default class PlanController {
 
   @Delete(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @ApiOperation({ summary: 'delete plan' })
   async deactivatePlan(@Param('id') id: string) {
     return await this.planService.deactivatePlan(id);
   }

@@ -12,7 +12,7 @@ import {
     Query,
 } from '@nestjs/common';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import OptionService from './option.service';
@@ -30,12 +30,14 @@ export default class OptionController {
 
     @Get(':id')
     @Unprotected()
+    @ApiOperation({ summary: 'find option by id' })
     async findOptionById(@Param('id') id: number): Promise<OptionEntity> {
         return this.optionService.findOptionById(id);
     }
 
     @Get()
     @Unprotected()
+    @ApiOperation({ summary: 'get option list' })
     @ApiQuery({
         name: 'page',
         required: false,
@@ -58,6 +60,7 @@ export default class OptionController {
 
     @Unprotected()
     @Post()
+    @ApiOperation({ summary: 'create option' })
     async createOption(
         @Body() dto: CreateOptionDTO,
     ): Promise<OptionEntity> {
@@ -66,6 +69,7 @@ export default class OptionController {
 
     @Put(':id')
     @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+    @ApiOperation({ summary: 'update option' })
     async updateOption(
         @Param('id') id: number,
         @Body() dto: UpdateOptionDTO,
@@ -74,6 +78,7 @@ export default class OptionController {
     }
 
     @Delete(':id')
+    @ApiOperation({ summary: 'delete option' })
     @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
     async deleteOption(@Param('id') id: number) {
         return await this.optionService.deleteOption(id);

@@ -1,5 +1,5 @@
 import { Controller, Get } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Roles, Unprotected } from "nest-keycloak-connect";
 import { USER_CLIENT_ROLE } from "src/common/enums/userClientRole.enum";
 import ArtistService from "./artist.service";
@@ -12,6 +12,7 @@ export default class ArtistController {
 
     @Get()
     @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+    @ApiOperation({ summary: 'get total artist' })
     async getCountArtist(): Promise<number> {
         return this.artistService.countArtist();
     }

@@ -9,7 +9,7 @@ import {
     Put,
     Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import CreateMentalHealthDTO from './dto/createMentalHealth.dto';
@@ -26,12 +26,14 @@ export default class MentalHealthController {
 
     @Get(':id')
     @Unprotected()
+    @ApiOperation({ summary: 'get mental health by id' })
     async findMentalHealthById(@Param('id') id: number): Promise<MentalHealthEntity> {
         return this.mentalHealthService.findMentalHealthById(id);
     }
 
     @Get()
     @Unprotected()
+    @ApiOperation({ summary: 'get mental health list' })
     async findMentalHealth(
         @Query() dto: FindMentalHealthDTO,
     ): Promise<MentalHealthEntity[]> {
@@ -39,6 +41,7 @@ export default class MentalHealthController {
     }
     @Unprotected()
     @Post()
+    @ApiOperation({ summary: 'create mental health' })
     async createMentalHealth(
         @Body() dto: CreateMentalHealthDTO,
     ): Promise<MentalHealthEntity> {
@@ -47,6 +50,7 @@ export default class MentalHealthController {
 
     @Put(':id')
     @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+    @ApiOperation({ summary: 'update mental health ' })
     async updateMentalHealth(
         @Param('id') id: number,
         @Body() dto: UpdateMentalHealthDTO,
@@ -56,6 +60,7 @@ export default class MentalHealthController {
 
     @Delete(':id')
     @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+    @ApiOperation({ summary: 'delete mental health ' })
     async deleteMentalHealth(@Param('id') id: number) {
         return await this.mentalHealthService.deleteMentalHealth(id);
     }

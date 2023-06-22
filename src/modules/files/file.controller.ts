@@ -8,7 +8,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileQuery } from './dto/file-query.dto';
 import { PublicFile } from './dto/publicFile.dto';
 import { FileEntity } from './entities/file.entity';
@@ -25,6 +25,7 @@ export class FilesController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'upload file' })
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   // @Unprotected()
   @ApiBody({
@@ -40,12 +41,14 @@ export class FilesController {
 
   @Get('id')
   @Unprotected()
+  @ApiOperation({ summary: 'get file' })
   async getFiles(@Param() query: FileQuery) {
     return this.fileService.getFile(query.id);
   }
 
   @Get()
   @Unprotected()
+  @ApiOperation({ summary: 'get file by id' })
   async getAllFiles() {
     return this.fileService.getAllFiles();
   }

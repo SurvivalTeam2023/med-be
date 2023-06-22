@@ -19,7 +19,7 @@ import { CreateAudioDTO } from './dto/createAudio.dto';
 import SearchAudioDto from './dto/searchAudio.dto';
 import UpdateAudioDto from './dto/updateAudio.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
@@ -31,14 +31,15 @@ export default class AudioController {
   constructor(private readonly audioService: AudioService) { }
 
   @Get(':id')
-  // @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   @Unprotected()
+  @ApiOperation({ summary: 'get audio by audio id' })
   async getAudioById(@Param('id') id: number): Promise<AudioEntity> {
     return this.audioService.findAudioById(id);
   }
 
   @Get()
   @Unprotected()
+  @ApiOperation({ summary: 'get audio list' })
   @ApiQuery({
     name: 'page',
     required: false,
@@ -61,6 +62,7 @@ export default class AudioController {
 
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   @Post()
+  @ApiOperation({ summary: 'create audio' })
   async createAudio(
     @Body() createAudioDto: CreateAudioDTO, @RequestPayload() token: string
   ): Promise<AudioEntity> {
@@ -69,6 +71,7 @@ export default class AudioController {
 
   @Put(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @ApiOperation({ summary: 'update audio field' })
   async updateAudio(
     @Param('id') id: number,
     @Body() updateAudioDto: UpdateAudioDto,
@@ -78,13 +81,16 @@ export default class AudioController {
 
   @Delete(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @ApiOperation({ summary: 'delete audio' })
   async deleteAudio(@Param('id') id: number) {
     return await this.audioService.deleteAudio(id);
   }
 
   @Get('countAudios')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @ApiOperation({ summary: 'get total audio' })
   async getCountAudio(): Promise<number> {
     return await this.audioService.countAudio();
   }
+
 }

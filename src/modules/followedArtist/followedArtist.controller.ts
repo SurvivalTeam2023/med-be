@@ -13,21 +13,24 @@ import { followArtistDTO } from "./dto/followArtist.dto"
 export default class FollowedArtistController {
     constructor(private readonly followedArtistService: FollowedArtistService) { }
     @Roles({ roles: [USER_CLIENT_ROLE.SUBSCRIBER] })
+    @ApiOperation({ summary: 'follow artist' })
     @Post()
-    async addAudioToPlaylist(@Body() dto: followArtistDTO, @RequestPayload() token: string): Promise<FollowedArtistEntity> {
+    async followArtist(@Body() dto: followArtistDTO, @RequestPayload() token: string): Promise<FollowedArtistEntity> {
         return await this.followedArtistService.followArtist(dto, token)
     }
 
     @Unprotected()
     @ApiOperation({ summary: 'Get total follower' })
     @Get(':artistId')
+    @ApiOperation({ summary: 'get total follower' })
     async getTotalFollower(@Param('artistId') artistId: string): Promise<number> {
         return await this.followedArtistService.showTotalFollower(artistId)
     }
 
     @Roles({ roles: [USER_CLIENT_ROLE.SUBSCRIBER] })
     @Delete('artistId')
-    async removeAudioFromPlaylist(@Param('artistId') artistId: string, @RequestPayload() token: string) {
+    @ApiOperation({ summary: 'unfollow artist' })
+    async unfollowArtist(@Param('artistId') artistId: string, @RequestPayload() token: string) {
         return await this.followedArtistService.unfollowArtist(artistId, token)
     }
 }

@@ -26,20 +26,20 @@ export default class MentalHealthDegreeController {
 
     @Get(':id')
     @Unprotected()
-    async findMentalHealthById(@Param('id') id: number): Promise<MentalHealthDegreeEntity> {
+    async findMentalHealthDegreeById(@Param('id') id: number): Promise<MentalHealthDegreeEntity> {
         return this.mentalHealthDegreeService.findMentalHealthDegreeById(id);
     }
 
     @Get()
     @Unprotected()
-    async findMentalHealth(
+    async findMentalHealthDegree(
         @Query() dto: FindMentalHealthDegreeDTO,
     ): Promise<MentalHealthDegreeEntity[]> {
         return this.mentalHealthDegreeService.findMentalHealthDegree(dto)
     }
     @Unprotected()
     @Post()
-    async createMentalHealth(
+    async createMentalHealthDegree(
         @Body() dto: CreateMentalHealthDegreeDTO,
     ): Promise<MentalHealthDegreeEntity> {
         return this.mentalHealthDegreeService.createMentalHealthDegree(dto);
@@ -47,7 +47,7 @@ export default class MentalHealthDegreeController {
 
     @Put(':id')
     @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
-    async updateMentalHealth(
+    async updateMentalHealthDegree(
         @Param('id') id: number,
         @Body() dto: UpdateMentalHealthDegreeDTO,
     ): Promise<MentalHealthDegreeEntity> {

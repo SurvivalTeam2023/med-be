@@ -12,7 +12,7 @@ import {
     Query,
 } from '@nestjs/common';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import QuestionService from './question.service';
@@ -29,12 +29,16 @@ export default class QuestionController {
 
     @Get(':id')
     @Unprotected()
+    @ApiOperation({ summary: 'get question by id ' })
+
     async findQuestionById(@Param('id') id: number): Promise<QuestionEntity> {
         return this.questionService.findQuestionById(id);
     }
 
     @Get()
     @Unprotected()
+    @ApiOperation({ summary: 'get question list ' })
+
     @ApiQuery({
         name: 'page',
         required: false,
@@ -57,6 +61,8 @@ export default class QuestionController {
 
     @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
     @Post()
+    @ApiOperation({ summary: 'create question' })
+
     async createQuestion(
         @Body() dto: CreateQuestionDTO,
     ): Promise<QuestionEntity> {
@@ -65,6 +71,7 @@ export default class QuestionController {
 
     @Put(':id')
     @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+    @ApiOperation({ summary: 'update question ' })
     async updateQuestion(
         @Param('id') id: number,
         @Body() dto: UpdateQuestionDTO,
@@ -73,6 +80,7 @@ export default class QuestionController {
     }
 
     @Delete(':id')
+    @ApiOperation({ summary: 'update question ' })
     @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
     async deleteQuestion(@Param('id') id: number) {
         return await this.questionService.deleteQuestion(id);
