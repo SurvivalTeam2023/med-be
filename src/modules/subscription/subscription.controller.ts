@@ -94,4 +94,12 @@ export default class SubscriptionController {
   async suspendSubscription(@Param('id') id: string) {
     return await this.subscriptionService.suspendSubscription(id);
   }
+  @Get('/user/userID')
+  @Roles({ roles: [USER_CLIENT_ROLE.USER] })
+  @ApiOperation({description:'get subscription list by userID and update status'})
+  async getSubscriptionByUserId(
+    @RequestPayload() token: string,
+  ): Promise<SubscriptionEntity[]> {
+    return this.subscriptionService.getSubscriptionByUserId(token);
+  }
 }

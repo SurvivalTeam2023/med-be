@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, In, Repository } from 'typeorm';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import {
@@ -16,7 +16,7 @@ import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
 import * as moment from 'moment';
 import UpdateSubscriptionDTO from './dto/updateSubscription.dto';
 import { PlanEntity } from '../plan/entities/plan.entity';
-import { lastValueFrom, map, Observable, firstValueFrom } from 'rxjs';
+import { lastValueFrom, map, Observable, firstValueFrom, catchError, of } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { AuthService } from '../auth/auth.services';
 import { PAYPAL_URL } from 'src/environments';
@@ -140,7 +140,7 @@ export default class SubscriptionService {
     await firstValueFrom(await this.userService.assignRole(user.username, USER_REALM_ROLE.APP_SUBSCRIBER))
     return subscriptionPaypal;
   }
-  @Cron(CronExpression.EVERY_HOUR)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async handlePendingStatusCron() {
     const subList = await this.subscriptionRepo.find(
       { where: { status: SubscriptionStatus.APPROVAL_PENDING } }
@@ -172,7 +172,7 @@ export default class SubscriptionService {
       }
     })
   }
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_HOUR)
   async handleActiveStatusCron() {
     const subList = await this.subscriptionRepo.find(
       { where: { status: SubscriptionStatus.ACTIVE } }
@@ -196,12 +196,15 @@ export default class SubscriptionService {
         sub.endDate = moment(nextBillingTime).toDate()
         await this.subscriptionRepo.save(sub)
       }
-      else if (subPayPal['status'] == SubscriptionStatus.SUSPENDED || !subPayPal) {
+      else if (subPayPal['status'] == SubscriptionStatus.SUSPENDED) {
         sub.status = SubscriptionStatus.SUSPENDED
         await this.subscriptionRepo.save(sub)
       }
-      else if (subPayPal['status'] == SubscriptionStatus.CANCELLED || !subPayPal) {
+      else if (subPayPal['status'] == SubscriptionStatus.CANCELLED) {
         sub.status = SubscriptionStatus.CANCELLED
+        await this.subscriptionRepo.save(sub)
+      } else if (!subPayPal) {
+        sub.status = SubscriptionStatus.EXPIRED
         await this.subscriptionRepo.save(sub)
       }
     })
@@ -292,5 +295,49 @@ export default class SubscriptionService {
     await this.subscriptionRepo.save(subscription);
 
     return subscription;
+  }
+
+  async getSubscriptionByUserId(token: string): Promise<SubscriptionEntity[]> {
+    const userId = getUserId(token)
+    const subList = await this.subscriptionRepo.find(
+      {
+        where: {
+          user: {
+            id: userId
+          },
+          status: In([SubscriptionStatus.ACTIVE, SubscriptionStatus.APPROVAL_PENDING])
+        }
+      }
+    )
+    const response = await lastValueFrom(
+      this.authService.getPayPalAccessToken(),
+    );
+    let adminToken = `Bearer ${response['access_token']}`;
+    const updateSub = await Promise.all(subList.map(async sub => {
+      const subPayPal = await lastValueFrom(this.httpService.get(`https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${sub.id}`,
+        {
+          headers: {
+            Authorization: adminToken,
+          }
+        }
+      )
+        .pipe(map((response) => response.data),
+          catchError((err) =>
+            of(
+              ErrorHelper.BadGatewayException(err.response.data),
+            ),
+          ),
+        )
+
+      )
+      const status = findValueByKey(subPayPal, 'status')
+
+      if (status == SubscriptionStatus.ACTIVE) {
+        sub.status = SubscriptionStatus.ACTIVE
+        await this.subscriptionRepo.save(sub)
+      }
+      return sub
+    }))
+    return updateSub
   }
 }
