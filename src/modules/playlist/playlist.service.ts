@@ -23,7 +23,7 @@ export default class PlaylistService {
     private readonly entityManage: EntityManager,
     @InjectRepository(PlaylistEntity)
     private playlistRepository: Repository<PlaylistEntity>,
-  ) { }
+  ) {}
 
   async findPlaylistById(playlistId: number): Promise<PlaylistEntity> {
     const playList = await this.playlistRepository
@@ -44,11 +44,31 @@ export default class PlaylistService {
   ): Promise<Pagination<PlaylistEntity>> {
     const queryBuilder = this.playlistRepository
       .createQueryBuilder('playlist')
-    if (dto.name) queryBuilder.where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` }).orderBy('playlist.created_at', 'DESC')
-    if (dto.status) queryBuilder.andWhere('playlist.status = :playlistStatus', { playlistStatus: dto.status, }).orderBy('playlist.created_at', 'DESC')
-    if (dto.authorId) queryBuilder.andWhere('playlist.author_id = :authorId', { authorId: dto.authorId, }).orderBy('playlist.created_at', 'DESC')
-    if (dto.playListType) queryBuilder.andWhere('playlist.playlist_type = :playlistType', { playlistType: dto.playListType, }).orderBy('playlist.created_at', 'DESC')
-    queryBuilder.orderBy('playlist.created_at', 'DESC')
+      .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
+      .leftJoinAndSelect('audio_playlist.audio', 'audio')
+      .leftJoinAndSelect('audio.file', 'files')
+      .leftJoinAndSelect('audio.artist', 'artist');
+    if (dto.name)
+      queryBuilder
+        .where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` })
+        .orderBy('playlist.created_at', 'DESC');
+    if (dto.status)
+      queryBuilder
+        .andWhere('playlist.status = :playlistStatus', {
+          playlistStatus: dto.status,
+        })
+        .orderBy('playlist.created_at', 'DESC');
+    if (dto.authorId)
+      queryBuilder
+        .andWhere('playlist.author_id = :authorId', { authorId: dto.authorId })
+        .orderBy('playlist.created_at', 'DESC');
+    if (dto.playListType)
+      queryBuilder
+        .andWhere('playlist.playlist_type = :playlistType', {
+          playlistType: dto.playListType,
+        })
+        .orderBy('playlist.created_at', 'DESC');
+    queryBuilder.orderBy('playlist.created_at', 'DESC');
     return paginate<PlaylistEntity>(queryBuilder, option);
   }
 
@@ -57,7 +77,11 @@ export default class PlaylistService {
     token: string,
   ): Promise<PlaylistEntity> {
     let authorId = getUserId(token);
-    const playlist = await this.playlistRepository.save({ ...dto, status: PlaylistStatus.ACTIVE, authorId: authorId });
+    const playlist = await this.playlistRepository.save({
+      ...dto,
+      status: PlaylistStatus.ACTIVE,
+      authorId: authorId,
+    });
     return playlist;
   }
 
@@ -89,12 +113,15 @@ export default class PlaylistService {
     return entity;
   }
 
-  async setPublicPlaylist(playlistId: number, publicStatus: PlaylistPublic): Promise<PlaylistEntity> {
+  async setPublicPlaylist(
+    playlistId: number,
+    publicStatus: PlaylistPublic,
+  ): Promise<PlaylistEntity> {
     const playlist = await this.playlistRepository.findOne({
       where: { id: playlistId },
     });
     playlist.isPublic = publicStatus;
-    await this.playlistRepository.save(playlist)
-    return playlist
+    await this.playlistRepository.save(playlist);
+    return playlist;
   }
 }
