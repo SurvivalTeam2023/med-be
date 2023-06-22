@@ -16,4 +16,7 @@ export class ErrorHelper {
     throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
+  static UnprocessableEntity(msg: string | string[]) {
+    throw new HttpException(msg, HttpStatus.UNPROCESSABLE_ENTITY);
+  }
 }

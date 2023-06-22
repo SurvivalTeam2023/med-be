@@ -16,6 +16,7 @@ export const ERROR_MESSAGE = {
     INVALID_DATE: 'End date must after start date',
     NOT_FOUND: 'Subscription not found!',
     DUPLICATE_NAME: 'Name already exist!',
+    NOT_APPROVE:"User have not approve"
   },
   FAVORITE: {
     INVALID_DATE: 'End date must after start date',

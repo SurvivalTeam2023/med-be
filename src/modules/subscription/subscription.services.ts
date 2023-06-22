@@ -27,6 +27,7 @@ import { CronExpression } from '@nestjs/schedule/dist';
 import { UserService } from '../user/user.services';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
+import { findValueByKey } from 'src/utils/parseJSON.utils';
 @Injectable()
 export default class SubscriptionService {
   constructor(
@@ -127,9 +128,8 @@ export default class SubscriptionService {
     ).catch((err) => {
       ErrorHelper.BadRequestException(err.response.data.errorMessage);
     });
-    const endDate = moment(subscriptionPaypal['start_time']).add(plan.usageTime, "M").toDate()
-    console.log(endDate, "log");
-
+    const startTime = findValueByKey(subscriptionPaypal, 'create_time');
+    const endDate = moment(startTime).add(plan.usageTime, "M").toDate()
     await this.subscriptionRepo.save({
       id: subscriptionPaypal['id'],
       user: user,
@@ -159,10 +159,12 @@ export default class SubscriptionService {
       )
         .pipe(map((response) => response.data))
       )
+      const nextBillingTime = findValueByKey(subPayPal, 'next_billing_time');
       if (subPayPal['status'] == SubscriptionStatus.ACTIVE) {
         sub.status = SubscriptionStatus.ACTIVE
-        sub.endDate = moment(subPayPal['next_billing_time']).toDate()
+        sub.endDate = moment(nextBillingTime).toDate()
         await this.subscriptionRepo.save(sub)
+
       }
       else if (subPayPal['status'] == SubscriptionStatus.APPROVAL_PENDING || !subPayPal) {
         sub.status = SubscriptionStatus.EXPIRED
@@ -189,8 +191,9 @@ export default class SubscriptionService {
       )
         .pipe(map((response) => response.data))
       )
+      const nextBillingTime = findValueByKey(subPayPal, 'next_billing_time');
       if (subPayPal['status'] == SubscriptionStatus.ACTIVE) {
-        sub.endDate = moment(subPayPal['next_billing_time']).toDate()
+        sub.endDate = moment(nextBillingTime).toDate()
         await this.subscriptionRepo.save(sub)
       }
       else if (subPayPal['status'] == SubscriptionStatus.SUSPENDED || !subPayPal) {
@@ -205,20 +208,46 @@ export default class SubscriptionService {
   }
 
 
-  async activateSubscription(subscriptionId: string) {
-    await lastValueFrom(
-      this.httpService.post(
-        `api-m.sandbox.paypal.com/v1/billing/subscriptions/${subscriptionId}d/activate`,
-        {},
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer A21AAKaKr5Ukst3BSFA7YUsvFgcq2I1BA07iIGhK1jjEet-Dn0bWvjtU-MQINEcl2a6FvwU9-tup2Ha6HO1eJKxYS9JOJDUMg',
-          }
+  async activateSubscription(subscriptionId: string, userToken: string): Promise<SubscriptionEntity[]> {
+    let userId = getUserId(userToken);
+    const response = await lastValueFrom(
+      this.authService.getPayPalAccessToken(),
+    );
+    const sub = await this.subscriptionRepo.findOne(
+      {
+        where: {
+          id: subscriptionId
         }
-      )
+      })
+    let adminToken = `Bearer ${response['access_token']}`;
+
+    const subPayPal = await lastValueFrom(this.httpService.get(`https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${sub.id}`,
+      {
+        headers: {
+          Authorization: adminToken,
+        }
+      }
     )
+      .pipe(map((response) => response.data))
+    )
+    const nextBillingTime = findValueByKey(subPayPal, 'next_billing_time');
+    if (subPayPal['status'] == SubscriptionStatus.ACTIVE) {
+      sub.status = SubscriptionStatus.ACTIVE
+      sub.endDate = moment(nextBillingTime).toDate()
+      await this.subscriptionRepo.save(sub)
+      const subList = await this.subscriptionRepo.createQueryBuilder('subscription')
+        .leftJoinAndSelect('subscription.plan', 'plan')
+        .where('subscription.user_id like :userId', { userId: userId })
+        .orderBy('subscription.created_at', 'DESC').getMany()
+      return subList
+    } else {
+      ErrorHelper.UnprocessableEntity(ERROR_MESSAGE.SUBSCRIPTION.NOT_APPROVE);
+
+    }
   }
+
+
+
   async updateSubscription(
     subscriptionId: string,
     dto: UpdateSubscriptionDTO,
