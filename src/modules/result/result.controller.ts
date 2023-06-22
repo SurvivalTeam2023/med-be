@@ -35,7 +35,7 @@ export default class ResultController {
 
     @Post()
     @Unprotected()
-    async createPlaylist(
+    async createResult(
         @Body() dto: CreateResultDTO,
     ): Promise<ResultEntity> {
         return await this.resultService.createResult(dto);
