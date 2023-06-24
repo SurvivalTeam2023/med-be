@@ -18,7 +18,8 @@ export class HealthCheckController {
     @HealthCheck()
     checkHealth() {
         return this.healthCheckService.check([
-            () => this.db.pingCheck('med-db')
+            () => this.http.pingCheck('Server Check', 'https://api.mediatation.tokyo/docs'),
+            () => this.db.pingCheck('med-be')
         ]);
     }
 }
