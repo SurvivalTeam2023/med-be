@@ -3,8 +3,7 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { HealthCheckService, HttpHealthIndicator, HealthCheck, TypeOrmHealthIndicator } from "@nestjs/terminus";
 import { Unprotected } from "nest-keycloak-connect";
 
-
-@Controller('health')
+@Controller('/actuator/health')
 @ApiBearerAuth()
 export class HealthCheckController {
     constructor(
