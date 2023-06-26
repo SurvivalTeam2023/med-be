@@ -31,10 +31,10 @@ import { MentalHealthDegreeEntity } from 'src/modules/mentalHealthDegree/entitie
 import { MentalHealthLogEntity } from 'src/modules/mentalHealthLog/entities/mentalHealthLog.entity';
 import { MentalHealthDegreeLogEntity } from 'src/modules/mentalHealthDegreeLog/entities/mentalHealthDegreeLog.entity';
 import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
-import { FavoriteGenreEntity } from 'src/modules/favorite/entities/favorite.entity';
 import { PlanEntity } from 'src/modules/plan/entities/plan.entity';
 import { UserStatusLogEntity } from 'src/modules/userStatusLog/entity/userStatusLog.entity';
 import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/followedArtist.entity';
+import { FavoriteGenreEntity } from 'src/modules/favoriteGenre/entities/favoriteGenre.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -63,7 +63,7 @@ const entities = [
   PlanEntity,
   FavoriteGenreEntity,
   UserStatusLogEntity,
-  FollowedArtistEntity
+  FollowedArtistEntity,
 ];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {
