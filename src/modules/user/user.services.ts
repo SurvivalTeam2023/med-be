@@ -31,7 +31,6 @@ import ArtistEntity from '../artist/entities/artist.entity';
 import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
 import { TokenDTO } from '../auth/dto/token.dto';
 import { UpdateUserDTO } from './dto/updateUser.dto';
-import { FavoriteGenreEntity } from '../favorite/entities/favorite.entity';
 import { PlaylistEntity } from '../playlist/entities/playlist.entity';
 import { FollowedArtistEntity } from '../followedArtist/entities/followedArtist.entity';
 import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
@@ -39,6 +38,7 @@ import { FilesService } from '../files/files.service';
 import { getUserId } from 'src/utils/decode.utils';
 import { FileEntity } from '../files/entities/file.entity';
 import { SubscriptionEntity } from '../subscription/entities/subscription.entity';
+import { FavoriteGenreEntity } from '../favoriteGenre/entities/favoriteGenre.entity';
 
 @Injectable()
 export class UserService {
@@ -218,7 +218,6 @@ export class UserService {
   }
 
   async findUserByName(username: string, token?: string | null): Promise<any> {
-    console.log(username);
     const user_keycloak = await lastValueFrom(
       this.httpService
         .get(
@@ -501,7 +500,6 @@ export class UserService {
         id: userId
       }
     })
-    console.log(user);
 
     if (user == null) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
@@ -546,11 +544,10 @@ export class UserService {
       avatar: avatar,
     })
     if (dto.email)
-      console.log(updatedUser.username);
 
-    await firstValueFrom(
-      await this.authService.verifyEmail(user.username),
-    );
+      await firstValueFrom(
+        await this.authService.verifyEmail(user.username),
+      );
     return updatedUser
   }
 }

@@ -4,8 +4,8 @@ import { BaseEntity } from '../../../common/base/base.entity';
 import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
 import { MentalHealthGenreEntity } from 'src/modules/mentalHealthGenre/entities/mentalHealthGenre.entity';
 import { GenreStatus } from 'src/common/enums/genreStatus.enum';
-import { FavoriteGenreEntity } from 'src/modules/favorite/entities/favorite.entity';
 import { EmotionEnum } from 'src/common/enums/emotion.enum';
+import { FavoriteGenreEntity } from 'src/modules/favoriteGenre/entities/favoriteGenre.entity';
 
 @Entity('genre')
 export class GenreEntity extends BaseEntity {

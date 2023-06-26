@@ -6,7 +6,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FavoriteGenreEntity } from './entities/favorite.entity';
+import { FavoriteGenreEntity } from './entities/favoriteGenre.entity';
 import { DeleteResult, EntityManager, In, Repository } from 'typeorm';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { ErrorHelper } from 'src/helpers/error.helper';
@@ -16,17 +16,22 @@ import { GenreEntity } from '../genre/entities/genre.entity';
 import { FavoriteStatus } from 'src/common/enums/favoriteStatus.enum';
 import { getUserId } from 'src/utils/decode.utils';
 @Injectable()
-export default class FavoriteService {
+export default class FavoriteGenreService {
   constructor(
     @InjectRepository(FavoriteGenreEntity)
     private favoriteRepo: Repository<FavoriteGenreEntity>,
     private readonly entityManage: EntityManager,
   ) { }
-  async findAllFavorite(userId: string): Promise<FavoriteGenreEntity[]> {
+  async findAllFavorite(token: string): Promise<FavoriteGenreEntity[]> {
+
+    const userId = getUserId(token)
     const querybuilder = this.favoriteRepo
-      .createQueryBuilder('favorite')
-      .leftJoinAndSelect('favorite.genre', 'genre')
-      .where('favorite.user_id = :user_id', { user_id: userId })
+      .createQueryBuilder('favorite_genre')
+      .leftJoinAndSelect('favorite_genre.genre', 'genre')
+      .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
+      .leftJoinAndSelect('audioGenre.audio', 'audio')
+      .select(['favorite_genre', 'genre', 'audioGenre.id', 'audio'])
+      .where('favorite_genre.user_id = :userId', { userId: userId })
       .getMany();
     return querybuilder;
   }
@@ -72,11 +77,10 @@ export default class FavoriteService {
   async isFavoriteExisted(token: string): Promise<{ exists: boolean }> {
     let userId = getUserId(token);
     const querybuilder = this.favoriteRepo
-      .createQueryBuilder('favorite')
-      .leftJoinAndSelect('favorite.genre', 'genre')
-      .where('favorite.user_id = :user_id', { user_id: userId })
+      .createQueryBuilder('favorite_genre')
+      .leftJoinAndSelect('favorite_genre.genre', 'genre')
+      .where('favorite_genre.user_id = :user_id', { user_id: userId })
       .getMany();
-    // return querybuilder;
     const favorites = await querybuilder;
     const exists = favorites.length > 0;
     return { exists };
