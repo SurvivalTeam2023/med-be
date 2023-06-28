@@ -23,13 +23,13 @@ export default class HistoryController {
     return this.historyService.createHistory(dto, token);
   }
 
-  @ApiOperation({ summary: 'find Favorite by userId' })
-  @Get(':userId')
+  @ApiOperation({ summary: 'get recent listened by userId' })
+  @Get()
   @Unprotected()
-  async getAllFavorite(
-    @Param('userId') userId: string,
+  async getAllHistory(
+    @RequestPayload() token: string,
   ): Promise<HistoryEntity[]> {
-    return this.historyService.findHistory(userId);
+    return this.historyService.findHistory(token);
   }
 
   @ApiOperation({ summary: 'total listener of an artist' })

@@ -42,6 +42,9 @@ export default class GenreService {
 
   async findGenres(name?: string): Promise<GenreEntity[]> {
     const queryBuilder = await this.genreRepo.createQueryBuilder('genre')
+      .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
+      .leftJoinAndSelect('audioGenre.audio', 'audio')
+      .select(['genre', 'audioGenre.id', 'audio'])
     if (name) queryBuilder.where('LOWER(genre.name) like :name', { name: `%${name}%` }).orderBy('genre.name', 'ASC')
 
 
@@ -72,6 +75,9 @@ export default class GenreService {
   }
   async getGenreByEmotion(emotions: Emotion[]): Promise<GenreEntity[]> {
     const genre = await this.genreRepo.createQueryBuilder('genre')
+      .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
+      .leftJoinAndSelect('audioGenre.audio', 'audio')
+      .select(['genre', 'audioGenre.id', 'audio'])
       .where('genre.emotion like :emotion', { emotion: `%${emotions[0].Type}%` }).orderBy('genre.name', 'ASC').getMany()
     return genre
   }
@@ -136,20 +142,17 @@ export default class GenreService {
       }
     }
 
-    const genre = await this.genreRepo.find({
-      relations: {
-        mentalHealthGenre: true
-      },
-      where: {
-        mentalHealthGenre: {
-          mentalHealth: {
-            name: highestPoint[0]
-          }
-        }
-      }
-    });
+    const genre = await this.genreRepo.createQueryBuilder('genre')
+      .leftJoin('genre.mentalHealthGenre', 'mentalHealthGenre')
+      .leftJoin('mentalHealthGenre.mentalHealth', 'mentalHealth')
+      .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
+      .leftJoinAndSelect('audioGenre.audio', 'audio')
+      .select(['genre', 'audioGenre.id', 'audio'])
+      .where('mentalHealth.name = :name', { name: highestPoint[0] })
+      .getMany();
 
     return genre;
+
   }
 
 }

@@ -8,7 +8,6 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { GenreModule } from './modules/genre/genre.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
-import { FavoriteModule } from './modules/favorite/favorite.module';
 import { PlanModule } from './modules/plan/plan.module';
 import { HistoryModule } from './modules/history/history.module';
 import { QuestionModule } from './modules/question/question.module';
@@ -26,6 +25,8 @@ import { UserLogModule } from './modules/userStatusLog/userStatusLog.module';
 import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.module';
 import { FollowedArtistModule } from './modules/followedArtist/followedArtist.module';
 import { WalletModule } from './modules/wallet/wallet.module';
+import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
+import { FavoriteGenreModule } from './modules/favoriteGenre/favoriteGenre.module';
 
 
 @Module({
@@ -39,7 +40,7 @@ import { WalletModule } from './modules/wallet/wallet.module';
     GenreModule,
     SubscriptionModule,
     PlanModule,
-    FavoriteModule,
+    FavoriteGenreModule,
     HistoryModule,
     QuestionModule,
     OptionModule,
@@ -55,7 +56,8 @@ import { WalletModule } from './modules/wallet/wallet.module';
     ArtistModule,
     FollowedArtistModule,
     UserLogModule,
-    WalletModule
+    WalletModule,
+    HealthCheckModule
   ],
   controllers: [],
   providers: [],

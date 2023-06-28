@@ -19,7 +19,8 @@ export default class HistoryService {
     private readonly entityManage: EntityManager,
   ) { }
 
-  async findHistory(userId: string): Promise<HistoryEntity[]> {
+  async findHistory(token: string): Promise<HistoryEntity[]> {
+    const userId = getUserId(token)
     const querybuilder = await this.historyRepo
       .createQueryBuilder('history')
       .leftJoinAndSelect('history.audio', 'audio')
