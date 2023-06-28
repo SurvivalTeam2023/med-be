@@ -21,10 +21,16 @@ import { GenreEntity } from '../genre/entities/genre.entity';
 import { AudioGenreEntity } from '../audioGenre/entities/audioGenre.entities';
 import { getUserId } from 'src/utils/decode.utils';
 import { PlaylistType } from 'src/common/enums/playlistType.enum';
+import GenreService from '../genre/genre.services';
+import { FilesService } from '../files/files.service';
+import getAudioDurationInSeconds from 'get-audio-duration';
+import { FileEntity } from '../files/entities/file.entity';
 
 @Injectable()
 export default class AudioService {
   constructor(
+    private readonly genreService: GenreService,
+    private readonly fileService: FilesService,
     private readonly entityManage: EntityManager,
     @InjectRepository(AudioEntity)
     private audioRepository: Repository<AudioEntity>,
@@ -63,31 +69,54 @@ export default class AudioService {
     queryBuilder.orderBy('audio.created_at', 'DESC')
     return paginate<AudioEntity>(queryBuilder, option);
   }
-  async createAudio(dto: CreateAudioDTO, token: string): Promise<AudioEntity> {
-    const audioPlaylists = dto.playlistId.map((playlistId) => {
-      const audioPlaylist = new AudioPlaylistEntity();
-      audioPlaylist.playlistId = playlistId;
-      return audioPlaylist;
-    });
-    let userId = getUserId(token);
-    const artist = await this.entityManage.findOne(ArtistEntity, {
-      where: { id: userId },
-    });
-    if (!artist) {
-      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
+  async createAudio(dto: CreateAudioDTO, token: string, files: { audio?: Express.Multer.File[], image?: Express.Multer.File[] }): Promise<AudioEntity> {
+    try {
+
+      let userId = getUserId(token);
+      const artist = await this.entityManage.findOne(ArtistEntity, {
+        where: { id: userId },
+      });
+      if (!artist) {
+        ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
+      }
+      const audioGenres = dto.genreId.map((genreId) => {
+        const audioGenre = new AudioGenreEntity();
+        audioGenre.genreId = genreId;
+        return audioGenre;
+      });
+
+      const audioFile = await this.fileService.uploadAudio(files.audio[0].buffer, files.audio[0].originalname, "med-audio")
+
+      const imageFile = await this.fileService.uploadAudio(files.image[0].buffer, files.image[0].originalname, "med-images")
+
+
+      const file: FileEntity[] = [audioFile, imageFile];
+      const audioLength = await getAudioDurationInSeconds(audioFile.url)
+
+
+
+      const entityData = this.audioRepository.create({
+        ...dto,
+        artist: artist,
+        status: AudioStatus.ACTIVE,
+        audioGenre: audioGenres,
+        file: file,
+        length: audioLength.toString(),
+        imageUrl: imageFile.url
+      })
+      if (dto.playlistId) {
+        const audioPlaylists = dto.playlistId.map((playlistId) => {
+          const audioPlaylist = new AudioPlaylistEntity();
+          audioPlaylist.playlistId = playlistId;
+          return audioPlaylist;
+        });
+        entityData.audioPlaylist = audioPlaylists
+      }
+      const entity = await this.audioRepository.save(entityData)
+      return entity;
+    } catch (error) {
+      ErrorHelper.BadRequestException(error)
     }
-    const audioGenres = dto.genreId.map((genreId) => {
-      const audioGenre = new AudioGenreEntity();
-      audioGenre.genreId = genreId;
-      return audioGenre;
-    });
-    const entity = this.audioRepository.save({
-      ...dto,
-      audioPlaylist: audioPlaylists,
-      artist: artist,
-      audioGenre: audioGenres
-    });
-    return entity;
   }
   async updateAudio(
     audioId: number,
@@ -104,7 +133,7 @@ export default class AudioService {
     });
     return updatedAudio;
   }
-  
+
   async deleteAudio(audioId: number): Promise<AudioEntity> {
     const entity = await this.audioRepository.findOne({
       where: { id: audioId },
@@ -117,5 +146,17 @@ export default class AudioService {
   }
   async countAudio(): Promise<number> {
     return this.audioRepository.count()
+  }
+  async getAudioByResult(questionBankID: number): Promise<any> {
+    const genres = await this.genreService.getGenreByResult(questionBankID)
+    const audios = await Promise.all(genres.map(async (genre) => {
+      return await this.audioRepository.createQueryBuilder('audio')
+        .leftJoin('audio.audioGenre', 'audioGenre')
+        .leftJoin('audioGenre.genre', 'genre')
+        .where('genre.id = :genreId', { genreId: genre.id })
+        .getMany();
+    }));
+
+    return audios;
   }
 }

@@ -1707,6 +1707,60 @@
   dependencies:
     text-decoding "^1.0.0"
 
+"@ffprobe-installer/darwin-arm64@5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@ffprobe-installer/darwin-arm64/-/darwin-arm64-5.0.1.tgz#a020a623955d55aa8daf45cb668c3044876b553b"
+  integrity sha512-vwNCNjokH8hfkbl6m95zICHwkSzhEvDC3GVBcUp5HX8+4wsX10SP3B+bGur7XUzTIZ4cQpgJmEIAx6TUwRepMg==
+
+"@ffprobe-installer/darwin-x64@5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@ffprobe-installer/darwin-x64/-/darwin-x64-5.1.0.tgz#f52316ac0bbe6f4ac70fdaea8db259ba4a055b00"
+  integrity sha512-J+YGscZMpQclFg31O4cfVRGmDpkVsQ2fZujoUdMAAYcP0NtqpC49Hs3SWJpBdsGB4VeqOt5TTm1vSZQzs1NkhA==
+
+"@ffprobe-installer/ffprobe@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@ffprobe-installer/ffprobe/-/ffprobe-2.0.0.tgz#d01ba6e3caa15b18dae809426360f4ccd2d2aaa7"
+  integrity sha512-BT5BHZZSOyFFbHd+3zFdEQCNfBORYwNtqre7l1dMmqvDha60G/7rEDCSeCX4sNLuCcNR4IxvGHicfRQie7SNUA==
+  optionalDependencies:
+    "@ffprobe-installer/darwin-arm64" "5.0.1"
+    "@ffprobe-installer/darwin-x64" "5.1.0"
+    "@ffprobe-installer/linux-arm" "5.1.0"
+    "@ffprobe-installer/linux-arm64" "5.1.0"
+    "@ffprobe-installer/linux-ia32" "5.1.0"
+    "@ffprobe-installer/linux-x64" "5.1.0"
+    "@ffprobe-installer/win32-ia32" "5.1.0"
+    "@ffprobe-installer/win32-x64" "5.1.0"
+
+"@ffprobe-installer/linux-arm64@5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@ffprobe-installer/linux-arm64/-/linux-arm64-5.1.0.tgz#0120872eab1ba8e48cce1cc71e396e707aa0cba2"
+  integrity sha512-u5b3r3/39eZmEV0X4OKUfp6gO3lOyVIpRO4WU+5Eb6omWYy+k0OkVbRffK4qJF1Uz8irwzyiDsmUZ6vE13/abQ==
+
+"@ffprobe-installer/linux-arm@5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@ffprobe-installer/linux-arm/-/linux-arm-5.1.0.tgz#5cf3e5015309671b40101fb0669877822c4e333e"
+  integrity sha512-y34AEive/M5/++RcuRJZciICYYRkmTh5gK6th7raydgfQhIYy/8AXAIGKqD5Hn855i6o/RpEIPjk7DWpEuwrdA==
+
+"@ffprobe-installer/linux-ia32@5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@ffprobe-installer/linux-ia32/-/linux-ia32-5.1.0.tgz#c0d06827d11747e5392206c19389313e1fcaad99"
+  integrity sha512-Uqk4sYYQxz0KQmEQ2xxbVu/KiDX7Pw6wRDpCYv0sW49GI3wpX2Umqi/Kmtr0tpCvxctVoCdf/U71EAxH2Lztdg==
+
+"@ffprobe-installer/linux-x64@5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@ffprobe-installer/linux-x64/-/linux-x64-5.1.0.tgz#ef575d1e55ea3ed26646d5be5b071235a56f6de6"
+  integrity sha512-r7cGOjNb8AMnKAEvz5f8N/WsWsre02LhAfDKZX0m5J0bsrYgs2HUlnnQiwjRCH9CYXYerjYqq592o/GXvxDS+Q==
+
+"@ffprobe-installer/win32-ia32@5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@ffprobe-installer/win32-ia32/-/win32-ia32-5.1.0.tgz#43b1462b9d89570fe3723c20b66bab684516751a"
+  integrity sha512-5O3vOoNRxmut0/Nu9vSazTdSHasrr+zPT2B3Hm7kjmO3QVFcIfVImS6ReQnZeSy8JPJOqXts5kX5x/3KOX54XQ==
+
+"@ffprobe-installer/win32-x64@5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@ffprobe-installer/win32-x64/-/win32-x64-5.1.0.tgz#87841123e8b903cc327f1e5b9aa69e5d2fbe6d7b"
+  integrity sha512-jMGYeAgkrdn4e2vvYt/qakgHRE3CPju4bn5TmdPfoAm1BlX1mY9cyMd8gf5vSzI8gH8Zq5WQAyAkmekX/8TSTg==
+
 "@firebase/app-types@0.9.0":
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/@firebase/app-types/-/app-types-0.9.0.tgz#35b5c568341e9e263b29b3d2ba0e9cfc9ec7f01e"
@@ -2258,6 +2312,14 @@
     lodash "4.17.21"
     path-to-regexp "3.2.0"
     swagger-ui-dist "4.15.1"
+
+"@nestjs/terminus@^10.0.1":
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/terminus/-/terminus-10.0.1.tgz#f91aaac539f21fcd1e40d6a87e62fea5fe862b8b"
+  integrity sha512-orQmQFdwN4QC2Oo30BrxEKzKAVeVluWQElgIe16NGvm597VqRH4b1GbKldVg6H8adehd/nR6RdCUyFozRdl2rA==
+  dependencies:
+    boxen "5.1.2"
+    check-disk-space "3.4.0"
 
 "@nestjs/testing@^9.0.0":
   version "9.2.0"
@@ -3072,6 +3134,13 @@ ajv@^8.0.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
+ansi-align@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-3.0.1.tgz#0cdf12e111ace773a86e9a1fad1225c43cb19a59"
+  integrity sha512-IOfwwBF5iczOjp/WeY4YxyjqAFMQoZufdQWDd19SEExbVLNXqvpzSJ/M7Za4/sCPmQ0+GRquoA7bGcINcxew6w==
+  dependencies:
+    string-width "^4.1.0"
+
 ansi-colors@4.1.3:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/ansi-colors/-/ansi-colors-4.1.3.tgz#37611340eb2243e70cc604cad35d63270d48781b"
@@ -3457,6 +3526,20 @@ bowser@^2.11.0:
   resolved "https://registry.yarnpkg.com/bowser/-/bowser-2.11.0.tgz#5ca3c35757a7aa5771500c70a73a9f91ef420a8f"
   integrity sha512-AlcaJBi/pqqJBIQ8U9Mcpc9i8Aqxn88Skv5d+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs+Ag6uUmJRA==
 
+boxen@5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/boxen/-/boxen-5.1.2.tgz#788cb686fc83c1f486dfa8a40c68fc2b831d2b50"
+  integrity sha512-9gYgQKXx+1nP8mP7CzFyaUARhg7D3n1dF/FnErWmu9l6JvGpNUN278h0aSb+QjoiKSWG+iZ3uHrcqk0qrY9RQQ==
+  dependencies:
+    ansi-align "^3.0.0"
+    camelcase "^6.2.0"
+    chalk "^4.1.0"
+    cli-boxes "^2.2.1"
+    string-width "^4.2.2"
+    type-fest "^0.20.2"
+    widest-line "^3.1.0"
+    wrap-ansi "^7.0.0"
+
 brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
@@ -3657,6 +3740,11 @@ chardet@^0.7.0:
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.7.0.tgz#90094849f0937f2eedc2425d0d28a9e5f0cbad9e"
   integrity sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==
 
+check-disk-space@3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/check-disk-space/-/check-disk-space-3.4.0.tgz#eb8e69eee7a378fd12e35281b8123a8b4c4a8ff7"
+  integrity sha512-drVkSqfwA+TvuEhFipiR1OC9boEGZL5RrWvVsOthdcvQNXyCCuKkEiTOTXZ7qxSf/GLwq4GvzfrQD/Wz325hgw==
+
 chokidar@3.5.3, chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"
@@ -3717,6 +3805,11 @@ classnames@2.x, classnames@^2.2.1, classnames@^2.2.3, classnames@^2.2.5, classna
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
   integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
+
+cli-boxes@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-2.2.1.tgz#ddd5035d25094fce220e9cab40a45840a440318f"
+  integrity sha512-y4coMcylgSCdVinjiDBuR8PCC2bLjyGTwEmPb9NHR/QaNU6EUOXcTY/s6VjGMD6ENSEaeQYHCY0GNGS5jfMwPw==
 
 cli-cursor@^3.1.0:
   version "3.1.0"
@@ -4218,7 +4311,7 @@ escape-html@~1.0.3:
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
   integrity sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==
 
-escape-string-regexp@^1.0.5:
+escape-string-regexp@^1.0.3, escape-string-regexp@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg==
@@ -4840,6 +4933,14 @@ gensync@^1.0.0-beta.2:
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
+get-audio-duration@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/get-audio-duration/-/get-audio-duration-4.0.0.tgz#6ef3963ac0044a660e59070542bcd12976bed7ee"
+  integrity sha512-spw+N28DvNr0IZ1j2ix+Zav9RC8F3kuT/b0UPwUAKc2bTifnpIdpVdvuIZi2GxaTFh43zvOkSvzR5KVCZzvPlQ==
+  dependencies:
+    "@ffprobe-installer/ffprobe" "^2.0.0"
+    execa "^5.0.0"
+
 get-caller-file@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
@@ -5205,6 +5306,11 @@ inflight@^1.0.4:
   dependencies:
     once "^1.3.0"
     wrappy "1"
+
+inherits-ex@^1.1.2, inherits-ex@^1.5.2:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/inherits-ex/-/inherits-ex-1.6.0.tgz#faef847b6e0ceb9908b5388dcb58a6572dce29f6"
+  integrity sha512-67sANrSoIvMmYDy0qyjmM/PvFdgBmWZVQoPBsRpDuP4tmlylEX1KdGN1bHvReG3eHBdaHY7WlZsrqys4y/cLVA==
 
 inherits@2, inherits@2.0.4, inherits@^2.0.1, inherits@^2.0.3, inherits@^2.0.4, inherits@~2.0.3, inherits@~2.0.4:
   version "2.0.4"
@@ -6382,7 +6488,7 @@ methods@^1.1.2, methods@~1.1.2:
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w==
 
-micromatch@^4.0.0, micromatch@^4.0.4:
+micromatch@^4.0.0, micromatch@^4.0.2, micromatch@^4.0.4:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-4.0.5.tgz#bc8999a7cbbf77cdc89f132f6e467051b49090c6"
   integrity sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==
@@ -6395,7 +6501,16 @@ mime-db@1.52.0, "mime-db@>= 1.43.0 < 2":
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.52.0.tgz#bbabcdc02859f4987301c856e3387ce5ec43bf70"
   integrity sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==
 
-mime-types@^2.0.8, mime-types@^2.1.12, mime-types@^2.1.27, mime-types@~2.1.24, mime-types@~2.1.34:
+mime-type@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/mime-type/-/mime-type-4.0.0.tgz#a44293aa3867a925a1c1b19e4e6fb66a7d8527aa"
+  integrity sha512-1FCc9fsTg44pd7koB486WEepve+sc4847F0USUf08j4+bAU6/9ckIq4kHVEhCxbxHCyUZy++dxx/PtSR/m4XBQ==
+  dependencies:
+    micromatch "^4.0.2"
+    path.js "^1.0.7"
+    util-ex "^0.3.15"
+
+mime-types@^2.0.8, mime-types@^2.1.12, mime-types@^2.1.27, mime-types@^2.1.35, mime-types@~2.1.24, mime-types@~2.1.34:
   version "2.1.35"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.35.tgz#381a871b62a734450660ae3deee44813f70d959a"
   integrity sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==
@@ -6857,6 +6972,15 @@ path-type@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
+
+path.js@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/path.js/-/path.js-1.0.7.tgz#7d136b607de19bfd98ba068874926287e6534939"
+  integrity sha512-DPX1vNSmckC3figW8xT/fEuF+XBg/96RUpXfW0yT6UGHgQI2mtTSADflz45bXKREbz+5GJa0qDQGNIpNr1skRQ==
+  dependencies:
+    escape-string-regexp "^1.0.3"
+    inherits-ex "^1.1.2"
+    util-ex "^0.3.10"
 
 pend@~1.2.0:
   version "1.2.0"
@@ -8010,7 +8134,7 @@ string-length@^4.0.1:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+string-width@^4.0.0, string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.2, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -8523,6 +8647,14 @@ util-deprecate@^1.0.1, util-deprecate@~1.0.1:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
+util-ex@^0.3.10, util-ex@^0.3.15:
+  version "0.3.18"
+  resolved "https://registry.yarnpkg.com/util-ex/-/util-ex-0.3.18.tgz#2adcf582b686cef8cdf5b9548b2036f3f0035ac5"
+  integrity sha512-GPVjD257DtgCDMHYqbdWvZ+RY3HaXZ7Dps/44de5WscOjFNL2Qr+6dTIKGlyfA4A5BXyeFKWy8mb19OATWhh8Q==
+  dependencies:
+    inherits-ex "^1.5.2"
+    xtend "^4.0.2"
+
 util@^0.12.4:
   version "0.12.5"
   resolved "https://registry.yarnpkg.com/util/-/util-0.12.5.tgz#5f17a6059b73db61a875668781a1c2b136bd6fbc"
@@ -8686,6 +8818,13 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
+widest-line@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/widest-line/-/widest-line-3.1.0.tgz#8292333bbf66cb45ff0de1603b136b7ae1496eca"
+  integrity sha512-NsmoXalsWVDMGupxZ5R08ka9flZjjiLvHVAWYOKtiKM8ujtZWr9cRffak+uSE48+Ob8ObalXpwyeUiyDD6QFgg==
+  dependencies:
+    string-width "^4.0.0"
+
 windows-release@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/windows-release/-/windows-release-4.0.0.tgz#4725ec70217d1bf6e02c7772413b29cdde9ec377"
@@ -8760,7 +8899,7 @@ xmlcreate@^2.0.4:
   resolved "https://registry.yarnpkg.com/xmlcreate/-/xmlcreate-2.0.4.tgz#0c5ab0f99cdd02a81065fa9cd8f8ae87624889be"
   integrity sha512-nquOebG4sngPmGPICTS5EnxqhKbCmz5Ox5hsszI2T6U5qdrJizBc+0ilYSEjTSzU0yZcmvppztXe/5Al5fUwdg==
 
-xtend@^4.0.0:
+xtend@^4.0.0, xtend@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
   integrity sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==

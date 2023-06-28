@@ -8,10 +8,14 @@ import {
   Delete,
   Get,
   Param,
+  ParseFilePipe,
   ParseIntPipe,
   Post,
   Put,
   Query,
+  UploadedFile,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AudioEntity } from './entities/audio.entity';
 import AudioService from './audio.services';
@@ -19,10 +23,11 @@ import { CreateAudioDTO } from './dto/createAudio.dto';
 import SearchAudioDto from './dto/searchAudio.dto';
 import UpdateAudioDto from './dto/updateAudio.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiQuery, ApiTags, ApiBody } from '@nestjs/swagger';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
+import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Audios')
 @Controller('audio')
@@ -60,14 +65,27 @@ export default class AudioController {
     });
   }
 
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  // @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   @Post()
-  @ApiOperation({ summary: 'create audio' })
+  @Unprotected()
+  @ApiOperation({ summary: 'Create audio' })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'audio', maxCount: 1 }, { name: 'image', maxCount: 1 },]))
   async createAudio(
-    @Body() createAudioDto: CreateAudioDTO, @RequestPayload() token: string
+    @UploadedFiles(new ParseFilePipe({
+      validators: [
+
+      ]
+    })) files: { audio?: Express.Multer.File[], image?: Express.Multer.File[] },
+    @Body() createAudioDto: CreateAudioDTO,
+    @RequestPayload() token: string,
   ): Promise<AudioEntity> {
-    return this.audioService.createAudio(createAudioDto, token);
+    console.log(createAudioDto);
+
+    return this.audioService.createAudio(createAudioDto, token, files);
   }
+
+
 
   @Put(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
@@ -87,7 +105,7 @@ export default class AudioController {
   }
 
   @Get('countAudios')
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @Unprotected()
   @ApiOperation({ summary: 'get total audio' })
   async getCountAudio(): Promise<number> {
     return await this.audioService.countAudio();

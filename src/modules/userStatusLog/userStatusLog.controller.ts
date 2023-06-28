@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Unprotected } from "nest-keycloak-connect";
 import { UserStatusLogEntity } from "./entity/userStatusLog.entity";
 import { UserLogService } from "./userStatusLog.service";
@@ -13,8 +13,8 @@ export default class UserLogController {
 
     @Get()
     @Unprotected()
+    @ApiOperation({ summary: 'get total user by status ' })
     async getUserStatusCount(
-
     ): Promise<UserStatusLogEntity> {
         return this.userLogService.countUserStatus();
     }

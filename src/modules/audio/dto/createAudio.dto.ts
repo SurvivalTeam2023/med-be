@@ -6,8 +6,11 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Validate,
 } from 'class-validator';
 import { AudioStatus } from '../../../common/enums/audioStatus.enum';
+import { Transform, Type } from 'class-transformer';
+import { FileTypeValidator } from 'src/decorator/fileType.decorator';
 
 export class CreateAudioDTO {
   @ApiProperty()
@@ -15,27 +18,26 @@ export class CreateAudioDTO {
   @IsString()
   name: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  imageUrl: string;
-
-  @ApiProperty({ enum: AudioStatus, default: AudioStatus.ACTIVE })
-  status: AudioStatus;
-
-  @IsNotEmpty()
-  @ApiProperty()
-  @IsString()
-  length: string;
-
-  @ApiProperty({ type: [Number] })
+  @ApiProperty({ type: [Number], required: false })
   @IsOptional()
-  @IsArray()
+  @IsNumber()
+  @Transform(({ value }) => value.split(','))
   playlistId: number[];
 
-  @IsNotEmpty()
   @ApiProperty({ type: [Number] })
   @IsArray()
+  @IsNumber()
+  @Transform(({ value }) => value.split(','))
   genreId: number[];
+
+  @ApiProperty({ type: 'string', format: 'binary' })
+  @Validate(FileTypeValidator, [['audio/mpeg', 'audio/wav']])
+  audio: Express.Multer.File;
+
+  @ApiProperty({ type: 'string', format: 'binary' })
+  @Validate(FileTypeValidator, [['image/jpeg']])
+  image: Express.Multer.File;
+
+
 }
 export default CreateAudioDTO;
