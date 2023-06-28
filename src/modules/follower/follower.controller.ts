@@ -19,4 +19,12 @@ export default class FollowerController {
     async followPlaylist(@RequestPayload() token: string, @Body() dto: CreateFollowerDTO): Promise<FollowerEntity> {
         return await this.followerService.followPlaylist(dto, token);
     }
+
+
+    @Get()
+    @Unprotected()
+    @ApiOperation({ summary: 'get followed playlist' })
+    async getfollowPlaylist(@RequestPayload() token: string): Promise<FollowerEntity> {
+        return await this.followerService.getFollowPlaylist(token);
+    }
 }

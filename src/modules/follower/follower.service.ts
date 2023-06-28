@@ -18,6 +18,19 @@ export default class FollowerService {
         private followerRepo: Repository<FollowerEntity>,
     ) { }
 
+
+    async getFollowPlaylist(token: string): Promise<any> {
+        const userId = getUserId(token)
+        const querybuilder = this.followerRepo
+            .createQueryBuilder('follower')
+            .leftJoinAndSelect('follower.playlist', 'playlist')
+            .leftJoinAndSelect('playlist.audioPlaylist', 'audioPlaylist')
+            .leftJoinAndSelect('audioPlaylist.audio', 'audio')
+            .select(['follower', 'playlist', 'audioPlaylist.id', 'audio'])
+            .where('follower.subscriber_id = :userId', { userId: userId })
+            .getMany();
+        return querybuilder;
+    }
     async followPlaylist(dto: CreateFollowerDTO, token: string): Promise<FollowerEntity> {
         let subscriberId = getUserId(token);
         const user = await this.entityManage.findOne(UserEntity, {

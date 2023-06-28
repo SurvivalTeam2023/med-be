@@ -1,20 +1,20 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import FavoriteService from './favorite.service';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Unprotected } from 'nest-keycloak-connect';
 import CreateFavoriteDTO from './dto/createFavorite.dto';
-import { FavoriteGenreEntity } from './entities/favorite.entity';
+import { FavoriteGenreEntity } from './entities/favoriteGenre.entity';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
+import FavoriteGenreService from './favoriteGenre.service';
 
 @ApiTags('Favorites')
 @Controller('favorite')
 @ApiBearerAuth()
 @Controller('rest/favorite')
-export default class FavoriteController {
-  constructor(private readonly favoriteService: FavoriteService) { }
+export default class FavoriteGenreController {
+  constructor(private readonly favoriteService: FavoriteGenreService) { }
 
-  @ApiOperation({ summary: 'create Favorite' })
+  @ApiOperation({ summary: 'create Favorite genre' })
   @Unprotected()
   @Post()
   async create(
@@ -24,14 +24,14 @@ export default class FavoriteController {
     return this.favoriteService.createFavorite(dto, token);
   }
 
-  @ApiOperation({ summary: 'delete Favorite' })
+  @ApiOperation({ summary: 'delete Favorite genre' })
   @Unprotected()
   @Delete(':id')
   async delete(@Param('id') id: number) {
     await this.favoriteService.deleteFavorite(id);
   }
 
-  @ApiOperation({ summary: 'find Favorite by userId' })
+  @ApiOperation({ summary: 'get Favorite genres by userId' })
   @Get(':userId')
   @Unprotected()
   async getAllFavorite(
@@ -46,8 +46,18 @@ export default class FavoriteController {
   async isFavoriteExisted(
     @RequestPayload() token: string,
   ): Promise<{ exists: boolean }> {
-    console.log('Received token:', token);
     const result = await this.favoriteService.isFavoriteExisted(token);
     return { exists: result.exists };
+  }
+
+  @ApiOperation({ summary: 'get favorite list' })
+  @Get('user/list')
+  @Unprotected()
+  async getFavorite(
+    @RequestPayload() token: string,
+  ): Promise<FavoriteGenreEntity[]> {
+
+    return await this.favoriteService.findAllFavorite(token);
+
   }
 }
