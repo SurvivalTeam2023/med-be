@@ -8,6 +8,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseFilePipe,
   ParseIntPipe,
   Post,
   Put,
@@ -69,9 +70,13 @@ export default class AudioController {
   @Unprotected()
   @ApiOperation({ summary: 'Create audio' })
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'audio', maxCount: 1 }, { name: 'image', maxCount: 5 },]))
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'audio', maxCount: 1 }, { name: 'image', maxCount: 1 },]))
   async createAudio(
-    @UploadedFiles() files: { audio?: Express.Multer.File, image?: Express.Multer.File[] },
+    @UploadedFiles(new ParseFilePipe({
+      validators: [
+
+      ]
+    })) files: { audio?: Express.Multer.File[], image?: Express.Multer.File[] },
     @Body() createAudioDto: CreateAudioDTO,
     @RequestPayload() token: string,
   ): Promise<AudioEntity> {

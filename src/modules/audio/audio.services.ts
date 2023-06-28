@@ -69,7 +69,7 @@ export default class AudioService {
     queryBuilder.orderBy('audio.created_at', 'DESC')
     return paginate<AudioEntity>(queryBuilder, option);
   }
-  async createAudio(dto: CreateAudioDTO, token: string, files: { audio?: Express.Multer.File, image?: Express.Multer.File[] }): Promise<AudioEntity> {
+  async createAudio(dto: CreateAudioDTO, token: string, files: { audio?: Express.Multer.File[], image?: Express.Multer.File[] }): Promise<AudioEntity> {
     try {
 
       let userId = getUserId(token);
@@ -85,15 +85,15 @@ export default class AudioService {
         return audioGenre;
       });
 
-      const audioFile = await this.fileService.uploadAudio(files.audio.buffer, files.audio.originalname, "med-audio")
-      const imagePromises = files.image.map(async img => {
-        const imageFile = await this.fileService.uploadAudio(img.buffer, img.originalname, "med-images")
-        return imageFile
-      })
-      const imageFiles = await Promise.all(imagePromises);
+      const audioFile = await this.fileService.uploadAudio(files.audio[0].buffer, files.audio[0].originalname, "med-audio")
 
-      const file: FileEntity[] = [audioFile, ...imageFiles];
+      const imageFile = await this.fileService.uploadAudio(files.image[0].buffer, files.image[0].originalname, "med-images")
+
+
+      const file: FileEntity[] = [audioFile, imageFile];
       const audioLength = await getAudioDurationInSeconds(audioFile.url)
+
+
 
       const entityData = this.audioRepository.create({
         ...dto,
@@ -102,7 +102,7 @@ export default class AudioService {
         audioGenre: audioGenres,
         file: file,
         length: audioLength.toString(),
-        imageUrl: "string"
+        imageUrl: imageFile.url
       })
       if (dto.playlistId) {
         const audioPlaylists = dto.playlistId.map((playlistId) => {
