@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { FileEntity } from './entities/file.entity';
 import { InjectAws } from 'aws-sdk-v3-nest/dist/index';
+import { getAudioDurationInSeconds } from 'get-audio-duration';
 @Injectable()
 export class FilesService {
   constructor(
@@ -25,6 +26,7 @@ export class FilesService {
           Bucket: BUCKET_NAME,
           Body: dataBuffer,
           Key: `${uuid()}-${filename}`,
+
         }
       }).done();
       const newFile = this.publicFilesRepository.create({
@@ -34,6 +36,31 @@ export class FilesService {
       await this.publicFilesRepository.save(newFile);
       return newFile;
     } catch (error) {
+    }
+  }
+
+  async uploadAudio(dataBuffer: Buffer, filename: string, folderName: string) {
+
+    try {
+      const uploadResult = await new Upload({
+        client: this.s3,
+
+        params: {
+          Bucket: BUCKET_NAME,
+          Body: dataBuffer,
+          Key: `${folderName}/${uuid()}-${filename}`,
+        }
+      }).done();
+
+      const newFile = this.publicFilesRepository.create({
+        key: uploadResult['Key'],
+        url: uploadResult['Location'],
+      });
+      await this.publicFilesRepository.save(newFile);
+      return newFile;
+    } catch (error) {
+      console.log(error);
+
     }
   }
 

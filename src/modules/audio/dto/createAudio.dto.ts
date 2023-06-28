@@ -8,6 +8,7 @@ import {
   IsString,
 } from 'class-validator';
 import { AudioStatus } from '../../../common/enums/audioStatus.enum';
+import { Transform, Type } from 'class-transformer';
 
 export class CreateAudioDTO {
   @ApiProperty()
@@ -15,27 +16,22 @@ export class CreateAudioDTO {
   @IsString()
   name: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  imageUrl: string;
-
-  @ApiProperty({ enum: AudioStatus, default: AudioStatus.ACTIVE })
-  status: AudioStatus;
-
-  @IsNotEmpty()
-  @ApiProperty()
-  @IsString()
-  length: string;
+  @ApiProperty({ type: [Number], required: false })
+  @IsOptional()
+  playlistId: number[];
 
   @ApiProperty({ type: [Number] })
   @IsOptional()
   @IsArray()
-  playlistId: number[];
-
-  @IsNotEmpty()
-  @ApiProperty({ type: [Number] })
-  @IsArray()
+  @Transform(({ value }) => value.split(','))
   genreId: number[];
+
+  @ApiProperty({ type: 'string', format: 'binary' })
+  audio: Express.Multer.File;
+
+  @ApiProperty({ type: 'string', format: 'binary' })
+  image: Express.Multer.File;
+
+
 }
 export default CreateAudioDTO;

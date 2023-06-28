@@ -49,11 +49,11 @@ export class AudioEntity extends BaseEntity {
   })
   public audioGenre: AudioGenreEntity[];
 
-  @OneToOne(() => FileEntity, (file) => file.audio, {
+  @OneToMany(() => FileEntity, (file) => file.audio, {
     cascade: true,
   })
   @JoinColumn({ name: 'file_id' })
-  public file: FileEntity;
+  public file: FileEntity[];
 
   @OneToMany(() => HistoryEntity, (history) => history.audioId, {
     cascade: true,

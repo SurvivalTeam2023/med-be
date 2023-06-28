@@ -39,6 +39,16 @@ export class FilesController {
     return this.fileService.uploadPublicFile(file.buffer, file.originalname);
   }
 
+  @Post('audio')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'upload file' })
+  // @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @Unprotected()
+  @ApiBody({
+    description: 'Upload image to with file extension jpg or png',
+    type: PublicFile,
+  })
   @Get('id')
   @Unprotected()
   @ApiOperation({ summary: 'get file' })

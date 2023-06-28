@@ -16,6 +16,7 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { getUserId } from 'src/utils/decode.utils';
 import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
+import GenreService from '../genre/genre.services';
 
 @Injectable()
 export default class PlaylistService {
@@ -124,4 +125,6 @@ export default class PlaylistService {
     await this.playlistRepository.save(playlist);
     return playlist;
   }
+
+
 }
