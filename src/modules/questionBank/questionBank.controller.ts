@@ -37,4 +37,14 @@ export default class QuestionBankController {
     async updateIsFinished(@Param('id') id: number): Promise<QuestionBankEntity> {
         return this.questionBankService.updateIsFinished(id)
     }
+
+    @ApiOperation({ summary: 'Get question bank by user' })
+    @Get('user')
+    @Unprotected()
+    async getQuestionBankByUser(
+        @RequestPayload() token: string,
+    ): Promise<QuestionBankEntity[]> {
+        return await this.questionBankService.getQuestionBankByUser(token);
+
+    }
 }
