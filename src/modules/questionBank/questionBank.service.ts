@@ -19,6 +19,18 @@ export default class QuestionBankService {
 
     ) { }
 
+    async getQuestionBankByUser(token: string): Promise<QuestionBankEntity[]> {
+        let userId = getUserId(token)
+        return await this.questionBankRepo.find({
+            where: {
+                userId: {
+                    id: userId
+                },
+                isFinished: true
+            }
+        })
+
+    }
     async createQuestionBank(token: string): Promise<QuestionBankEntity> {
         let userId = getUserId(token);
         const user = await this.entityManage.findOne(UserEntity, {
