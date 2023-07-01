@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { MentalHealthEntity } from 'src/modules/mentalHealth/entities/mentalHealth.entity';
 import { OptionEntity } from 'src/modules/option/entities/option.entity';
@@ -7,6 +7,7 @@ import { QuestionBankQuestionEntity } from 'src/modules/questionBankQuestion/ent
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
 import { QuestionMentalHealthEntity } from 'src/modules/questionMentalHealth/entities/questionMentalHealth.entity';
 import { QuestionStatus } from 'src/common/enums/questionStatus.enum';
+import { AgeEntity } from 'src/modules/age/entities/age.entity';
 
 @Entity('question')
 export class QuestionEntity extends BaseEntity {
@@ -38,4 +39,7 @@ export class QuestionEntity extends BaseEntity {
     (questionMentalHealth) => questionMentalHealth.question,
   )
   public questionMentalHealth: QuestionMentalHealthEntity[];
+
+  @ManyToOne(() => AgeEntity, (age) => age.question)
+  age: AgeEntity;
 }
