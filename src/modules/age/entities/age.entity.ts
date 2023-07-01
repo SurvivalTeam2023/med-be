@@ -1,5 +1,6 @@
+import { BaseEntity } from "src/common/base/base.entity";
 import { QuestionEntity } from "src/modules/question/entities/question.entity";
-import { Entity, BaseEntity, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany } from "typeorm";
 
 @Entity('age')
 export class AgeEntity extends BaseEntity {
