@@ -25,6 +25,8 @@ import GenreService from '../genre/genre.services';
 import { FilesService } from '../files/files.service';
 import getAudioDurationInSeconds from 'get-audio-duration';
 import { FileEntity } from '../files/entities/file.entity';
+import { AudioFileEntity } from '../audioFile/entities/audioFile.entity';
+import UserEntity from '../user/entities/user.entity';
 
 @Injectable()
 export default class AudioService {
@@ -57,7 +59,8 @@ export default class AudioService {
     const queryBuilder = this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
-      .leftJoinAndSelect('audio.file', 'file')
+      .leftJoinAndSelect('audio.audioFile', 'audioFile')
+      .leftJoinAndSelect('audioFile.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist');
     if (dto.name) queryBuilder.where('LOWER(audio.name) like :name', { name: `%${dto.name}%` }).orderBy('audio.created_at', 'DESC')
 
@@ -66,6 +69,7 @@ export default class AudioService {
     if (dto.playlistId) queryBuilder.andWhere('audio_playlist.playlist_id = :playlistId', { playlistId: dto.playlistId, }).orderBy('audio.created_at', 'DESC')
 
     if (dto.artistId) queryBuilder.andWhere('artist.id = :artistId', { artistId: dto.artistId, }).orderBy('audio.created_at', 'DESC')
+      .where('audioFile.is_primary = 1')
     queryBuilder.orderBy('audio.created_at', 'DESC')
     return paginate<AudioEntity>(queryBuilder, option);
   }
@@ -91,6 +95,12 @@ export default class AudioService {
 
 
       const file: FileEntity[] = [audioFile, imageFile];
+      const audioFiles = file.map((file) => {
+        const audioFile = new AudioFileEntity()
+        audioFile.file = file
+        audioFile.isPrimary = true
+        return audioFile
+      })
       const audioLength = await getAudioDurationInSeconds(audioFile.url)
 
 
@@ -100,7 +110,7 @@ export default class AudioService {
         artist: artist,
         status: AudioStatus.ACTIVE,
         audioGenre: audioGenres,
-        file: file,
+        audioFile: audioFiles,
         length: audioLength.toString(),
         imageUrl: imageFile.url
       })
