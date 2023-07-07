@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { AppHelper } from 'src/helpers/app.helper';
+
 @Catch()
 export class HttpExceptionFilter extends BaseExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): void {
@@ -34,7 +35,7 @@ export class HttpExceptionFilter extends BaseExceptionFilter {
         error,
       });
     }
-    return response.status(HttpStatus.INTERNAL_SERVER_ERROR).join({
+    return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       isSuccuss: false,
       code: response.INTERNAL_SERVER_ERROR,
       message: 'Something went wrong',
