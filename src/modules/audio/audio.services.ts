@@ -42,9 +42,11 @@ export default class AudioService {
     const entity = await this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
-      .leftJoinAndSelect('audio.file', 'files')
+      .leftJoinAndSelect('audio.audioFile', 'audioFile')
+      .leftJoinAndSelect('audioFile.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist')
       .where('audio.id = :audioId', { audioId })
+      .andWhere('audioFile.is_primary =  1')
       .getOne();
     if (!entity) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND);
@@ -61,7 +63,8 @@ export default class AudioService {
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
-      .leftJoinAndSelect('audio.artist', 'artist');
+      .leftJoinAndSelect('audio.artist', 'artist')
+      .where('audioFile.is_primary =  1')
     if (dto.name) queryBuilder.where('LOWER(audio.name) like :name', { name: `%${dto.name}%` }).orderBy('audio.created_at', 'DESC')
 
     if (dto.status) queryBuilder.andWhere('audio.status = :audioStatus', { audioStatus: dto.status }).orderBy('audio.created_at', 'DESC')
@@ -69,7 +72,7 @@ export default class AudioService {
     if (dto.playlistId) queryBuilder.andWhere('audio_playlist.playlist_id = :playlistId', { playlistId: dto.playlistId, }).orderBy('audio.created_at', 'DESC')
 
     if (dto.artistId) queryBuilder.andWhere('artist.id = :artistId', { artistId: dto.artistId, }).orderBy('audio.created_at', 'DESC')
-      .where('audioFile.is_primary = 1')
+
     queryBuilder.orderBy('audio.created_at', 'DESC')
     return paginate<AudioEntity>(queryBuilder, option);
   }
