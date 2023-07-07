@@ -59,7 +59,8 @@ export default class AudioService {
     const queryBuilder = this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
-      .leftJoinAndSelect('audio.file', 'file')
+      .leftJoinAndSelect('audio.audioFile', 'audioFile')
+      .leftJoinAndSelect('audioFile.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist');
     if (dto.name) queryBuilder.where('LOWER(audio.name) like :name', { name: `%${dto.name}%` }).orderBy('audio.created_at', 'DESC')
 
@@ -68,8 +69,7 @@ export default class AudioService {
     if (dto.playlistId) queryBuilder.andWhere('audio_playlist.playlist_id = :playlistId', { playlistId: dto.playlistId, }).orderBy('audio.created_at', 'DESC')
 
     if (dto.artistId) queryBuilder.andWhere('artist.id = :artistId', { artistId: dto.artistId, }).orderBy('audio.created_at', 'DESC')
-
-      .where('file.is_primary = 1')
+      .where('audioFile.is_primary = 1')
     queryBuilder.orderBy('audio.created_at', 'DESC')
     return paginate<AudioEntity>(queryBuilder, option);
   }
