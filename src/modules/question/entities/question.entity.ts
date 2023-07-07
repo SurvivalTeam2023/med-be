@@ -19,6 +19,9 @@ export class QuestionEntity extends BaseEntity {
   })
   public option: OptionEntity[];
 
+  @Column()
+  public default: boolean;
+
   @OneToMany(
     () => QuestionBankQuestionEntity,
     (questionBankQuestion) => questionBankQuestion.question,
@@ -41,5 +44,6 @@ export class QuestionEntity extends BaseEntity {
   public questionMentalHealth: QuestionMentalHealthEntity[];
 
   @ManyToOne(() => AgeEntity, (age) => age.question)
+  @JoinColumn({ name: 'age_id' })
   age: AgeEntity;
 }

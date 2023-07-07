@@ -21,9 +21,4 @@ export class OptionEntity extends BaseEntity {
     @ManyToOne(() => QuestionEntity, (question) => question.option)
     @JoinColumn({ name: 'question_id' })
     public question: QuestionEntity;
-
-    @OneToMany(() => ResultEntity, (result) => result.optionId, {
-        cascade: true,
-    })
-    public result: ResultEntity[];
 }

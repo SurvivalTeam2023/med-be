@@ -20,6 +20,7 @@ import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import ResultService from './result.service';
 import { ResultEntity } from './entities/result.entity';
 import CreateResultDTO from './dto/createResult.dto';
+import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 
 @ApiTags('Results')
 @Controller('result')
@@ -38,9 +39,9 @@ export default class ResultController {
     @Unprotected()
     @ApiOperation({ summary: 'create result after finish quiz' })
     async createResult(
-        @Body() dto: CreateResultDTO,
-    ): Promise<ResultEntity> {
-        return await this.resultService.createResult(dto);
+        @Body() dto: CreateResultDTO, @RequestPayload() token: string
+    ): Promise<{ mentalHealth: string, point: number }[]> {
+        return await this.resultService.createResult(dto, token);
     }
 
     @Delete(':id')

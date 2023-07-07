@@ -18,6 +18,7 @@ import { FileEntity } from '../../files/entities/file.entity';
 import { UpdateDateColumn } from 'typeorm/decorator/columns/UpdateDateColumn';
 import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/followedArtist.entity';
 import { FavoriteGenreEntity } from 'src/modules/favoriteGenre/entities/favoriteGenre.entity';
+import { ResultEntity } from 'src/modules/result/entities/result.entity';
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryColumn()
@@ -83,7 +84,7 @@ export class UserEntity {
   @UpdateDateColumn({ type: 'timestamp', name: 'last_updated_at' })
   public lastUpdatedAt: Date;
 
-  @OneToMany(() => QuestionBankEntity, (questionBank) => questionBank.userId, {
+  @OneToMany(() => QuestionBankEntity, (questionBank) => questionBank.user, {
     cascade: true,
   })
   questionBank: QuestionBankEntity[];
@@ -112,6 +113,11 @@ export class UserEntity {
     cascade: true,
   })
   followedArtist: FollowedArtistEntity[];
+
+  @OneToMany(() => ResultEntity, (result) => result.user, {
+    cascade: true,
+  })
+  result: ResultEntity[];
 
 }
 export default UserEntity;

@@ -29,6 +29,7 @@ export class MentalHealthEntity extends BaseEntity {
   )
   public questionMentalHealth: QuestionMentalHealthEntity[];
 
+
   @OneToMany(
     () => MentalHealthDegreeEntity,
     (mentalHealthDegree) => mentalHealthDegree.mentalHealth,

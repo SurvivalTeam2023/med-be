@@ -8,9 +8,6 @@ export class CreateResultDTO {
     @IsNumber()
     questionBankId: number;
 
-    @ApiProperty({ enum: ResultStatus, default: ResultStatus.ACTIVE })
-    status: ResultStatus;
-
     @ApiProperty({ type: Array })
     @IsArray()
     optionId: number[];
