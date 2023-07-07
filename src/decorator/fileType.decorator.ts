@@ -1,27 +1,22 @@
+import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
 import * as mime from 'mime-types';
-import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
 
-@ValidatorConstraint({ name: 'fileType', async: false })
-export class FileTypeValidator implements ValidatorConstraintInterface {
-    validate(value: Express.Multer.File[], args: ValidationArguments) {
-        if (!Array.isArray(value)) {
-            return false;
-        }
-
-        const allowedTypes: string[] = args.constraints[0];
-
-        for (const file of value) {
-            const fileType = mime.lookup(file.originalname);
-
-            if (!allowedTypes.includes(fileType)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    defaultMessage(args: ValidationArguments) {
-        return 'Invalid file type.';
-    }
+export function IsFileType(allowedTypes: string[], validationOptions?: ValidationOptions) {
+    return function (object: Object, propertyName: string) {
+        registerDecorator({
+            name: 'isFileType',
+            target: object.constructor,
+            propertyName: propertyName,
+            options: validationOptions,
+            validator: {
+                validate(value: Express.Multer.File, args: ValidationArguments) {
+                    if (!value) {
+                        return true; // Skip validation if value is not provided
+                    }
+                    const fileType = mime.lookup(value.originalname);
+                    return allowedTypes.includes(fileType);
+                },
+            },
+        });
+    };
 }
