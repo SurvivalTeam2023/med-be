@@ -70,17 +70,12 @@ export default class AudioController {
   @Unprotected()
   @ApiOperation({ summary: 'Create audio' })
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'audio', maxCount: 1 }, { name: 'image', maxCount: 1 },]))
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'audio', maxCount: 1 }, { name: 'image', maxCount: 1 }]))
   async createAudio(
-    @UploadedFiles(new ParseFilePipe({
-      validators: [
-
-      ]
-    })) files: { audio?: Express.Multer.File[], image?: Express.Multer.File[] },
+    @UploadedFiles() files: { audio?: Express.Multer.File[], image?: Express.Multer.File[] },
     @Body() createAudioDto: CreateAudioDTO,
     @RequestPayload() token: string,
   ): Promise<AudioEntity> {
-    console.log(createAudioDto);
 
     return this.audioService.createAudio(createAudioDto, token, files);
   }
