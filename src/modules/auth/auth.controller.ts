@@ -14,7 +14,7 @@ import { LoginGmailDTO } from './dto/loginGmail.dto';
 export class AuthController {
   constructor(private authService: AuthService) { }
 
-  @Post('token')
+  @Post('/login/token')
   @ApiOperation({ summary: 'api login to med-app' })
   @Unprotected()
   async login(@Body() loginDTO: LoginDTO) {
