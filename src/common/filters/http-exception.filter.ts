@@ -17,6 +17,7 @@ export class HttpExceptionFilter extends BaseExceptionFilter {
     new Logger('HttpExceptionFilter').error({ message, stack });
     new Logger('Raw-Exception').error(exception);
     if (exception instanceof HttpException) {
+      console.log('HttpException', exception);
       const status = exception.getStatus();
       const exceptionResponse = exception.getResponse() as any;
       const error = Array.isArray(exceptionResponse?.message)
