@@ -35,7 +35,7 @@ export class AuthService {
     private readonly httpService: HttpService,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
-  ) { }
+  ) {}
 
   async logout(
     username: string,
@@ -87,12 +87,20 @@ export class AuthService {
           },
         },
       )
-      .pipe(map((response) => response.data),
+      .pipe(
+        map((response) => response.data),
         catchError((err) => {
-          if (err.response.status == "400")
-            return of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.KEYCLOAK.NOT_VERIFY_EMAIL))
-          if (err.response.status == "401")
-            return of(ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND))
+          console.error(err);
+          if (err.response.status == '400')
+            return of(
+              ErrorHelper.UnAuthorizeException(
+                ERROR_MESSAGE.KEYCLOAK.NOT_VERIFY_EMAIL,
+              ),
+            );
+          if (err.response.status == '401')
+            return of(
+              ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND),
+            );
         }),
       );
   }
@@ -115,12 +123,19 @@ export class AuthService {
           },
         },
       )
-      .pipe(map((response) => response.data.refresh_token),
+      .pipe(
+        map((response) => response.data.refresh_token),
         catchError((err) => {
-          if (err.response.status == "400")
-            return of(ErrorHelper.UnAuthorizeException(ERROR_MESSAGE.KEYCLOAK.NOT_VERIFY_EMAIL))
-          if (err.response.status == "401")
-            return of(ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND))
+          if (err.response.status == '400')
+            return of(
+              ErrorHelper.UnAuthorizeException(
+                ERROR_MESSAGE.KEYCLOAK.NOT_VERIFY_EMAIL,
+              ),
+            );
+          if (err.response.status == '401')
+            return of(
+              ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND),
+            );
         }),
       );
   }
@@ -154,7 +169,13 @@ export class AuthService {
         },
       )
       .pipe(map((response) => response.data))
-      .pipe(catchError((err) => of(ErrorHelper.BadRequestException(ERROR_MESSAGE.USER.SOMETHING_WRONG))));
+      .pipe(
+        catchError((err) =>
+          of(
+            ErrorHelper.BadRequestException(ERROR_MESSAGE.USER.SOMETHING_WRONG),
+          ),
+        ),
+      );
   }
 
   async changePassword(name: string): Promise<Observable<AxiosResponse<[]>>> {
@@ -180,7 +201,9 @@ export class AuthService {
       .pipe(map((response) => response.data))
       .pipe(
         catchError((err) =>
-          of(ErrorHelper.BadRequestException(ERROR_MESSAGE.USER.SOMETHING_WRONG)),
+          of(
+            ErrorHelper.BadRequestException(ERROR_MESSAGE.USER.SOMETHING_WRONG),
+          ),
         ),
       );
   }
