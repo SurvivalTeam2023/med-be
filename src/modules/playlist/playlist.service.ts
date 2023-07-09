@@ -76,7 +76,7 @@ export default class PlaylistService {
     dto: CreatePlaylistDto,
     token: string,
   ): Promise<PlaylistEntity> {
-    let authorId = getUserId(token);
+    const authorId = getUserId(token);
     const playlist = await this.playlistRepository.save({
       ...dto,
       status: PlaylistStatus.ACTIVE,
