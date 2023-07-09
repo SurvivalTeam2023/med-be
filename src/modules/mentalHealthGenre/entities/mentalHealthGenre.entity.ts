@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { GenreEntity } from 'src/modules/genre/entities/genre.entity';

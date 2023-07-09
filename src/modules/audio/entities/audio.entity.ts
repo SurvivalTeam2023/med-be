@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Column,
   Entity,
@@ -37,7 +36,6 @@ export class AudioEntity extends BaseEntity {
   @Column({ default: 0 })
   public liked: number;
 
-
   @OneToMany(
     () => AudioPlaylistEntity,
     (audioPlaylist) => audioPlaylist.audio,
@@ -50,7 +48,6 @@ export class AudioEntity extends BaseEntity {
   })
   public audioGenre: AudioGenreEntity[];
 
-
   @OneToMany(() => HistoryEntity, (history) => history.audio, {
     cascade: true,
   })
@@ -59,7 +56,9 @@ export class AudioEntity extends BaseEntity {
   @OneToMany(() => AccessEntity, (access) => access.audioId, { cascade: true })
   access: AccessEntity[];
 
-  @OneToMany(() => AudioFileEntity, (audioFile) => audioFile.audio, { cascade: true })
+  @OneToMany(() => AudioFileEntity, (audioFile) => audioFile.audio, {
+    cascade: true,
+  })
   audioFile: AudioFileEntity[];
 
   @ManyToOne(() => ArtistEntity, (artist) => artist.audios)

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
@@ -125,6 +124,4 @@ export default class PlaylistService {
     await this.playlistRepository.save(playlist);
     return playlist;
   }
-
-
 }

@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FavoriteGenreEntity } from './entities/favoriteGenre.entity';
+import { FavoriteEntity } from './entities/favorite.entity';
 import { DeleteResult, EntityManager, In, Repository } from 'typeorm';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 import { ErrorHelper } from 'src/helpers/error.helper';
@@ -13,21 +13,17 @@ import { GenreEntity } from '../genre/entities/genre.entity';
 import { FavoriteStatus } from 'src/common/enums/favoriteStatus.enum';
 import { getUserId } from 'src/utils/decode.utils';
 @Injectable()
-export default class FavoriteGenreService {
+export default class FavoriteService {
   constructor(
-    @InjectRepository(FavoriteGenreEntity)
-    private favoriteRepo: Repository<FavoriteGenreEntity>,
+    @InjectRepository(FavoriteEntity)
+    private favoriteRepo: Repository<FavoriteEntity>,
     private readonly entityManage: EntityManager,
   ) {}
-  async findAllFavorite(token: string): Promise<FavoriteGenreEntity[]> {
-    const userId = getUserId(token);
+  async findAllFavorite(userId: string): Promise<FavoriteEntity[]> {
     const querybuilder = this.favoriteRepo
-      .createQueryBuilder('favorite_genre')
-      .leftJoinAndSelect('favorite_genre.genre', 'genre')
-      .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
-      .leftJoinAndSelect('audioGenre.audio', 'audio')
-      .select(['favorite_genre', 'genre', 'audioGenre.id', 'audio'])
-      .where('favorite_genre.user_id = :userId', { userId: userId })
+      .createQueryBuilder('favorite')
+      .leftJoinAndSelect('favorite.genre', 'genre')
+      .where('favorite.user_id = :user_id', { user_id: userId })
       .getMany();
     return querybuilder;
   }
@@ -35,7 +31,7 @@ export default class FavoriteGenreService {
   async createFavorite(
     dto: CreateFavoriteDTO,
     token: string,
-  ): Promise<FavoriteGenreEntity[]> {
+  ): Promise<FavoriteEntity[]> {
     let userId = getUserId(token);
     const user = await this.entityManage.findOne(UserEntity, {
       where: { id: userId },
@@ -49,7 +45,7 @@ export default class FavoriteGenreService {
     if (!genres) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
     }
-    const favorites: FavoriteGenreEntity[] = [];
+    const favorites: FavoriteEntity[] = [];
     for (const genre of genres) {
       const favorite = await this.favoriteRepo.save({
         user: user,
@@ -59,7 +55,7 @@ export default class FavoriteGenreService {
     }
     return favorites;
   }
-  async deleteFavorite(favoriteId: number): Promise<FavoriteGenreEntity> {
+  async deleteFavorite(favoriteId: number): Promise<FavoriteEntity> {
     const favorite = await this.favoriteRepo.findOne({
       where: { id: favoriteId },
     });
@@ -73,10 +69,11 @@ export default class FavoriteGenreService {
   async isFavoriteExisted(token: string): Promise<{ exists: boolean }> {
     let userId = getUserId(token);
     const querybuilder = this.favoriteRepo
-      .createQueryBuilder('favorite_genre')
-      .leftJoinAndSelect('favorite_genre.genre', 'genre')
-      .where('favorite_genre.user_id = :user_id', { user_id: userId })
+      .createQueryBuilder('favorite')
+      .leftJoinAndSelect('favorite.genre', 'genre')
+      .where('favorite.user_id = :user_id', { user_id: userId })
       .getMany();
+    // return querybuilder;
     const favorites = await querybuilder;
     const exists = favorites.length > 0;
     return { exists };

@@ -1,5 +1,9 @@
-/* eslint-disable prettier/prettier */
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -9,7 +13,7 @@ import {
   Post,
   Put,
   Patch,
-  Query
+  Query,
 } from '@nestjs/common';
 
 import GenreService from './genre.services';
@@ -24,7 +28,7 @@ import { Emotion } from '@aws-sdk/client-rekognition';
 @Controller('genres')
 @ApiBearerAuth()
 export default class GenreController {
-  constructor(private readonly genreService: GenreService) { }
+  constructor(private readonly genreService: GenreService) {}
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
@@ -37,9 +41,9 @@ export default class GenreController {
   @Unprotected()
   @ApiOperation({ summary: 'get genre list' })
   @ApiQuery({
-    name: "name",
+    name: 'name',
     type: String,
-    required: false
+    required: false,
   })
   async getGenres(@Query('name') name: string): Promise<GenreEntity[]> {
     return this.genreService.findGenres(name);
@@ -49,7 +53,7 @@ export default class GenreController {
   @Unprotected()
   @ApiOperation({ summary: 'get genre by emotion' })
   async getGenreByEmotion(@Body() emotions: Emotion[]) {
-    return await this.genreService.getGenreByEmotion(emotions)
+    return await this.genreService.getGenreByEmotion(emotions);
   }
 
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
@@ -78,7 +82,9 @@ export default class GenreController {
   @Get('/questionBank/:id')
   @Unprotected()
   @ApiOperation({ summary: 'get genre by result from quiz' })
-  async getGenreByResult(@Param('id') questionBankId: number): Promise<GenreEntity[]> {
-    return await this.genreService.getGenreByResult(questionBankId)
+  async getGenreByResult(
+    @Param('id') questionBankId: number,
+  ): Promise<GenreEntity[]> {
+    return await this.genreService.getGenreByResult(questionBankId);
   }
 }

@@ -4,8 +4,8 @@ import { GenreEntity } from 'src/modules/genre/entities/genre.entity';
 import UserEntity from 'src/modules/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
-@Entity('favorite_genre')
-export class FavoriteGenreEntity extends BaseEntity {
+@Entity('favorite')
+export class FavoriteEntity extends BaseEntity {
   @Column({
     type: 'enum',
     enum: FavoriteStatus,

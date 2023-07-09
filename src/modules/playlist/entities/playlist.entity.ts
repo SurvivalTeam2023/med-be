@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { BaseEntity } from 'src/common/base/base.entity';
 import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
 import { AudioPlaylistEntity } from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
@@ -29,7 +28,7 @@ export class PlaylistEntity extends BaseEntity {
   @Column({
     type: 'enum',
     enum: PlaylistPublic,
-    name: "is_public"
+    name: 'is_public',
   })
   public isPublic: PlaylistPublic;
 
@@ -42,7 +41,7 @@ export class PlaylistEntity extends BaseEntity {
   @Column({
     type: 'enum',
     enum: PlaylistType,
-    name: "playlist_type"
+    name: 'playlist_type',
   })
   public playlistType: PlaylistType;
 
@@ -50,5 +49,4 @@ export class PlaylistEntity extends BaseEntity {
     cascade: true,
   })
   follower: FollowerEntity;
-
 }
