@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
 import AudioPlaylistDto from 'src/modules/audio/dto/audioPlaylist.dto';
 import { AudioStatus } from '../../../common/enums/audioStatus.enum';

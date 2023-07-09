@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 export const ERROR_MESSAGE = {
   PLAYLIST: {
     NOT_FOUND: 'Playlist not found!',
@@ -34,11 +33,11 @@ export const ERROR_MESSAGE = {
     NOT_FOUND: 'Option not found!',
   },
   RESULT: {
-    NOT_FOUND: 'Result not found'
+    NOT_FOUND: 'Result not found',
   },
   QUESTION_BANK: {
     NOT_FOUND: 'Question bank not found',
-    IS_FINISHED: "Question bank already finish by this user"
+    IS_FINISHED: 'Question bank already finish by this user',
   },
   MENTAL_HEALTH: {
     NOT_FOUND: 'Mental health not found!',
@@ -50,7 +49,7 @@ export const ERROR_MESSAGE = {
     NOT_FOUND: 'User not found!',
     UNDER_AGES: 'User must over 12 year old!',
     UNVERIFIED_EMAIL: 'Please verify your email',
-    SOMETHING_WRONG: "Something went wrong"
+    SOMETHING_WRONG: 'Something went wrong',
   },
   KEYCLOAK: {
     SERVER_DEAD: 'Something went wrong, Keycloaks server',
@@ -59,7 +58,7 @@ export const ERROR_MESSAGE = {
     ROLE_ASSIGN: 'Unable to assign role to user',
     ROLE_NAME: 'Unable to find role name',
     USER_NAME: 'Unable to find username',
-    SOMETHING_WRONG: "Something went wrong",
-    INVALID_TOKEN:"Invalid Token"
+    SOMETHING_WRONG: 'Something went wrong',
+    INVALID_TOKEN: 'Invalid Token',
   },
 };

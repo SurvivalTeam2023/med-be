@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import FavoriteService from './favorite.service';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';

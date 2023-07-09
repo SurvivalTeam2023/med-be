@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -23,14 +22,9 @@ const KEYCLOAK_ADMIN_PASSWORD: string =
   process.env.KEYCLOAK_ADMIN_PASSWORD || '123456';
 
 //paypal config
-const PAYPAL_PRODUCT_ID: string =
-  process.env.PAYPAL_PRODUCT_ID || 'null';
-const PAYPAL_CLIENT_ID: string =
-  process.env.PAYPAL_CLIENT_ID ||
-  'null';
-const PAYPAL_CLIENT_SECRET: string =
-  process.env.PAYPAL_CLIENT_SECRET ||
-  'null';
+const PAYPAL_PRODUCT_ID: string = process.env.PAYPAL_PRODUCT_ID || 'null';
+const PAYPAL_CLIENT_ID: string = process.env.PAYPAL_CLIENT_ID || 'null';
+const PAYPAL_CLIENT_SECRET: string = process.env.PAYPAL_CLIENT_SECRET || 'null';
 const PAYPAL_URL: string =
   process.env.PAYPAL_URL || 'https://api-m.sandbox.paypal.com';
 

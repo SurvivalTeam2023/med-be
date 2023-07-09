@@ -1,9 +1,6 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable prefer-const */
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FavoriteEntity } from './entities/favorite.entity';
@@ -21,7 +18,7 @@ export default class FavoriteService {
     @InjectRepository(FavoriteEntity)
     private favoriteRepo: Repository<FavoriteEntity>,
     private readonly entityManage: EntityManager,
-  ) { }
+  ) {}
   async findAllFavorite(userId: string): Promise<FavoriteEntity[]> {
     const querybuilder = this.favoriteRepo
       .createQueryBuilder('favorite')

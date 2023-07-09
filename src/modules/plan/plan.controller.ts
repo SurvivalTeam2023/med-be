@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   Body,
@@ -22,31 +21,23 @@ import UpdatePlanDTO from './dto/updatePlan.dto';
 @Controller('plans')
 @ApiBearerAuth()
 export default class PlanController {
-  constructor(
-    private readonly planService: PlanService,
-  ) { }
+  constructor(private readonly planService: PlanService) {}
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
-  async getPlanById(
-    @Param('id') id: string,
-  ): Promise<PlanEntity> {
+  async getPlanById(@Param('id') id: string): Promise<PlanEntity> {
     return this.planService.findPlanById(id);
   }
 
   @Get()
   @Unprotected()
-  async getPlans(
-    @Query() dto: SearchPlanDTO,
-  ): Promise<PlanEntity[]> {
+  async getPlans(@Query() dto: SearchPlanDTO): Promise<PlanEntity[]> {
     return this.planService.findPlan(dto);
   }
 
   @Post()
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
-  async createPlan(
-    @Body() dto: CreatePlanDTO,
-  ): Promise<PlanEntity> {
+  async createPlan(@Body() dto: CreatePlanDTO): Promise<PlanEntity> {
     return this.planService.createPlan(dto);
   }
 
@@ -56,10 +47,7 @@ export default class PlanController {
     @Param('id') id: string,
     @Body() updateSubscriptionDTO: UpdatePlanDTO,
   ): Promise<PlanEntity> {
-    return await this.planService.updatePlan(
-      id,
-      updateSubscriptionDTO,
-    );
+    return await this.planService.updatePlan(id, updateSubscriptionDTO);
   }
 
   @Delete(':id')

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Column,
   Entity,
@@ -35,7 +34,6 @@ export class AudioEntity extends BaseEntity {
 
   @Column({ default: 0 })
   public liked: number;
-
 
   @OneToMany(
     () => AudioPlaylistEntity,

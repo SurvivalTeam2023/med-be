@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -28,7 +26,7 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 @Controller('playlist')
 @ApiBearerAuth()
 export default class PlaylistController {
-  constructor(private readonly playlistService: PlaylistService) { }
+  constructor(private readonly playlistService: PlaylistService) {}
 
   @Get(':id')
   @Unprotected()
@@ -64,7 +62,8 @@ export default class PlaylistController {
   @Post()
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.USER] })
   async createPlaylist(
-    @Body() createPlaylistDto: CreatePlaylistDto, @RequestPayload() token: string
+    @Body() createPlaylistDto: CreatePlaylistDto,
+    @RequestPayload() token: string,
   ): Promise<PlaylistEntity> {
     return await this.playlistService.createPlaylist(createPlaylistDto, token);
   }

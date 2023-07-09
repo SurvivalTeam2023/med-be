@@ -1,6 +1,11 @@
-/* eslint-disable prettier/prettier */
 import { AudioEntity } from 'src/modules/audio/entities/audio.entity';
-import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('file')
 export class FileEntity {

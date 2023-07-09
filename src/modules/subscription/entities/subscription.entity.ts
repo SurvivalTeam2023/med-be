@@ -1,9 +1,17 @@
-/* eslint-disable prettier/prettier */
 import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
 import { AccessEntity } from 'src/modules/access/entities/access.entity';
 import { PlanEntity } from 'src/modules/plan/entities/plan.entity';
 import UserEntity from 'src/modules/user/entities/user.entity';
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('subscription')
 export class SubscriptionEntity {
@@ -26,10 +34,7 @@ export class SubscriptionEntity {
   })
   public status: SubscriptionStatus;
 
-  @ManyToOne(
-    () => PlanEntity,
-    (plan) => plan.subscription,
-  )
+  @ManyToOne(() => PlanEntity, (plan) => plan.subscription)
   @JoinColumn({ name: 'plan_id' })
   public plan: PlanEntity;
 

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { Unprotected, Roles } from 'nest-keycloak-connect';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -12,7 +11,7 @@ import { LoginGmailDTO } from './dto/loginGmail.dto';
 @Controller('auth')
 @ApiBearerAuth()
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @Post('token')
   @ApiOperation({ summary: 'api login to med-app' })
@@ -59,9 +58,7 @@ export class AuthController {
   @Put()
   @ApiOperation({ summary: 'forgot password' })
   @Unprotected()
-  async forgetPassword(
-    @Param('username') username: string,
-  ) {
+  async forgetPassword(@Param('username') username: string) {
     return this.authService.forgetPassword(username);
   }
 }

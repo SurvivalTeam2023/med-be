@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { BaseEntity } from 'src/common/base/base.entity';
 import { FavoriteStatus } from 'src/common/enums/favoriteStatus.enum';
 import { GenreEntity } from 'src/modules/genre/entities/genre.entity';

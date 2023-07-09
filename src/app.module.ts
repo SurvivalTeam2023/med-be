@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { FilesModules } from './modules/files/file.module';
 import { TypeOrmConfigModule } from './common/typeorm/typeorm.module';
@@ -27,7 +26,6 @@ import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.modul
 import { FollowedArtistModule } from './modules/followedArtist/followedArtist.module';
 import { WalletModule } from './modules/wallet/wallet.module';
 
-
 @Module({
   imports: [
     TypeOrmConfigModule,
@@ -55,9 +53,9 @@ import { WalletModule } from './modules/wallet/wallet.module';
     ArtistModule,
     FollowedArtistModule,
     UserLogModule,
-    WalletModule
+    WalletModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

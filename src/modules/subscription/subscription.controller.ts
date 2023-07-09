@@ -1,7 +1,10 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-/* eslint-disable prettier/prettier */
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -28,7 +31,7 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 @Controller('subscriptions')
 @ApiBearerAuth()
 export default class SubscriptionController {
-  constructor(private readonly subscriptionService: SubscriptionService) { }
+  constructor(private readonly subscriptionService: SubscriptionService) {}
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
@@ -64,15 +67,14 @@ export default class SubscriptionController {
   @ApiOperation({ summary: 'create subscription' })
   @Post()
   async createSubscription(
-    @Body() dto: CreateSubscriptionDTO, @RequestPayload() token: string
+    @Body() dto: CreateSubscriptionDTO,
+    @RequestPayload() token: string,
   ): Promise<any> {
     return this.subscriptionService.createSubscription(dto, token);
   }
   @Post(':id')
   @ApiOperation({ summary: 'activate subscription' })
-  async activateSubscription(
-    @Param('id') id: string,
-  ) {
+  async activateSubscription(@Param('id') id: string) {
     return this.subscriptionService.activateSubscription(id);
   }
   @Put(':id')

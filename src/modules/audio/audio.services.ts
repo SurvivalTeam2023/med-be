@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
@@ -28,7 +27,7 @@ export default class AudioService {
     private readonly entityManage: EntityManager,
     @InjectRepository(AudioEntity)
     private audioRepository: Repository<AudioEntity>,
-  ) { }
+  ) {}
 
   async findAudioById(audioId: number): Promise<AudioEntity> {
     const entity = await this.audioRepository
@@ -53,14 +52,28 @@ export default class AudioService {
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
       .leftJoinAndSelect('audio.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist');
-    if (dto.name) queryBuilder.where('LOWER(audio.name) like :name', { name: `%${dto.name}%` }).orderBy('audio.created_at', 'DESC')
+    if (dto.name)
+      queryBuilder
+        .where('LOWER(audio.name) like :name', { name: `%${dto.name}%` })
+        .orderBy('audio.created_at', 'DESC');
 
-    if (dto.status) queryBuilder.andWhere('audio.status = :audioStatus', { audioStatus: dto.status }).orderBy('audio.created_at', 'DESC')
+    if (dto.status)
+      queryBuilder
+        .andWhere('audio.status = :audioStatus', { audioStatus: dto.status })
+        .orderBy('audio.created_at', 'DESC');
 
-    if (dto.playlistId) queryBuilder.andWhere('audio_playlist.playlist_id = :playlistId', { playlistId: dto.playlistId, }).orderBy('audio.created_at', 'DESC')
+    if (dto.playlistId)
+      queryBuilder
+        .andWhere('audio_playlist.playlist_id = :playlistId', {
+          playlistId: dto.playlistId,
+        })
+        .orderBy('audio.created_at', 'DESC');
 
-    if (dto.artistId) queryBuilder.andWhere('artist.id = :artistId', { artistId: dto.artistId, }).orderBy('audio.created_at', 'DESC')
-    queryBuilder.orderBy('audio.created_at', 'DESC')
+    if (dto.artistId)
+      queryBuilder
+        .andWhere('artist.id = :artistId', { artistId: dto.artistId })
+        .orderBy('audio.created_at', 'DESC');
+    queryBuilder.orderBy('audio.created_at', 'DESC');
     return paginate<AudioEntity>(queryBuilder, option);
   }
   async createAudio(dto: CreateAudioDTO, token: string): Promise<AudioEntity> {
@@ -85,7 +98,7 @@ export default class AudioService {
       ...dto,
       audioPlaylist: audioPlaylists,
       artist: artist,
-      audioGenre: audioGenres
+      audioGenre: audioGenres,
     });
     return entity;
   }
@@ -104,7 +117,7 @@ export default class AudioService {
     });
     return updatedAudio;
   }
-  
+
   async deleteAudio(audioId: number): Promise<AudioEntity> {
     const entity = await this.audioRepository.findOne({
       where: { id: audioId },
@@ -116,6 +129,6 @@ export default class AudioService {
     return entity;
   }
   async countAudio(): Promise<number> {
-    return this.audioRepository.count()
+    return this.audioRepository.count();
   }
 }

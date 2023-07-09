@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -28,7 +26,7 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 @Controller('audio')
 @ApiBearerAuth()
 export default class AudioController {
-  constructor(private readonly audioService: AudioService) { }
+  constructor(private readonly audioService: AudioService) {}
 
   @Get(':id')
   // @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
@@ -62,7 +60,8 @@ export default class AudioController {
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
   @Post()
   async createAudio(
-    @Body() createAudioDto: CreateAudioDTO, @RequestPayload() token: string
+    @Body() createAudioDto: CreateAudioDTO,
+    @RequestPayload() token: string,
   ): Promise<AudioEntity> {
     return this.audioService.createAudio(createAudioDto, token);
   }

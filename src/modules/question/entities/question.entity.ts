@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { MentalHealthEntity } from 'src/modules/mentalHealth/entities/mentalHealth.entity';
@@ -29,7 +28,7 @@ export class QuestionEntity extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: QuestionStatus
+    enum: QuestionStatus,
   })
   public status: QuestionStatus;
 
