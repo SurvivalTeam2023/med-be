@@ -9,13 +9,13 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 @Controller('recommendation')
 @ApiBearerAuth()
 export default class RecommendationController {
-  constructor(private readonly recommendationService: RecommendationService) {}
+  constructor(private readonly recommendationService: RecommendationService) { }
 
   @Get(':id')
   @ApiOperation({ summary: 'get recommendation by userId' })
   @Unprotected()
   async getResultById(@RequestPayload() token: string): Promise<any> {
-    const userId = getUserId(token);
+    const userId = "a582937b-f5a4-45cb-be6a-51ee41bcdc84";
     return await this.recommendationService.getRecommendationsService(userId);
   }
 }
