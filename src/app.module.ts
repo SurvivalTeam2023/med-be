@@ -27,7 +27,7 @@ import { FollowedArtistModule } from './modules/followedArtist/followedArtist.mo
 import { WalletModule } from './modules/wallet/wallet.module';
 import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
 import { FavoriteGenreModule } from './modules/favoriteGenre/favoriteGenre.module';
-
+import { RecommandationModule } from './modules/recommandations/recommendations.module';
 
 @Module({
   imports: [
@@ -57,9 +57,10 @@ import { FavoriteGenreModule } from './modules/favoriteGenre/favoriteGenre.modul
     FollowedArtistModule,
     UserLogModule,
     WalletModule,
-    HealthCheckModule
+    HealthCheckModule,
+    RecommandationModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
