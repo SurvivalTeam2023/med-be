@@ -26,7 +26,9 @@ export default class FollowerService {
             .leftJoinAndSelect('follower.playlist', 'playlist')
             .leftJoinAndSelect('playlist.audioPlaylist', 'audioPlaylist')
             .leftJoinAndSelect('audioPlaylist.audio', 'audio')
-            .select(['follower', 'playlist', 'audioPlaylist.id', 'audio'])
+            .leftJoinAndSelect('audio.audioFile', 'audioFile')
+            .leftJoinAndSelect('audioFile.file', 'file')
+            .select(['follower', 'playlist', 'audioPlaylist.id', 'audio', 'audioFile', 'file'])
             .where('follower.subscriber_id = :userId', { userId: userId })
             .getMany();
         return querybuilder;
