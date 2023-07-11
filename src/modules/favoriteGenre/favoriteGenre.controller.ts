@@ -31,7 +31,7 @@ export default class FavoriteGenreController {
     await this.favoriteService.deleteFavorite(id);
   }
 
-  @ApiOperation({ summary: 'get Favorite genres by userId' })
+  @ApiOperation({ summary: 'get Favorite genres list by userId' })
   @Get(':userId')
   @Unprotected()
   async getAllFavorite(
@@ -50,14 +50,4 @@ export default class FavoriteGenreController {
     return { exists: result.exists };
   }
 
-  @ApiOperation({ summary: 'get favorite list' })
-  @Get('user/list')
-  @Unprotected()
-  async getFavorite(
-    @RequestPayload() token: string,
-  ): Promise<FavoriteGenreEntity[]> {
-
-    return await this.favoriteService.findAllFavorite(token);
-
-  }
 }
