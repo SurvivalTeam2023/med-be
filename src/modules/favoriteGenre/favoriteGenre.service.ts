@@ -26,6 +26,8 @@ export default class FavoriteGenreService {
       .leftJoinAndSelect('favorite_genre.genre', 'genre')
       .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
       .leftJoinAndSelect('audioGenre.audio', 'audio')
+      .leftJoinAndSelect('audio.audioFile', 'audioFile')
+      .leftJoinAndSelect('audioFile.file', 'file')
       .select(['favorite_genre', 'genre', 'audioGenre.id', 'audio'])
       .where('favorite_genre.user_id = :userId', { userId: userId })
       .getMany();
