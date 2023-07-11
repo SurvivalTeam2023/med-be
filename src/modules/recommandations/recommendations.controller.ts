@@ -18,4 +18,12 @@ export default class RecommendationController {
     const userId = "a582937b-f5a4-45cb-be6a-51ee41bcdc84";
     return await this.recommendationService.getRecommendationsService(userId);
   }
+
+  @Get('genre/:id')
+  @ApiOperation({ summary: 'get recommendation by genreId' })
+  @Unprotected()
+  async getResultByGenreId(@Param('id') genreId: number, @RequestPayload() token: string): Promise<any> {
+    const userId = "a582937b-f5a4-45cb-be6a-51ee41bcdc84";
+    return await this.recommendationService.getRecommendationsByGenre(genreId);
+  }
 }

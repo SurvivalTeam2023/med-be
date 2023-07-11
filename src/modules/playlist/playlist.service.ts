@@ -24,14 +24,15 @@ export default class PlaylistService {
     private readonly entityManage: EntityManager,
     @InjectRepository(PlaylistEntity)
     private playlistRepository: Repository<PlaylistEntity>,
-  ) {}
+  ) { }
 
   async findPlaylistById(playlistId: number): Promise<PlaylistEntity> {
     const playList = await this.playlistRepository
       .createQueryBuilder('playlist')
       .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
       .leftJoinAndSelect('audio_playlist.audio', 'audio')
-      .leftJoinAndSelect('audio.file', 'files')
+      .leftJoinAndSelect('audio.audioFile', 'audioFile')
+      .leftJoinAndSelect('audioFile.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist')
       .where('playlist.id = :playlistId', { playlistId: playlistId })
       .getOne();

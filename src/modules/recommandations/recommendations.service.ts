@@ -35,4 +35,49 @@ export default class RecommendationService {
 
     return audioList;
   }
+  async getRecommendationsByGenre(genreId: number): Promise<[]> {
+    console.log(genreId, 'genre');
+    const url = AI_SERVICE_URL + '/recommendation/genre/?genre_id=' + genreId;
+    console.log(url);
+
+    const listRecommendAudio = await firstValueFrom(
+      this.httpService.get(url).pipe(
+        map((response) => response.data),
+        catchError((err) => {
+          return err;
+        }),
+      ),
+    )
+    // const audioList = this.resultRepo.createQueryBuilder('audio')
+    //   .leftJoin('audio.audioFile', 'audioFile')
+    //   .leftJoin('audioFile.file', 'file')
+    //   .select(['audio', 'audioFile', 'file.url'])
+    //   .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
+    //   .getMany()
+
+    return listRecommendAudio;
+  }
+
+  async getRecommendationsByAudio(genreId: number): Promise<[]> {
+    console.log(genreId, 'genre');
+    const url = AI_SERVICE_URL + '/recommendation/genre/?genre_id=' + genreId;
+    console.log(url);
+
+    const listRecommendAudio = await firstValueFrom(
+      this.httpService.get(url).pipe(
+        map((response) => response.data),
+        catchError((err) => {
+          return err;
+        }),
+      ),
+    )
+    // const audioList = this.resultRepo.createQueryBuilder('audio')
+    //   .leftJoin('audio.audioFile', 'audioFile')
+    //   .leftJoin('audioFile.file', 'file')
+    //   .select(['audio', 'audioFile', 'file.url'])
+    //   .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
+    //   .getMany()
+
+    return listRecommendAudio;
+  }
 }
