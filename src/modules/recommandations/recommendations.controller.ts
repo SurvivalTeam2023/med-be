@@ -11,7 +11,7 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 export default class RecommendationController {
   constructor(private readonly recommendationService: RecommendationService) { }
 
-  @Get(':id')
+  @Get('user/:id')
   @ApiOperation({ summary: 'get recommendation by userId' })
   @Unprotected()
   async getResultById(@RequestPayload() token: string): Promise<any> {
@@ -25,5 +25,13 @@ export default class RecommendationController {
   async getResultByGenreId(@Param('id') genreId: number, @RequestPayload() token: string): Promise<any> {
     const userId = "a582937b-f5a4-45cb-be6a-51ee41bcdc84";
     return await this.recommendationService.getRecommendationsByGenre(genreId);
+  }
+
+  @Get('audio/:id')
+  @ApiOperation({ summary: 'get recommendation by genreId' })
+  @Unprotected()
+  async getResultByAudioId(@Param('id') genreId: number, @RequestPayload() token: string): Promise<any> {
+    const userId = "a582937b-f5a4-45cb-be6a-51ee41bcdc84";
+    return await this.recommendationService.getRecommendationsByAudio(genreId);
   }
 }
