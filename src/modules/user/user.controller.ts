@@ -122,6 +122,7 @@ export class UserController {
   @Roles({ roles: [USER_CLIENT_ROLE.USER, USER_CLIENT_ROLE.SUBSCRIBER] })
   @UseInterceptors(FileInterceptor('avatar'))
   @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'update user' })
   @Put()
   async updateUser(
     @Body() dto: UpdateUserDTO,
@@ -130,4 +131,15 @@ export class UserController {
   ): Promise<UserEntity> {
     return await this.userService.updateUser(token, dto, avatar);
   }
+
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'update user by id' })
+  @Put(':id')
+  async updateUserByUserId(@Body() dto: UpdateUserDTO, @UploadedFile() avatar: Express.Multer.File, @Param('id') id: string): Promise<UserEntity> {
+    return await this.userService.updateUserById(id, dto, avatar)
+  }
+
+
 }
