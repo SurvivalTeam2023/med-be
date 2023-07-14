@@ -550,4 +550,63 @@ export class UserService {
       );
     return updatedUser
   }
+
+
+  async updateUserById(userId: string, dto: UpdateUserDTO, file: Express.Multer.File): Promise<UserEntity> {
+    let avatar: FileEntity
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId
+      }
+    })
+
+    if (user == null) {
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
+    }
+    if (dto.dob) {
+      this.validateAge(dto.dob);
+    }
+    const response = await lastValueFrom(
+      this.authService.getAcessToken(this.getAdminAccount()),
+    );
+    let adminToken = `Bearer ${response['access_token']}`;
+    await firstValueFrom(
+      this.httpService
+        .put(
+          `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}`,
+          {
+            id: userId,
+            ...(dto.firstName && { firstName: dto.firstName }), // Add firstName if not null
+            ...(dto.lastName && { lastName: dto.lastName }),   // Add lastName if not null
+            ...(dto.email ? { email: dto.email, emailVerified: false } : {}),
+          },
+          {
+            headers: {
+              Accept: 'application/json',
+              Authorization: adminToken
+            },
+          },
+        )
+        .pipe(map((response) => response.data))
+        .pipe(
+          catchError((err) =>
+            of(
+              ErrorHelper.BadGatewayException(err.response.data),
+            ),
+          ),
+        )
+    );
+    if (file) { avatar = await this.fileService.uploadPublicFile(file.buffer, file.originalname) }
+    const updatedUser = await this.userRepository.save({
+      ...dto,
+      id: userId,
+      avatar: avatar,
+    })
+    if (dto.email)
+
+      await firstValueFrom(
+        await this.authService.verifyEmail(user.username),
+      );
+    return updatedUser
+  }
 }

@@ -119,5 +119,12 @@ export class UserController {
   async updateUser(@Body() dto: UpdateUserDTO, @UploadedFile() avatar: Express.Multer.File, @RequestPayload() token: string): Promise<UserEntity> {
     return await this.userService.updateUser(token, dto, avatar)
   }
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiConsumes('multipart/form-data')
+  @Put(':id')
+  async updateUserByUserId(@Body() dto: UpdateUserDTO, @UploadedFile() avatar: Express.Multer.File, @Param('id') id: string): Promise<UserEntity> {
+    return await this.userService.updateUserById(id, dto, avatar)
+  }
 
 }
