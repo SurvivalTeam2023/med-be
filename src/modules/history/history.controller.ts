@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Unprotected } from 'nest-keycloak-connect';
@@ -12,7 +11,7 @@ import HistoryService from './history.service';
 @ApiBearerAuth()
 @Controller('rest/history')
 export default class HistoryController {
-  constructor(private readonly historyService: HistoryService) { }
+  constructor(private readonly historyService: HistoryService) {}
   @ApiOperation({ summary: 'create History' })
   @Unprotected()
   @Post('create')
