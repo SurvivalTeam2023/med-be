@@ -133,4 +133,19 @@ export default class ResultService {
         }
         return result;
     }
+
+    async findResultByUserId(
+        token: string,
+    ): Promise<ResultEntity[]> {
+        const userId = getUserId(token)
+        const result = await this.resultRepo
+            .createQueryBuilder('result')
+            .leftJoin('result.user', 'user')
+            .where('user.id = :userId', { userId })
+            .getMany()
+        if (!result) {
+            ErrorHelper.NotFoundException(ERROR_MESSAGE.RESULT.NOT_FOUND);
+        }
+        return result;
+    }
 }

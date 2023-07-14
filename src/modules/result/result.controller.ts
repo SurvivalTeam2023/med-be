@@ -50,4 +50,12 @@ export default class ResultController {
     async deleteResult(@Param('id') id: number) {
         return await this.resultService.deleteResult(id);
     }
+
+    @Get('/user/:id')
+    @ApiOperation({ summary: 'get result by user ' })
+    @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.ADMIN] })
+    async getResultByUser(@RequestPayload() token: string): Promise<ResultEntity[]> {
+        return await this.resultService.findResultByUserId(token);
+    }
+
 }
