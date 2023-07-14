@@ -6,44 +6,42 @@ import {
   Logger,
 } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
-import { AppHelper } from 'src/helpers/app.helper';
+
 @Catch()
 export class HttpExceptionFilter extends BaseExceptionFilter {
-  catch(exception: unknown, host: ArgumentsHost): void {
+  catch(exception: Error, host: ArgumentsHost): void {
+    console.log('Global_Exception: ', Error);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
-    const { message, stack } = exception as {
-      message: unknown;
-      stack: unknown;
-    };
+    const { message, stack } = exception;
     new Logger('HttpExceptionFilter').error({ message, stack });
-    new Logger('Raw-Exception').error(exception)
+    new Logger('Raw-Exception').error(exception);
     if (exception instanceof HttpException) {
-      const status =
-        exception instanceof HttpException
-          ? exception.getStatus()
-          : HttpStatus.INTERNAL_SERVER_ERROR;
+      console.log('HttpException', exception);
+      const status = exception.getStatus();
       const exceptionResponse = exception.getResponse() as any;
-      const error = AppHelper.checkArrString(exceptionResponse?.message)
-        ? AppHelper.messageErrPasser(exceptionResponse.message)
-        : [exceptionResponse];
-      return response.status(status).json({
-        isSuccuss: false,
-        code: response.statusCode,
+      const error = Array.isArray(exceptionResponse?.message)
+        ? exceptionResponse.message.map((msg: string) => ({ message: msg }))
+        : [{ message: exceptionResponse }];
+
+      response.status(status).json({
+        isSuccess: false,
+        code: status,
         message: exception.message,
         error,
       });
+    } else {
+      response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        isSuccess: false,
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Something went wrong',
+        error: [
+          {
+            fieldName: 'Server',
+            message: 'Something went wrong',
+          },
+        ],
+      });
     }
-    return response.status(HttpStatus.INTERNAL_SERVER_ERROR).join({
-      isSuccuss: false,
-      code: response.INTERNAL_SERVER_ERROR,
-      message: 'Something went wrong',
-      errors: [
-        {
-          fieldName: 'Server',
-          message: 'Something went wrong',
-        },
-      ],
-    });
   }
 }

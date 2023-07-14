@@ -11,26 +11,21 @@ const DB_PASSWORD: string = process.env.DB_PASSWORD || '123123';
 const DB_DATABASE: string = process.env.DB_DATABASE || 'med-be';
 const APP_BASE_URL_PREFIX: string = process.env.APP_BASE_URL_PREFIX || 'api';
 //keycloak config
-const KEYCLOAK_HOST: string = process.env.KEYCLOAK_HOST || 'localhost';
+const KEYCLOAK_HOST: string = process.env.KEYCLOAK_HOST || '167.86.69.42';
 const KEYCLOAK_REALM_ClIENT: string =
   process.env.KEYCLOAK_REALM_ClIENT || 'med-app';
 const REALM_PRODUCTION = process.env.REALM_PRODUCTION || 'null';
 const KEYCLOAK_CLIENT_ID: string = process.env.KEYCLOAK_CLIENT_ID || 'med-app';
 const KEYCLOAK_CLIENT_SECRECT: string =
-  process.env.KEYCLOAK_CLIENT_SECRECT || 'null';
+  process.env.KEYCLOAK_CLIENT_SECRECT || '7h37hsWaRV4vRnHJxFBAc3PZ4yDkFGGb';
 const KEYCLOAK_ADMIN_ID: string = process.env.KEYCLOAK_ADMIN_ID || 'tam';
 const KEYCLOAK_ADMIN_PASSWORD: string =
   process.env.KEYCLOAK_ADMIN_PASSWORD || '123456';
 
 //paypal config
-const PAYPAL_PRODUCT_ID: string =
-  process.env.PAYPAL_PRODUCT_ID || 'null';
-const PAYPAL_CLIENT_ID: string =
-  process.env.PAYPAL_CLIENT_ID ||
-  'null';
-const PAYPAL_CLIENT_SECRET: string =
-  process.env.PAYPAL_CLIENT_SECRET ||
-  'null';
+const PAYPAL_PRODUCT_ID: string = process.env.PAYPAL_PRODUCT_ID || 'null';
+const PAYPAL_CLIENT_ID: string = process.env.PAYPAL_CLIENT_ID || 'null';
+const PAYPAL_CLIENT_SECRET: string = process.env.PAYPAL_CLIENT_SECRET || 'null';
 const PAYPAL_URL: string =
   process.env.PAYPAL_URL || 'https://api-m.sandbox.paypal.com';
 

@@ -2,7 +2,7 @@ name: CD
 on:
   push:
     branches:
-      - develop
+      - playground
 jobs:
   Remove-Antifact:
     name: Remove artifact
@@ -22,26 +22,9 @@ jobs:
     env:
       NODE_ENV: "development"
     name: Build and Deploy
-    steps:  
+    steps:
       - name: Checkout 🛎
         uses: actions/checkout@v3
-
-      - name: Setup Node 🏗
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-         node-version: ${{ matrix.node }}
-         cache: 'yarn'
-
-      - name: install dependency
-        run: yarn
-
-      - name: lint check 
-        run: yarn lint
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -72,16 +55,16 @@ jobs:
       - name: Build, tag, and push docker image to Amazon ECR Public
         env:
           REPOSITORY: ${{ secrets.REPOSITORY }}
-          IMAGE_TAG: "banhsbao-${{ steps.format-time.outputs.replaced }}"
+          IMAGE_TAG: "med-playground-${{ steps.format-time.outputs.replaced }}"
         run: |
           docker build -t $REPOSITORY:$IMAGE_TAG .
           docker push $REPOSITORY:$IMAGE_TAG
 
       - name: Executing remote ssh EC2
         uses: appleboy/ssh-action@master
-        env: 
+        env:
           REPOSITORY: ${{ secrets.REPOSITORY }}
-          IMAGE_TAG: "banhsbao-${{ steps.format-time.outputs.replaced }}"
+          IMAGE_TAG: "med-playground-${{ steps.format-time.outputs.replaced }}"
           EKS_DEPLOYMENT: ${{ secrets.EKS_DEPLOYMENT }}
           APP_NAME: ${{ secrets.APP_NAME }}
         with:
@@ -91,5 +74,5 @@ jobs:
           envs: REGISTRY, REGISTRY_ALIAS, REPOSITORY, IMAGE_TAG, EKS_DEPLOYMENT, APP_NAME
           script: |
               echo "$IMAGE_TAG"
-              kubectl set image deployment/$EKS_DEPLOYMENT $APP_NAME=$REPOSITORY:$IMAGE_TAG 
+              kubectl set image deployment/$EKS_DEPLOYMENT $APP_NAME=$REPOSITORY:$IMAGE_TAG -n playground
 

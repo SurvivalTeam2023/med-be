@@ -36,6 +36,7 @@ import { UserStatusLogEntity } from 'src/modules/userStatusLog/entity/userStatus
 import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/followedArtist.entity';
 import { FavoriteGenreEntity } from 'src/modules/favoriteGenre/entities/favoriteGenre.entity';
 import { AgeEntity } from 'src/modules/age/entities/age.entity';
+import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -66,6 +67,7 @@ const entities = [
   UserStatusLogEntity,
   FollowedArtistEntity,
   AgeEntity,
+  AudioFileEntity,
 
 ];
 @Injectable()
