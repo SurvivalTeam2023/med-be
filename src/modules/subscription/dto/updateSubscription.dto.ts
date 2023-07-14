@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
 import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
 
