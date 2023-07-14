@@ -37,7 +37,8 @@ export default class ResultService {
 
     async createResult(dto: CreateResultDTO, token: string): Promise<{ mentalHealth: string, point: number }[]> {
 
-        const userId = getUserId(token);
+        // const userId = getUserId(token);
+        const userId = "a582937b-f5a4-45cb-be6a-51ee41bcdc84"
         const user = await this.entityManage.findOne(UserEntity, { where: { id: userId } });
 
         if (!user) {
@@ -50,138 +51,77 @@ export default class ResultService {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.QUESTION_BANK.NOT_FOUND);
         }
 
-        const result = await this.resultRepo.find({
-            where: {
-                user: {
-                    id: user.id,
-                },
-            },
+
+        const firstResult = await this.resultRepo.create({
+            optionIds: dto.optionId,
+            questionBank: questionBank,
+            status: ResultStatus.ACTIVE,
+            user: user
         });
 
-        if (result.length === 0) {
-            const firstResult = await this.resultRepo.create({
-                optionIds: dto.optionId,
-                questionBank: questionBank,
-                status: ResultStatus.ACTIVE,
-                user: user
+        const optionPromises = dto.optionId.map(async (id) => {
+            const option = await this.entityManage.findOne(OptionEntity, {
+                relations: {
+                    question: true,
+                },
+                where: { id: id },
             });
 
-            const optionPromises = dto.optionId.map(async (id) => {
-                const option = await this.entityManage.findOne(OptionEntity, {
-                    relations: {
-                        question: true,
-                    },
-                    where: { id: id },
-                });
-
-                if (!option) {
-                    ErrorHelper.NotFoundException(ERROR_MESSAGE.QUESTION_BANK.NOT_FOUND);
-                }
-
-                return { question: option.question, points: option.points };
-            });
-
-            const questionOptions = await Promise.all(optionPromises);
-
-            const mentalHealthMap = new Map<string, number>();
-
-            for (const { question, points } of questionOptions) {
-                const questionMentalHealth = await this.entityManage.findOne(QuestionMentalHealthEntity, {
-                    relations: {
-                        mentalHealth: true,
-                    },
-                    where: {
-                        question: {
-                            id: question.id,
-                        },
-                    }
-                }
-                )
-
-                if (!questionMentalHealth) {
-                    continue;
-                }
-
-                const mentalHealth = questionMentalHealth.mentalHealth.name;
-                const updateValue = mentalHealthMap.get(mentalHealth) || 0;
-                mentalHealthMap.set(mentalHealth, updateValue + points);
+            if (!option) {
+                ErrorHelper.NotFoundException(ERROR_MESSAGE.QUESTION_BANK.NOT_FOUND);
             }
 
-            const sum = Array.from(mentalHealthMap.values()).reduce((accumulator, value) => accumulator + value, 0);
-            const percentageMap = new Map<string, number>();
+            return { question: option.question, points: option.points };
+        });
 
-            for (const [key, value] of mentalHealthMap) {
-                const percentage = (value / sum) * 100;
-                percentageMap.set(key, percentage);
+        const questionOptions = await Promise.all(optionPromises);
+
+        const mentalHealthMap = new Map<string, number>();
+
+        for (const { question, points } of questionOptions) {
+            const questionMentalHealth = await this.entityManage.findOne(QuestionMentalHealthEntity, {
+                relations: {
+                    mentalHealth: true,
+                },
+                where: {
+                    question: {
+                        id: question.id,
+                    },
+                }
+            }
+            )
+
+            if (!questionMentalHealth) {
+                continue;
             }
 
-            const resultArray = Array.from(percentageMap.entries()).map(([mentalHealth, point]) => ({
-                mentalHealth,
-                point,
-            }));
-            await this.entityManage.transaction(async (entityManager) => {
-                firstResult.mentalHealth = resultArray;
-                await entityManager.save(firstResult);
-                questionBank.isFinished = true
-                await entityManager.save(questionBank)
-            })
-            return resultArray;
-
-
+            const mentalHealth = questionMentalHealth.mentalHealth.name;
+            const updateValue = mentalHealthMap.get(mentalHealth) || 0;
+            mentalHealthMap.set(mentalHealth, updateValue + points);
         }
-        //  else {
-        //     // result for 2nd question and so on 
-        //     console.log(dto.optionId);
-
-        //     for (const id of dto.optionId) {
-        //         const option = await this.entityManage.findOne(OptionEntity, {
-        //             relations: {
-        //                 question: true
-        //             },
-        //             where: { id: id },
-        //         });
-
-        //         if (!option) {
-        //             ErrorHelper.NotFoundException(ERROR_MESSAGE.QUESTION_BANK.NOT_FOUND)
-        //         }
-
-        //         const mentalHealth = await this.entityManage.find(MentalHealthEntity, {
-        //             where: {
-        //                 questionMentalHealth: {
-        //                     question: {
-        //                         id: option.question.id
-        //                     }
-        //                 }
-        //             }
-        //         });
-
-        //         const resultMentalHealths = mentalHealth.map(e => {
-        //             const resultMentalHealth = new ResultMentalHealthEntity()
-        //             resultMentalHealth.mentalHealth = e
-        //             return resultMentalHealth
-        //         });
+        const sum = Array.from(mentalHealthMap.values()).reduce((accumulator, value) => accumulator + value, 0);
 
 
-        //         const result = this.resultRepo.create({
-        //             option: option,
-        //             resultMentalHealth: resultMentalHealths,
-        //             questionBank: questionBank,
-        //             user: user,
-        //             status: ResultStatus.ACTIVE,
-        //         });
+        const resultArray = Array.from(mentalHealthMap.entries()).map(([mentalHealth, point]) => ({
+            mentalHealth,
+            point,
+        }));
+        const percentageMapArray = Array.from(mentalHealthMap.entries()).map(([mentalHealth, point]) => ({
+            mentalHealth,
+            point: point / sum * 100,
+        }));
+        //show mentalHealthDegree find by point and mentalHealth
+        await this.entityManage.transaction(async (entityManager) => {
+            firstResult.mentalHealth = resultArray;
+            await entityManager.save(firstResult);
+            questionBank.isFinished = true
+            await entityManager.save(questionBank)
+        })
+        return percentageMapArray;
 
-        //         questionBank.isFinished = true;
-        //         await this.entityManage.save(questionBank);
-        //     }
-        //     const newResult = await this.resultRepo.find({
-        //         where: {
-        //             questionBank: {
-        //                 id: dto.questionBankId
-        //             }
-        //         }
-        //     })
-        //     //calculate percentage of point in question bank for the 2nd result and so on
-        // }
+
+
+
     }
 
 

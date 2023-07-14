@@ -80,7 +80,7 @@ export default class AudioController {
     @Body() createAudioDto: CreateAudioDTO,
     @RequestPayload() token: string,
   ): Promise<AudioEntity> {
-    console.log(createAudioDto);
+   
 
     return this.audioService.createAudio(createAudioDto, token, files);
   }

@@ -37,7 +37,9 @@ export default class QuestionBankService {
 
     }
     async createQuestionBank(token: string): Promise<QuestionBankEntity> {
-        const userId = getUserId(token);
+        // const userId = getUserId(token);
+        const userId = "a582937b-f5a4-45cb-be6a-51ee41bcdc84"
+
         const user = await this.entityManage.findOne(UserEntity, {
             where: { id: userId },
         });
@@ -54,9 +56,12 @@ export default class QuestionBankService {
                 user: {
                     id: user.id
                 },
-            }
+            },
+            order: {
+                createdAt: "DESC"
+            },
         });
-        console.log(checkQuestionBank);
+
 
         let questionBankQuestions: QuestionBankQuestionEntity[] = [];
         const age = getAge(user.dob);
@@ -113,17 +118,22 @@ export default class QuestionBankService {
                     },
                 }
             })
+            const highestPoint = result.mentalHealth.reduce((highest, current) => {
+                if (current.point > highest.point) {
+                    return current;
+                } else {
+                    return highest;
+                }
+            });
 
-            const mentalHealths = result.mentalHealth.map(e => {
-                return e.mentalHealth
-            })
-            console.log(mentalHealths);
-            const count = 10 / mentalHealths.length
+            const mentalHealths = result.mentalHealth.filter(obj => obj.point === highestPoint.point);
+            const count = 12 / mentalHealths.length
+
             let questionList: QuestionEntity[] = []
             for (const mentalHealth of mentalHealths) {
                 const mentalHealths = await this.entityManage.findOne(MentalHealthEntity, {
                     where: {
-                        name: mentalHealth
+                        name: mentalHealth.mentalHealth
                     }
                 })
                 const questions = await this.entityManage
@@ -131,8 +141,11 @@ export default class QuestionBankService {
                     .from(QuestionEntity, 'question')
                     .leftJoinAndSelect('question.option', 'option')
                     .leftJoin('question.questionMentalHealth', 'questionMentalHealth')
+                    .leftJoin('question.age', 'age')
                     .select(['question.id', 'question.question', 'question.status', 'option.id', 'option.option'])
                     .where("question.status = 'ACTIVE'")
+                    .andWhere("question.default = 0")
+                    .andWhere("age.startAge <= :age AND age.endAge >= :age", { age })
                     .andWhere("questionMentalHealth.mentalHealthId = :mentalHealthId", { mentalHealthId: mentalHealths.id })
                     .orderBy('RAND()')
                     .take(count)
@@ -141,25 +154,23 @@ export default class QuestionBankService {
                 questionList.push(...questions)
             }
 
-            console.log(questionList, "list");
-
             questionBankQuestions = questionList.map((question) => {
                 const questionBankQuestion = new QuestionBankQuestionEntity();
                 questionBankQuestion.question = question;
                 return questionBankQuestion;
             });
+
+
+            const questionBank = await this.questionBankRepo.save({
+                isFinished: false,
+                numberOfQuestion: count,
+                questionBankQuestion: questionBankQuestions,
+                user: user
+            });
+
+            return questionBank;
         }
-
-        const questionBank = await this.questionBankRepo.save({
-            isFinished: false,
-            numberOfQuestion: 10,
-            questionBankQuestion: questionBankQuestions,
-            user: user
-        });
-
-        return questionBank;
     }
-
     async isLastQuizValid(token: string): Promise<{ isValid: boolean }> {
         let userId = getUserId(token);
         const questionBankQueryResult = await this.entityManage
