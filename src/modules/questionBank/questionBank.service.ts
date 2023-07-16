@@ -37,8 +37,7 @@ export default class QuestionBankService {
 
     }
     async createQuestionBank(token: string): Promise<QuestionBankEntity> {
-        // const userId = getUserId(token);
-        const userId = "a582937b-f5a4-45cb-be6a-51ee41bcdc84"
+        const userId = getUserId(token);
 
         const user = await this.entityManage.findOne(UserEntity, {
             where: { id: userId },

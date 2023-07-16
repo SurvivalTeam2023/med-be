@@ -13,7 +13,7 @@ export class MentalHealthDegreeEntity extends BaseEntity {
 
 
   @Column()
-  public title: String;
+  public title: string;
 
   @Column({
     type: 'enum',
