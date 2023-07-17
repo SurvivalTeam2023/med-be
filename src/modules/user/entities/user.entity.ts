@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { GENDER } from 'src/common/enums/userGender.enum';
 import { USER_STATUS } from 'src/common/enums/userStatus.enum';
 import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
@@ -109,9 +108,13 @@ export class UserEntity {
   })
   follower: FollowerEntity[];
 
-  @OneToMany(() => FollowedArtistEntity, (followedArtist) => followedArtist.user, {
-    cascade: true,
-  })
+  @OneToMany(
+    () => FollowedArtistEntity,
+    (followedArtist) => followedArtist.user,
+    {
+      cascade: true,
+    },
+  )
   followedArtist: FollowedArtistEntity[];
 
   @OneToMany(() => ResultEntity, (result) => result.user, {

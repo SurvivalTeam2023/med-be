@@ -1,8 +1,13 @@
-/* eslint-disable prettier/prettier */
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
 import { PlanStatus } from 'src/common/enums/planStatus.enum';
-
 
 @Entity('plan')
 export class PlanEntity {
@@ -15,7 +20,7 @@ export class PlanEntity {
   @Column()
   public desc: string;
 
-  @Column({ name: "usage_time" })
+  @Column({ name: 'usage_time' })
   public usageTime: number;
 
   @Column()
@@ -29,13 +34,10 @@ export class PlanEntity {
 
   @Column({
     type: 'enum',
-    enum: PlanStatus
+    enum: PlanStatus,
   })
   public status: PlanStatus;
 
-  @OneToMany(
-    () => SubscriptionEntity,
-    (subscription) => subscription.plan,
-  )
+  @OneToMany(() => SubscriptionEntity, (subscription) => subscription.plan)
   public subscription: SubscriptionEntity[];
 }

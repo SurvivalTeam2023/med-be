@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -23,17 +21,27 @@ import { CreateAudioDTO } from './dto/createAudio.dto';
 import SearchAudioDto from './dto/searchAudio.dto';
 import UpdateAudioDto from './dto/updateAudio.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiQuery, ApiTags, ApiBody } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+  ApiBody,
+} from '@nestjs/swagger';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
-import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+} from '@nestjs/platform-express';
 
 @ApiTags('Audios')
 @Controller('audio')
 @ApiBearerAuth()
 export default class AudioController {
-  constructor(private readonly audioService: AudioService) { }
+  constructor(private readonly audioService: AudioService) {}
 
   @Get(':id')
   @Unprotected()
@@ -70,16 +78,20 @@ export default class AudioController {
   @Unprotected()
   @ApiOperation({ summary: 'Create audio' })
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'audio', maxCount: 1 }, { name: 'image', maxCount: 1 }]))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'audio', maxCount: 1 },
+      { name: 'image', maxCount: 1 },
+    ]),
+  )
   async createAudio(
-    @UploadedFiles() files: { audio?: Express.Multer.File[], image?: Express.Multer.File[] },
+    @UploadedFiles()
+    files: { audio?: Express.Multer.File[]; image?: Express.Multer.File[] },
     @Body() createAudioDto: CreateAudioDTO,
     @RequestPayload() token: string,
   ): Promise<AudioEntity> {
     return this.audioService.createAudio(createAudioDto, token, files);
   }
-
-
 
   @Put(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
@@ -104,5 +116,4 @@ export default class AudioController {
   async getCountAudio(): Promise<number> {
     return await this.audioService.countAudio();
   }
-
 }

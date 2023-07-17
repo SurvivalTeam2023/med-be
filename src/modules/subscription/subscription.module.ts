@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,9 +8,14 @@ import SubscriptionService from './subscription.services';
 import { UserModule } from '../user/user.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([SubscriptionEntity]), HttpModule, AuthModule, UserModule],
-    controllers: [SubscriptionController],
-    providers: [SubscriptionService],
-    exports: [SubscriptionService],
+  imports: [
+    TypeOrmModule.forFeature([SubscriptionEntity]),
+    HttpModule,
+    AuthModule,
+    UserModule,
+  ],
+  controllers: [SubscriptionController],
+  providers: [SubscriptionService],
+  exports: [SubscriptionService],
 })
-export class SubscriptionModule { }
+export class SubscriptionModule {}

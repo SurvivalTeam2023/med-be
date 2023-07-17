@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import * as dotenv from 'dotenv';
 
 dotenv.config();

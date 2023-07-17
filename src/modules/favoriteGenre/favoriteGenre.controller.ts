@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Unprotected } from 'nest-keycloak-connect';
@@ -12,7 +11,7 @@ import FavoriteGenreService from './favoriteGenre.service';
 @ApiBearerAuth()
 @Controller('rest/favorite')
 export default class FavoriteGenreController {
-  constructor(private readonly favoriteService: FavoriteGenreService) { }
+  constructor(private readonly favoriteService: FavoriteGenreService) {}
 
   @ApiOperation({ summary: 'create Favorite genre' })
   @Unprotected()

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { EmotionEnum } from 'src/common/enums/emotion.enum';
@@ -23,7 +22,7 @@ export class UpdateGenreDTO {
   @ApiProperty({ enum: GenreStatus, default: GenreStatus.ACTIVE })
   status: GenreStatus;
 
-  @ApiProperty({ enum: EmotionEnum, })
+  @ApiProperty({ enum: EmotionEnum })
   emotion: EmotionEnum;
 }
 export default UpdateGenreDTO;

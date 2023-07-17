@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { AudioStatus } from '../../../common/enums/audioStatus.enum';
 
 export interface AudioInterface {

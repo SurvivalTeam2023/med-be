@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { MentalHealthGenreEntity } from 'src/modules/mentalHealthGenre/entities/mentalHealthGenre.entity';
@@ -13,7 +12,7 @@ export class MentalHealthEntity extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: MentalHealthStatus
+    enum: MentalHealthStatus,
   })
   public status: MentalHealthStatus;
 
