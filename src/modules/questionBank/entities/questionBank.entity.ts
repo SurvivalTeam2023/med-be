@@ -28,5 +28,5 @@ export class QuestionBankEntity extends BaseEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.questionBank)
   @JoinColumn({ name: 'user_id' })
-  public userId: UserEntity;
+  public user: UserEntity;
 }

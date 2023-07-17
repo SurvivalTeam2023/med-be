@@ -23,7 +23,7 @@ export default class GenreService {
     private readonly entityManage: EntityManager,
     @InjectRepository(GenreEntity)
     private genreRepo: Repository<GenreEntity>,
-  ) {}
+  ) { }
 
   async createGenre(dto: CreateGenreDTO): Promise<GenreEntity> {
     const newGenre = this.genreRepo.save({
@@ -86,82 +86,6 @@ export default class GenreService {
       })
       .orderBy('genre.name', 'ASC')
       .getMany();
-    return genre;
-  }
-
-  async getGenreByResult(questionBankId: number): Promise<GenreEntity[]> {
-    const results = await this.entityManage.find(ResultEntity, {
-      where: {
-        questionBankId: questionBankId,
-      },
-    });
-
-    const questionMap = new Map<QuestionEntity, number>();
-    const mentalHealthMap = new Map<string, number>();
-
-    await Promise.all(
-      results.map(async (result) => {
-        const option = await this.entityManage.findOne(OptionEntity, {
-          relations: {
-            question: true,
-          },
-          where: {
-            id: result.optionId,
-          },
-        });
-
-        questionMap.set(option.question, option.points);
-      }),
-    );
-
-    await Promise.all(
-      Array.from(questionMap.entries()).map(async ([key, value]) => {
-        const question = await this.entityManage.findOne(QuestionEntity, {
-          relations: {
-            questionMentalHealth: true,
-          },
-          where: {
-            id: key.id,
-          },
-        });
-
-        for (const e of question.questionMentalHealth) {
-          const questionMentalHealth = await this.entityManage.findOne(
-            QuestionMentalHealthEntity,
-            {
-              relations: {
-                mentalHealth: true,
-              },
-              where: {
-                id: e.id,
-              },
-            },
-          );
-
-          const mentalHealth = questionMentalHealth.mentalHealth.name;
-          const updateValue = mentalHealthMap.get(mentalHealth) || 0;
-          mentalHealthMap.set(mentalHealth, updateValue + value);
-        }
-      }),
-    );
-
-    let highestPoint: [string, number];
-    for (const entry of mentalHealthMap.entries()) {
-      if (!highestPoint || entry[1] > highestPoint[1]) {
-        highestPoint = entry;
-      }
-    }
-
-    const genre = await this.genreRepo
-      .createQueryBuilder('genre')
-      .leftJoin('genre.mentalHealthGenre', 'mentalHealthGenre')
-      .leftJoin('mentalHealthGenre.mentalHealth', 'mentalHealth')
-      .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
-      .leftJoinAndSelect('audioGenre.audio', 'audio')
-      .select(['genre', 'audioGenre.id', 'audio'])
-      .where('mentalHealth.name = :name', { name: highestPoint[0] })
-      .getMany();
-
     return genre;
   }
 }

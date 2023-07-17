@@ -23,12 +23,13 @@ import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import ResultService from './result.service';
 import { ResultEntity } from './entities/result.entity';
 import CreateResultDTO from './dto/createResult.dto';
+import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 
 @ApiTags('Results')
 @Controller('result')
 @ApiBearerAuth()
 export default class ResultController {
-  constructor(private readonly resultService: ResultService) {}
+  constructor(private readonly resultService: ResultService) { }
 
   @Get(':id')
   @ApiOperation({ summary: 'get result by id' })
@@ -40,8 +41,10 @@ export default class ResultController {
   @Post()
   @Unprotected()
   @ApiOperation({ summary: 'create result after finish quiz' })
-  async createResult(@Body() dto: CreateResultDTO): Promise<ResultEntity> {
-    return await this.resultService.createResult(dto);
+  async createResult(
+    @Body() dto: CreateResultDTO, @RequestPayload() token: string
+  ): Promise<{ mentalHealth: string, point: number }[] | { mentalHealth: string, point: number, degree: string }> {
+    return await this.resultService.createResult(dto, token);
   }
 
   @Delete(':id')
@@ -50,4 +53,12 @@ export default class ResultController {
   async deleteResult(@Param('id') id: number) {
     return await this.resultService.deleteResult(id);
   }
+
+  @Get('/user/:id')
+  @ApiOperation({ summary: 'get result by user ' })
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.ADMIN] })
+  async getResultByUser(@RequestPayload() token: string): Promise<ResultEntity[]> {
+    return await this.resultService.findResultByUserId(token);
+  }
+
 }

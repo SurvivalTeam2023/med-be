@@ -35,7 +35,7 @@ export default class AudioService {
     private readonly entityManage: EntityManager,
     @InjectRepository(AudioEntity)
     private audioRepository: Repository<AudioEntity>,
-  ) {}
+  ) { }
 
   async findAudioById(audioId: number): Promise<AudioEntity> {
     const entity = await this.audioRepository
@@ -180,20 +180,5 @@ export default class AudioService {
   }
   async countAudio(): Promise<number> {
     return this.audioRepository.count();
-  }
-  async getAudioByResult(questionBankID: number): Promise<any> {
-    const genres = await this.genreService.getGenreByResult(questionBankID);
-    const audios = await Promise.all(
-      genres.map(async (genre) => {
-        return await this.audioRepository
-          .createQueryBuilder('audio')
-          .leftJoin('audio.audioGenre', 'audioGenre')
-          .leftJoin('audioGenre.genre', 'genre')
-          .where('genre.id = :genreId', { genreId: genre.id })
-          .getMany();
-      }),
-    );
-
-    return audios;
   }
 }
