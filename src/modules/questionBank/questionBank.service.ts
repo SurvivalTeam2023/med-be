@@ -47,19 +47,14 @@ export default class QuestionBankService {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
         }
 
-        const checkQuestionBank = await this.questionBankRepo.findOne({
-            relations: {
-                user: true
-            },
-            where: {
-                user: {
-                    id: user.id
-                },
-            },
-            order: {
-                createdAt: "DESC"
-            },
-        });
+        const checkQuestionBank = await this.questionBankRepo.createQueryBuilder('questionBank')
+            .leftJoin("questionBank.questionBankQuestion", 'questionBankQuestion')
+            .leftJoin("questionBankQuestion.question", "question")
+            .leftJoin("question.option", "option")
+            .leftJoin("questionBank.user", "user")
+            .where("user.id = :userId", { userId: userId })
+            .select(["questionBank", "questionBankQuestion.id", 'question.id', 'question.question', 'question.status', 'option.id', 'option.option'])
+            .getOne()
 
 
         let questionBankQuestions: QuestionBankQuestionEntity[] = [];
@@ -107,9 +102,11 @@ export default class QuestionBankService {
             return questionBank;
         }
         //Create question bank 2# and so on  
-        else if (checkQuestionBank && checkQuestionBank.isFinished == false) {
+        else if (checkQuestionBank.isFinished == false) {
+           
+
             return checkQuestionBank
-        } else {
+        } else if (checkQuestionBank.isFinished === true) {
             const result = await this.entityManage.findOne(ResultEntity, {
                 where: {
                     questionBank: {
