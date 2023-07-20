@@ -24,6 +24,7 @@ import ResultService from './result.service';
 import { ResultEntity } from './entities/result.entity';
 import CreateResultDTO from './dto/createResult.dto';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
+import ResultDTO from './dto/result.dto';
 
 @ApiTags('Results')
 @Controller('result')
@@ -56,8 +57,8 @@ export default class ResultController {
 
   @Get('/user/:id')
   @ApiOperation({ summary: 'get result by user ' })
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.ADMIN] })
-  async getResultByUser(@RequestPayload() token: string): Promise<ResultEntity[]> {
+  @Roles({ roles: [USER_CLIENT_ROLE.USER, USER_CLIENT_ROLE.ADMIN] })
+  async getResultByUser(@RequestPayload() token: string): Promise<ResultDTO[]> {
     return await this.resultService.findResultByUserId(token);
   }
 

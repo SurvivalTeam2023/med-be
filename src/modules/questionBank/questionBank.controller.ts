@@ -26,9 +26,9 @@ export default class QuestionBankController {
     @Unprotected()
     async isLastQuizValid(
         @RequestPayload() token: string,
-    ): Promise<{ isValid: boolean }> {
-        const result = await this.questionBankService.isLastQuizValid(token);
-        return { isValid: result.isValid };
+    ): Promise<boolean> {
+        return await this.questionBankService.isLastQuizValid(token);
+
     }
 
     @Roles({ roles: [USER_CLIENT_ROLE.USER] })
