@@ -14,6 +14,7 @@ import { QuestionEntity } from "../question/entities/question.entity";
 import { QuestionMentalHealthEntity } from "../questionMentalHealth/entities/questionMentalHealth.entity";
 import { MentalHealthEntity } from "../mentalHealth/entities/mentalHealth.entity";
 import { MentalHealthDegreeEntity } from "../mentalHealthDegree/entities/mentalHealthDegree.entity";
+import ResultDTO from "./dto/result.dto";
 
 
 @Injectable()
@@ -182,7 +183,7 @@ export default class ResultService {
 
     async findResultByUserId(
         token: string,
-    ): Promise<ResultEntity[]> {
+    ): Promise<ResultDTO[]> {
         const userId = getUserId(token)
         const result = await this.resultRepo
             .createQueryBuilder('result')
@@ -192,6 +193,12 @@ export default class ResultService {
         if (!result) {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.RESULT.NOT_FOUND);
         }
-        return result;
+        const resultArray = result.map(r => {
+            const mentalHealthValueArray = r.mentalHealth.map((item) => item.mentalHealth);
+            const resultDto: ResultDTO = { id: r.id, questionBankId: r.questionBankId, createdAt: r.createdAt, mentalHealth: mentalHealthValueArray }
+            return resultDto
+        })
+
+        return resultArray;
     }
 }

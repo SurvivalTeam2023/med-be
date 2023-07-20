@@ -103,7 +103,7 @@ export default class QuestionBankService {
         }
         //Create question bank 2# and so on  
         else if (checkQuestionBank.isFinished == false) {
-           
+
 
             return checkQuestionBank
         } else if (checkQuestionBank.isFinished === true) {
@@ -167,19 +167,16 @@ export default class QuestionBankService {
             return questionBank;
         }
     }
-    async isLastQuizValid(token: string): Promise<{ isValid: boolean }> {
+    async isLastQuizValid(token: string): Promise<boolean> {
         let userId = getUserId(token);
-        const questionBankQueryResult = await this.entityManage
-            .createQueryBuilder()
-            .from(QuestionBankEntity, 'question_bank')
-            .select('question_bank')
+        const questionBankQueryResult = await this.questionBankRepo
+            .createQueryBuilder('question_bank')
             .orderBy('created_at', 'DESC')
-            .where('user_id = :user_id', { user_id: userId })
-            .andWhere('is_finished = true')
-            .andWhere('NOW() - created_at > 3')
-            .getMany();
-        const isValid = questionBankQueryResult.length > 0;
-        return { isValid };
+            .where('question_bank.user_id = :userId', { userId: userId })
+            .andWhere('NOW() - question_bank.created_at > 3')
+            .getOne();
+
+        return questionBankQueryResult.isFinished
     }
     async updateIsFinished(id: number): Promise<QuestionBankEntity> {
         const questionBank = await this.questionBankRepo.findOne({
