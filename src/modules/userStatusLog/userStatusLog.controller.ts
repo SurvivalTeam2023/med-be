@@ -15,7 +15,7 @@ export default class UserLogController {
     @Unprotected()
     @ApiOperation({ summary: 'get total user by status ' })
     async getUserStatusCount(
-    ): Promise<UserStatusLogEntity> {
-        return this.userLogService.countUserStatus();
+    ): Promise<UserStatusLogEntity[]> {
+        return this.userLogService.getCountUser();
     }
 }

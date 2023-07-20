@@ -41,4 +41,8 @@ export class UserLogService {
         })
         return statusLog
     }
+
+    async getCountUser(): Promise<UserStatusLogEntity[]> {
+        return await this.userLogRepo.find()
+    }
 }
