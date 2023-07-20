@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Roles, Unprotected } from "nest-keycloak-connect";
+import { Roles } from "nest-keycloak-connect";
 import { UserStatusLogEntity } from "./entity/userStatusLog.entity";
 import { UserLogService } from "./userStatusLog.service";
 import { USER_CLIENT_ROLE } from "src/common/enums/userClientRole.enum";
