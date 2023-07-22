@@ -28,10 +28,10 @@ import { Emotion } from '@aws-sdk/client-rekognition';
 @Controller('genres')
 @ApiBearerAuth()
 export default class GenreController {
-  constructor(private readonly genreService: GenreService) {}
+  constructor(private readonly genreService: GenreService) { }
 
   @Get(':id')
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @Unprotected()
   @ApiOperation({ summary: 'get genre by id' })
   async getGenreById(@Param('id') id: number): Promise<GenreEntity> {
     return this.genreService.findGenreById(id);
