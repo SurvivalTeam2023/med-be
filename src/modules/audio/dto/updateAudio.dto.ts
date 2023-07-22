@@ -19,6 +19,6 @@ export class UpdateAudioDTO {
   @IsOptional()
   @IsString()
   @ApiProperty()
-  length: string;
+  length: number;
 }
 export default UpdateAudioDTO;

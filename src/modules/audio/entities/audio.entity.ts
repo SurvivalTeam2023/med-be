@@ -31,7 +31,7 @@ export class AudioEntity extends BaseEntity {
   public status: AudioStatus;
 
   @Column()
-  public length: string;
+  public length: number;
 
   @Column({ default: 0 })
   public liked: number;

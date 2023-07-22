@@ -92,11 +92,10 @@ export default class AudioService {
   async createAudio(
     dto: CreateAudioDTO,
     token: string,
-    files: { audio?: Express.Multer.File[]; image?: Express.Multer.File[] },
   ): Promise<AudioEntity> {
     try {
       let userId = getUserId(token);
-      const artist = await this.entityManage.findOne(ArtistEntity, {
+      const artist = await this.entityManage.findOne(UserEntity, {
         where: { id: userId },
       });
       if (!artist) {
@@ -108,16 +107,20 @@ export default class AudioService {
         return audioGenre;
       });
 
-      const audioFile = await this.fileService.uploadAudio(
-        files.audio[0].buffer,
-        files.audio[0].originalname,
-        'med-audio',
+      const audioFile = await this.entityManage.findOne(FileEntity,
+        {
+          where: {
+            id: dto.audioFileId
+          }
+        }
       );
 
-      const imageFile = await this.fileService.uploadAudio(
-        files.image[0].buffer,
-        files.image[0].originalname,
-        'med-images',
+      const imageFile = await this.entityManage.findOne(FileEntity,
+        {
+          where: {
+            id: dto.imageFileId
+          }
+        }
       );
 
       const file: FileEntity[] = [audioFile, imageFile];
@@ -135,7 +138,7 @@ export default class AudioService {
         status: AudioStatus.ACTIVE,
         audioGenre: audioGenres,
         audioFile: audioFiles,
-        length: audioLength.toString(),
+        length: audioLength,
         imageUrl: imageFile.url,
       });
       if (dto.playlistId) {
