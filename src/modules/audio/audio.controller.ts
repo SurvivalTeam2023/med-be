@@ -5,8 +5,10 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
+  HttpStatus,
   Param,
   ParseFilePipe,
+  ParseFilePipeBuilder,
   ParseIntPipe,
   Post,
   Put,
@@ -36,12 +38,14 @@ import {
   FileFieldsInterceptor,
   FileInterceptor,
 } from '@nestjs/platform-express';
+import { ErrorHelper } from 'src/helpers/error.helper';
+import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 
 @ApiTags('Audios')
 @Controller('audio')
 @ApiBearerAuth()
 export default class AudioController {
-  constructor(private readonly audioService: AudioService) {}
+  constructor(private readonly audioService: AudioService) { }
 
   @Get(':id')
   @Unprotected()
@@ -73,24 +77,15 @@ export default class AudioController {
     });
   }
 
-  // @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+
   @Post()
-  @Unprotected()
+  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.ADMIN] })
   @ApiOperation({ summary: 'Create audio' })
-  @ApiConsumes('multipart/form-data')
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'audio', maxCount: 1 },
-      { name: 'image', maxCount: 1 },
-    ]),
-  )
   async createAudio(
-    @UploadedFiles()
-    files: { audio?: Express.Multer.File[]; image?: Express.Multer.File[] },
     @Body() createAudioDto: CreateAudioDTO,
     @RequestPayload() token: string,
   ): Promise<AudioEntity> {
-    return this.audioService.createAudio(createAudioDto, token, files);
+    return this.audioService.createAudio(createAudioDto, token);
   }
 
   @Put(':id')

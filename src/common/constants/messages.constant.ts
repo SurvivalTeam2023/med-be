@@ -6,6 +6,7 @@ export const ERROR_MESSAGE = {
   AUDIO: {
     NOT_FOUND: 'Audio not found!',
     DUPLICATE_NAME: 'Name already exist!',
+    INVALID_TYPE: "Invalid Audio File"
   },
   GENRE: {
     NOT_FOUND: 'Genre not found!',
@@ -62,4 +63,7 @@ export const ERROR_MESSAGE = {
     SOMETHING_WRONG: 'Something went wrong',
     INVALID_TOKEN: 'Invalid Token',
   },
+  IMAGE: {
+    INVALID_FILE: "Invalid Image File"
+  }
 };
