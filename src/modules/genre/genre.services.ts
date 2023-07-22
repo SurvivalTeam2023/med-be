@@ -33,9 +33,13 @@ export default class GenreService {
   }
 
   async findGenreById(genreId: number): Promise<GenreEntity> {
-    const genre = await this.genreRepo.findOneBy({
-      id: genreId,
-    });
+    const genre = await this.genreRepo
+      .createQueryBuilder('genre')
+      .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
+      .leftJoinAndSelect('audioGenre.audio', 'audio')
+      .leftJoinAndSelect('genre.playlist', 'playlist')
+      .select(['genre', 'playlist'])
+      .getOne()
     return genre;
   }
 
@@ -44,6 +48,7 @@ export default class GenreService {
       .createQueryBuilder('genre')
       .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
       .leftJoinAndSelect('audioGenre.audio', 'audio')
+      .leftJoinAndSelect('genre.playlist', 'playlist')
       .select(['genre', 'audioGenre.id', 'audio']);
     if (name)
       queryBuilder
