@@ -39,6 +39,7 @@ export default class GenreService {
       .leftJoinAndSelect('audioGenre.audio', 'audio')
       .leftJoinAndSelect('genre.playlist', 'playlist')
       .select(['genre', 'playlist'])
+      .where('genre.id = :genreId', { genreId: genreId })
       .getOne()
     return genre;
   }
