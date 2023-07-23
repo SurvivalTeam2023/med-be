@@ -6,6 +6,7 @@ import { createAudioPlaylistDTO } from "./dto/createAudioPlaylist.dto";
 import { RequestPayload } from "src/decorator/requestPayload.decorator";
 import { Roles } from "nest-keycloak-connect";
 import { USER_CLIENT_ROLE } from "src/common/enums/userClientRole.enum";
+import { likeSongDTO } from "./dto/likeSong.dto";
 
 @ApiTags('AudioPlaylists')
 @Controller('audioPlaylist')
@@ -23,5 +24,11 @@ export default class AudioPlaylistController {
     @Delete()
     async removeAudioFromPlaylist(@Query('audioId') audioId: number, @Query('playlistId') playlistId: number, @RequestPayload() token: string) {
         return await this.audioPlaylistService.removeAudioFromPlaylist(playlistId, audioId, token)
+    }
+    @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.USER, USER_CLIENT_ROLE.SUBSCRIBER] })
+    @ApiOperation({ summary: 'add audio to playlist' })
+    @Post('likedAudio')
+    async likeAudio(@Body() dto: likeSongDTO, @RequestPayload() token: string): Promise<AudioPlaylistEntity> {
+        return await this.audioPlaylistService.likeAudio(dto.audioId, token)
     }
 }
