@@ -16,6 +16,11 @@ import { QuestionEntity } from '../question/entities/question.entity';
 import { MentalHealthEntity } from '../mentalHealth/entities/mentalHealth.entity';
 import { OptionEntity } from '../option/entities/option.entity';
 import { QuestionMentalHealthEntity } from '../questionMentalHealth/entities/questionMentalHealth.entity';
+import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
+import UserEntity from '../user/entities/user.entity';
+import ArtistEntity from '../artist/entities/artist.entity';
+import PlaylistDto from '../playlist/dto/playlist.dto';
+import GenreDTO from './dto/genre.dto';
 
 @Injectable()
 export default class GenreService {
@@ -32,7 +37,8 @@ export default class GenreService {
     return newGenre;
   }
 
-  async findGenreById(genreId: number): Promise<GenreEntity> {
+  async findGenreById(genreId: number): Promise<any> {
+
     const genre = await this.genreRepo
       .createQueryBuilder('genre')
       .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
@@ -40,8 +46,26 @@ export default class GenreService {
       .leftJoinAndSelect('genre.playlist', 'playlist')
       .select(['genre', 'playlist'])
       .where('genre.id = :genreId', { genreId: genreId })
+      .andWhere('playlist.is_public = :isPublic', { isPublic: PlaylistPublic.PUBLIC })
       .getOne()
-    return genre;
+    const playlists = await Promise.all(
+      genre.playlist.map(async (playlist) => {
+        const user = await this.entityManage.findOne(UserEntity, {
+          where: {
+            id: playlist.authorId,
+          },
+        });
+        return { playlist, author: user.firstName + " " + user.lastName };
+      })
+    );
+
+    const genreDTO: GenreDTO = {
+      id: genre.id,
+      name: genre.name,
+      emotion: genre.emotion,
+      playlists: playlists
+    }
+    return genreDTO
   }
 
   async findGenres(name?: string): Promise<GenreEntity[]> {
