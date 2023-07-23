@@ -37,35 +37,17 @@ export default class GenreService {
     return newGenre;
   }
 
-  async findGenreById(genreId: number): Promise<any> {
+  async findGenreById(genreId: number): Promise<GenreEntity> {
 
     const genre = await this.genreRepo
       .createQueryBuilder('genre')
-      .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
-      .leftJoinAndSelect('audioGenre.audio', 'audio')
       .leftJoinAndSelect('genre.playlist', 'playlist')
-      .select(['genre', 'playlist'])
+      .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
       .where('genre.id = :genreId', { genreId: genreId })
       .andWhere('playlist.is_public = :isPublic', { isPublic: PlaylistPublic.PUBLIC })
       .getOne()
-    const playlists = await Promise.all(
-      genre.playlist.map(async (playlist) => {
-        const user = await this.entityManage.findOne(UserEntity, {
-          where: {
-            id: playlist.authorId,
-          },
-        });
-        return { playlist, author: user.firstName + " " + user.lastName };
-      })
-    );
 
-    const genreDTO: GenreDTO = {
-      id: genre.id,
-      name: genre.name,
-      emotion: genre.emotion,
-      playlists: playlists
-    }
-    return genreDTO
+    return genre
   }
 
   async findGenres(name?: string): Promise<GenreEntity[]> {
@@ -86,7 +68,11 @@ export default class GenreService {
     genreId: number,
     dto: UpdateGenreDTO,
   ): Promise<GenreEntity> {
-    const genre = await this.findGenreById(genreId);
+    const genre = await this.genreRepo.findOne({
+      where: {
+        id: genreId
+      }
+    })
     if (!genre) ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
 
     const updatedGenre = await this.genreRepo.save({
@@ -97,7 +83,11 @@ export default class GenreService {
   }
 
   async deleteGenre(genreId: number): Promise<GenreEntity> {
-    const genre = await this.findGenreById(genreId);
+    const genre = await this.genreRepo.findOne({
+      where: {
+        id: genreId
+      }
+    })
     if (!genre) ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
     const updatedGenre = this.genreRepo.save({
       id: genre.id,

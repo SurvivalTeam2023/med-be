@@ -23,6 +23,7 @@ import { GenreEntity } from './entities/genre.entity';
 import CreateGenreDTO from './dto/createGenre.dto';
 import UpdateGenreDTO from './dto/updateGenre.dto';
 import { Emotion } from '@aws-sdk/client-rekognition';
+import GenreDTO from './dto/genre.dto';
 
 @ApiTags('Genres')
 @Controller('genres')
