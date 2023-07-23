@@ -7,6 +7,8 @@ import { PlaylistEntity } from "../playlist/entities/playlist.entity";
 import { PlaylistType } from "src/common/enums/playlistType.enum";
 import { createAudioPlaylistDTO } from "./dto/createAudioPlaylist.dto";
 import { getUserId } from "src/utils/decode.utils";
+import { ERROR_MESSAGE } from "src/common/constants/messages.constant";
+import { ErrorHelper } from "src/helpers/error.helper";
 
 @Injectable()
 export default class AudioPlaylistService {
@@ -30,7 +32,15 @@ export default class AudioPlaylistService {
             }
         }
         )
+        if (!audio) {
+            ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND)
+        }
+        if (!playlist) {
+            ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAYLIST.NOT_FOUND)
+        }
         const audioPlaylist = await this.audioPlaylistRepository.save({
+            audioId: audio.id,
+            playlistId: playlist.id,
             audio: audio,
             playlist: playlist
         })

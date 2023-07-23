@@ -40,6 +40,7 @@ import {
 } from '@nestjs/platform-express';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
+import AudioDTO from './dto/audio.dto';
 
 @ApiTags('Audios')
 @Controller('audio')
@@ -50,8 +51,8 @@ export default class AudioController {
   @Get(':id')
   @Unprotected()
   @ApiOperation({ summary: 'get audio by audio id' })
-  async getAudioById(@Param('id') id: number): Promise<AudioEntity> {
-    return this.audioService.findAudioById(id);
+  async getAudioById(@Param('id') id: number, @RequestPayload() token: string): Promise<{ audio: AudioEntity, isLiked: boolean }> {
+    return this.audioService.findAudioById(id, token);
   }
 
   @Get()
@@ -66,15 +67,16 @@ export default class AudioController {
     required: false,
   })
   async getAudios(
+    @RequestPayload() token: string,
     @Query() audio: SearchAudioDto,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
-  ): Promise<Pagination<AudioEntity>> {
+  ): Promise<Pagination<AudioDTO>> {
     limit = limit > 100 ? 100 : limit;
     return this.audioService.findAudios(audio, {
       page,
       limit,
-    });
+    }, token);
   }
 
 

@@ -26,6 +26,7 @@ import getAudioDurationInSeconds from 'get-audio-duration';
 import { FileEntity } from '../files/entities/file.entity';
 import { AudioFileEntity } from '../audioFile/entities/audioFile.entity';
 import UserEntity from '../user/entities/user.entity';
+import AudioDTO from './dto/audio.dto';
 
 @Injectable()
 export default class AudioService {
@@ -37,8 +38,19 @@ export default class AudioService {
     private audioRepository: Repository<AudioEntity>,
   ) { }
 
-  async findAudioById(audioId: number): Promise<AudioEntity> {
-    const entity = await this.audioRepository
+  async findAudioById(audioId: number, token: string): Promise<{ audio: AudioEntity, isLiked: boolean }> {
+    let isLiked: boolean = false
+    const userId = getUserId(token)
+    const likedPlaylist = await this.entityManage.findOne(PlaylistEntity, {
+      relations: {
+        audioPlaylist: true
+      },
+      where: {
+        authorId: userId,
+        playlistType: PlaylistType.LIKED
+      }
+    })
+    const audio = await this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
@@ -47,23 +59,44 @@ export default class AudioService {
       .where('audio.id = :audioId', { audioId })
       .andWhere('audioFile.is_primary =  1')
       .getOne();
-    if (!entity) {
+
+    console.log(audio);
+
+    if (!audio) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND);
     }
+    for (const audioPlaylist of likedPlaylist.audioPlaylist) {
+      if (audioPlaylist.audioId = audio.id)
+        isLiked = true
+    }
 
-    return entity;
+    return { audio: audio, isLiked: isLiked };
   }
   async findAudios(
     dto: SearchAudioDTO,
     option: IPaginationOptions,
-  ): Promise<Pagination<AudioEntity>> {
+    token: string
+  ): Promise<Pagination<AudioDTO>> {
+
+    const userId = getUserId(token)
+
+    const likedPlaylist = await this.entityManage.findOne(PlaylistEntity, {
+      relations: {
+        audioPlaylist: true
+      },
+      where: {
+        authorId: userId,
+        playlistType: PlaylistType.LIKED
+      }
+    })
+
     const queryBuilder = this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist')
-      .where('audioFile.is_primary =  1');
+      .where('audioFile.is_primary =  1')
     if (dto.name)
       queryBuilder
         .where('LOWER(audio.name) like :name', { name: `%${dto.name}%` })
@@ -87,7 +120,35 @@ export default class AudioService {
         .orderBy('audio.created_at', 'DESC');
 
     queryBuilder.orderBy('audio.created_at', 'DESC');
-    return paginate<AudioEntity>(queryBuilder, option);
+    const result = await paginate<AudioEntity>(queryBuilder, option)
+    const audios = result.items.map(e => {
+      let isLiked: boolean = false
+      for (const audioPlaylist of likedPlaylist.audioPlaylist) {
+        if (audioPlaylist.audioId === e.id) {
+          isLiked = true
+          break;
+        }
+      }
+      const audioDTO: AudioDTO = {
+        id: e.id,
+        imageUrl: e.imageUrl,
+        length: e.length,
+        liked: e.liked,
+        name: e.name,
+        status: e.status,
+        artist: e.artist,
+        audioFile: e.audioFile,
+        audioPlaylist: e.audioPlaylist,
+        isLiked: isLiked,
+
+      }
+      return audioDTO
+    })
+
+    return {
+      ...result,
+      items: audios,
+    };
   }
   async createAudio(
     dto: CreateAudioDTO,

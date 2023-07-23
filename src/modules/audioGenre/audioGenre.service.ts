@@ -9,7 +9,7 @@ export class AudioGenreService {
     @InjectRepository(AudioGenreEntity)
     private audioGenreRepo: Repository<AudioGenreEntity>,
     private readonly entityManage: EntityManager,
-  ) {}
+  ) { }
 
   async findAudioGenre(genreId: number): Promise<AudioGenreEntity[]> {
     const querybuilder = this.audioGenreRepo
@@ -17,7 +17,8 @@ export class AudioGenreService {
       .leftJoinAndSelect('audio_genre.genre', 'genre')
       .leftJoinAndSelect('audio_genre.audio', 'audio')
       .leftJoinAndSelect('audio.artist', 'artist')
-      .leftJoinAndSelect('audio.file', 'file')
+      .leftJoinAndSelect('audio.audioFile', 'audioFile')
+      .leftJoinAndSelect('audioFile.file', 'file')
       .where('audio_genre.genre = :genre_id', { genre_id: genreId })
       .getMany();
 
