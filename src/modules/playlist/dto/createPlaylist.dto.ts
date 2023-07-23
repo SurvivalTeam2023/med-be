@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { PlaylistStatus } from '../../../common/enums/playlistStatus.enum';
 import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
+import { PlaylistType } from 'src/common/enums/playlistType.enum';
 
 export class CreatePlaylistDto {
   @ApiProperty()
@@ -18,12 +19,15 @@ export class CreatePlaylistDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  imageUrl: string;
+  imageUrl?: string;
 
   @IsOptional()
   @IsString()
   @ApiProperty()
   description: string;
+
+  @ApiProperty({ enum: PlaylistType })
+  playlistType: PlaylistType;
 
   @ApiProperty({ enum: PlaylistPublic })
   isPublic: PlaylistPublic;

@@ -15,8 +15,8 @@ export class PlaylistEntity extends BaseEntity {
   @Column({ name: 'author_id' })
   public authorId!: string;
 
-  @Column({ name: 'image_url' })
-  public imageUrl: string;
+  @Column({ name: 'image_url', nullable: true })
+  public imageUrl?: string;
   @Column({
     type: 'enum',
     enum: PlaylistStatus,
