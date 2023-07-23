@@ -1,27 +1,29 @@
 import { ApiProperty } from '@nestjs/swagger';
 import AudioPlaylistDto from 'src/modules/audio/dto/audioPlaylist.dto';
 import { AudioStatus } from '../../../common/enums/audioStatus.enum';
+import { AudioPlaylistEntity } from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
+import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
+import ArtistEntity from 'src/modules/artist/entities/artist.entity';
 
 export class AudioDTO {
-  @ApiProperty()
   id: number;
 
-  @ApiProperty()
   name: string;
 
-  @ApiProperty()
-  image_url: string;
+  imageUrl: string;
 
-  @ApiProperty({ enum: AudioStatus, default: AudioStatus.ACTIVE })
-  audio_status: AudioStatus;
+  status: AudioStatus;
 
-  @ApiProperty()
-  length: string;
+  length: number;
 
-  @ApiProperty()
   liked: number;
 
-  @ApiProperty()
-  audio_playlist: AudioPlaylistDto[];
+  audioPlaylist: AudioPlaylistEntity[];
+
+  audioFile: AudioFileEntity[];
+
+  artist: ArtistEntity
+
+  isLiked: boolean;
 }
 export default AudioDTO;
