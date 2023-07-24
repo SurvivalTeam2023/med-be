@@ -31,7 +31,7 @@ export default class FavoriteGenreController {
   }
 
   @ApiOperation({ summary: 'get Favorite genres list by userId' })
-  @Get(':userId')
+  @Get('/userId')
   @Unprotected()
   async getAllFavorite(
     @RequestPayload() token: string,
