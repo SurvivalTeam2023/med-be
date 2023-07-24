@@ -53,5 +53,5 @@ export class PlaylistEntity extends BaseEntity {
 
   @ManyToOne(() => GenreEntity, (genre) => genre.playlist, {
   })
-  genre: FollowerEntity;
+  genre: GenreEntity;
 }

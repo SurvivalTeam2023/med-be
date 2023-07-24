@@ -81,7 +81,8 @@ export default class AudioPlaylistService {
         }
         await this.audioPlaylistRepository.remove(audioPlaylist)
     }
-    async likeAudio(audioId: number, token: string): Promise<AudioPlaylistEntity> {
+    async updateIsLiked(audioId: number, isLiked: boolean, token: string): Promise<any> {
+
         const userId = getUserId(token);
         let playlist = await this.entityManage.findOne(PlaylistEntity, {
             where: {
@@ -95,28 +96,61 @@ export default class AudioPlaylistService {
             }
         }
         )
-        if (!audio) {
-            ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND)
-        }
-        if (!playlist) {
-            const playlistDTO: CreatePlaylistDto = {
-                name: "Like Song",
-                isPublic: PlaylistPublic.PRIVATE,
-                playlistType: PlaylistType.LIKED,
-                description: "All of your liked song",
+        if (isLiked == true) {
+            if (!audio) {
+                ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND)
             }
-            playlist = await this.playlistService.createPlaylist(playlistDTO, token)
-        }
-        const audioPlaylist = await this.audioPlaylistRepository.save({
-            audioId: audio.id,
-            playlistId: playlist.id,
-            audio: audio,
-            playlist: playlist
-        })
-        audio.liked++
-        await this.entityManage.save(audio)
+            if (!playlist) {
+                const playlistDTO: CreatePlaylistDto = {
+                    name: "Like Song",
+                    isPublic: PlaylistPublic.PRIVATE,
+                    playlistType: PlaylistType.LIKED,
+                    description: "All of your liked song",
+                }
+                playlist = await this.playlistService.createPlaylist(playlistDTO, token)
+            }
+            const audioPlaylist = await this.audioPlaylistRepository.save({
+                audioId: audio.id,
+                playlistId: playlist.id,
+                audio: audio,
+                playlist: playlist
+            })
+            audio.liked++
+            await this.entityManage.save(audio)
 
-        return audioPlaylist
+            return {
+                audio: {
+                    ...audio,
+                    isLiked: isLiked
+                },
+                playlist
+            }
+        } else if (isLiked == false) {
+            const audioPlaylist = await this.audioPlaylistRepository.findOne({
+                relations: {
+                    audio: true,
+                    playlist: true
+                }
+                , where: {
+                    audio: {
+                        id: audio.id
+                    },
+                    playlist: {
+                        id: playlist.id
+                    }
+                }
+            })
+            await this.audioPlaylistRepository.remove(audioPlaylist)
+            audio.liked--
+            await this.entityManage.save(audio)
+            return {
+                audio: {
+                    ...audio,
+                    isLiked: isLiked
+                },
+                playlist
+            }
+        }
     }
 
 }

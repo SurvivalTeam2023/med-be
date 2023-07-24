@@ -11,7 +11,7 @@ import FavoriteGenreService from './favoriteGenre.service';
 @ApiBearerAuth()
 @Controller('rest/favorite')
 export default class FavoriteGenreController {
-  constructor(private readonly favoriteService: FavoriteGenreService) {}
+  constructor(private readonly favoriteService: FavoriteGenreService) { }
 
   @ApiOperation({ summary: 'create Favorite genre' })
   @Unprotected()
@@ -34,9 +34,9 @@ export default class FavoriteGenreController {
   @Get(':userId')
   @Unprotected()
   async getAllFavorite(
-    @Param('userId') userId: string,
+    @RequestPayload() token: string,
   ): Promise<FavoriteGenreEntity[]> {
-    return this.favoriteService.findAllFavorite(userId);
+    return this.favoriteService.findAllFavorite(token);
   }
 
   @ApiOperation({ summary: 'Is favorite existed?' })

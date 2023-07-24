@@ -16,6 +16,9 @@ import {
 import { getUserId } from 'src/utils/decode.utils';
 import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
 import GenreService from '../genre/genre.services';
+import { PlaylistType } from 'src/common/enums/playlistType.enum';
+import { PlaylistDTO } from './dto/playlist.dto';
+import AudioDTO from '../audio/dto/audio.dto';
 
 @Injectable()
 export default class PlaylistService {
@@ -125,5 +128,38 @@ export default class PlaylistService {
     playlist.isPublic = publicStatus;
     await this.playlistRepository.save(playlist);
     return playlist;
+  }
+
+  async getLikedSong(token: string): Promise<any> {
+    const userId = getUserId(token)
+    const playlist = await this.playlistRepository
+      .createQueryBuilder('playlist')
+      .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
+      .leftJoinAndSelect('audio_playlist.audio', 'audio')
+      .leftJoinAndSelect('audio.audioFile', 'audioFile')
+      .leftJoinAndSelect('audioFile.file', 'file')
+      .leftJoinAndSelect('audio.artist', 'artist')
+      .where('playlist.playlist_type = :playlistType', { playlistType: PlaylistType.LIKED })
+      .andWhere('playlist.author_id = :authorId', { authorId: userId })
+      .select(['playlist', 'audio_playlist.id', 'audio', 'artist.artist_name', 'file.url'])
+      .getOne();
+    if (!playlist) { ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAYLIST.NOT_FOUND) }
+
+    const audioPlaylists = playlist.audioPlaylist.map(e => {
+      const audioPlaylist = {
+        id: e.id,
+        audio: {
+          ...e.audio,
+          isLiked: true
+        }
+      }
+      return audioPlaylist
+    })
+    const playlistDTO: PlaylistDTO = {
+      ...playlist,
+      authorId: userId,
+      audioPlaylist: audioPlaylists
+    }
+    return playlistDTO
   }
 }
