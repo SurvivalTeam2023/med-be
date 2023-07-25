@@ -49,6 +49,7 @@ export default class PlaylistService {
     const queryBuilder = this.playlistRepository
       .createQueryBuilder('playlist')
       .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
+      .leftJoin('playlist.genre', 'genre')
       .leftJoinAndSelect('audio_playlist.audio', 'audio')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
@@ -71,6 +72,11 @@ export default class PlaylistService {
       queryBuilder
         .andWhere('playlist.playlist_type = :playlistType', {
           playlistType: dto.playListType,
+        })
+    if (dto.genreId)
+      queryBuilder
+        .andWhere('genre.id = :genreId', {
+          genreId: dto.genreId,
         })
         .orderBy('playlist.created_at', 'DESC');
     queryBuilder.orderBy('playlist.created_at', 'DESC');
