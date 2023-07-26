@@ -92,7 +92,8 @@ export default class AudioService {
 
     const queryBuilder = this.audioRepository
       .createQueryBuilder('audio')
-      .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
+      .leftJoinAndSelect('audio.audioPlaylist', 'audioPlaylist')
+      .leftJoinAndSelect('audioPlaylist.playlist', 'playlist')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist')
@@ -109,7 +110,7 @@ export default class AudioService {
 
     if (dto.playlistId)
       queryBuilder
-        .andWhere('audio_playlist.playlist_id = :playlistId', {
+        .andWhere('audioPlaylist.playlist_id = :playlistId', {
           playlistId: dto.playlistId,
         })
         .orderBy('audio.created_at', 'DESC');
