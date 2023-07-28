@@ -125,10 +125,8 @@ export default class QuestionBankService {
 
             const mentalHealths = result.mentalHealth.filter(obj => obj.point === highestPoint.point);
             const count = 12 / mentalHealths.length
-            let sum: number = 0
             let questionList: QuestionEntity[] = []
             for (const mentalHealth of mentalHealths) {
-                sum += count
                 const mentalHealths = await this.entityManage.findOne(MentalHealthEntity, {
                     where: {
                         name: mentalHealth.mentalHealth
@@ -161,7 +159,7 @@ export default class QuestionBankService {
 
             const questionBank = await this.questionBankRepo.save({
                 isFinished: false,
-                numberOfQuestion: sum,
+                numberOfQuestion: questionList.length,
                 questionBankQuestion: questionBankQuestions,
                 user: user
             });
