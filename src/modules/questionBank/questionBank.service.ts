@@ -159,7 +159,6 @@ export default class QuestionBankService {
                 return questionBankQuestion;
             });
 
-            console.log(sum);
             const questionBank = await this.questionBankRepo.save({
                 isFinished: false,
                 numberOfQuestion: sum,
