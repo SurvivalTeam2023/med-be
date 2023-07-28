@@ -114,6 +114,7 @@ export default class QuestionBankService {
                     },
                 }
             })
+
             const highestPoint = result.mentalHealth.reduce((highest, current) => {
                 if (current.point > highest.point) {
                     return current;
@@ -124,7 +125,7 @@ export default class QuestionBankService {
 
             const mentalHealths = result.mentalHealth.filter(obj => obj.point === highestPoint.point);
             const count = 12 / mentalHealths.length
-            let sum: number
+            let sum: number = 0
             let questionList: QuestionEntity[] = []
             for (const mentalHealth of mentalHealths) {
                 sum += count
@@ -148,6 +149,7 @@ export default class QuestionBankService {
                     .take(count)
                     .getMany();
 
+
                 questionList.push(...questions)
             }
 
@@ -157,7 +159,7 @@ export default class QuestionBankService {
                 return questionBankQuestion;
             });
 
-
+            console.log(sum);
             const questionBank = await this.questionBankRepo.save({
                 isFinished: false,
                 numberOfQuestion: sum,
