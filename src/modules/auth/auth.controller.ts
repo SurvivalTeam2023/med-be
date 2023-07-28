@@ -17,6 +17,8 @@ export class AuthController {
   @ApiOperation({ summary: 'api login to med-app' })
   @Unprotected()
   async login(@Body() loginDTO: LoginDTO) {
+    console.log(this.authService.getAcessToken(loginDTO));
+    
     return this.authService.getAcessToken(loginDTO);
   }
 

@@ -22,7 +22,6 @@ import { getUserId } from 'src/utils/decode.utils';
 import { PlaylistType } from 'src/common/enums/playlistType.enum';
 import GenreService from '../genre/genre.services';
 import { FilesService } from '../files/files.service';
-import getAudioDurationInSeconds from 'get-audio-duration';
 import { FileEntity } from '../files/entities/file.entity';
 import { AudioFileEntity } from '../audioFile/entities/audioFile.entity';
 import UserEntity from '../user/entities/user.entity';
@@ -37,6 +36,7 @@ export default class AudioService {
     @InjectRepository(AudioEntity)
     private audioRepository: Repository<AudioEntity>,
   ) { }
+
 
   async findAudioById(audioId: number, token: string): Promise<{ audio: AudioEntity, isLiked: boolean }> {
     let isLiked: boolean = false
@@ -59,8 +59,6 @@ export default class AudioService {
       .where('audio.id = :audioId', { audioId })
       .andWhere('audioFile.is_primary =  1')
       .getOne();
-
-    console.log(audio);
 
     if (!audio) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND);
@@ -133,7 +131,6 @@ export default class AudioService {
       const audioDTO: AudioDTO = {
         id: e.id,
         imageUrl: e.imageUrl,
-        length: e.length,
         liked: e.liked,
         name: e.name,
         status: e.status,
@@ -185,14 +182,13 @@ export default class AudioService {
         }
       );
 
-      const file: FileEntity[] = [audioFile, imageFile];
+      const file: FileEntity[] = [audioFile];
       const audioFiles = file.map((file) => {
         const audioFile = new AudioFileEntity();
         audioFile.file = file;
         audioFile.isPrimary = true;
         return audioFile;
       });
-      const audioLength = await getAudioDurationInSeconds(audioFile.url);
 
       const entityData = this.audioRepository.create({
         ...dto,
@@ -200,7 +196,6 @@ export default class AudioService {
         status: AudioStatus.ACTIVE,
         audioGenre: audioGenres,
         audioFile: audioFiles,
-        length: audioLength,
         imageUrl: imageFile.url,
       });
       if (dto.playlistId) {
