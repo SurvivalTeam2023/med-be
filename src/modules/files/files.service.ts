@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { FileEntity } from './entities/file.entity';
 import { InjectAws } from 'aws-sdk-v3-nest/dist/index';
+import { getAudioDurationInSeconds } from 'get-audio-duration';
 import { ErrorHelper } from 'src/helpers/error.helper';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 @Injectable()

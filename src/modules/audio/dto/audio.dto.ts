@@ -14,6 +14,7 @@ export class AudioDTO {
 
   status: AudioStatus;
 
+  length: number;
 
   liked: number;
 

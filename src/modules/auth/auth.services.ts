@@ -32,7 +32,7 @@ export class AuthService {
     private readonly httpService: HttpService,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
-  ) { }
+  ) {}
 
   async logout(
     username: string,

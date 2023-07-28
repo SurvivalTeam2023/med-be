@@ -16,5 +16,9 @@ export class UpdateAudioDTO {
   @ApiProperty({ enum: AudioStatus, default: AudioStatus.ACTIVE })
   status: AudioStatus;
 
+  @IsOptional()
+  @IsString()
+  @ApiProperty()
+  length: number;
 }
 export default UpdateAudioDTO;

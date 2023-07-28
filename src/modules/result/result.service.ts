@@ -15,8 +15,6 @@ import { QuestionMentalHealthEntity } from "../questionMentalHealth/entities/que
 import { MentalHealthEntity } from "../mentalHealth/entities/mentalHealth.entity";
 import { MentalHealthDegreeEntity } from "../mentalHealthDegree/entities/mentalHealthDegree.entity";
 import ResultDTO from "./dto/result.dto";
-import { MentalHealthDegreeLogEntity } from "../mentalHealthDegreeLog/entities/mentalHealthDegreeLog.entity";
-import { MentalHealthLogEntity } from "../mentalHealthLog/entities/mentalHealthLog.entity";
 
 
 @Injectable()
@@ -56,7 +54,6 @@ export default class ResultService {
                     },
                 },
             });
-
             const percentageObject = {
                 mentalHealth: result.mentalHealth[0].mentalHealth,
                 point: result.mentalHealth[0].point / 36 * 100,
@@ -147,38 +144,13 @@ export default class ResultService {
             await entityManager.save(questionBank)
         })
         if (mentalHealthMap.size > 1) {
-            for (const [mentalHealth, point] of mentalHealthMap) {
-                const degree = await this.entityManage.findOne(MentalHealthDegreeEntity, {
-                    relations: {
-                        mentalHealth: true
-                    },
-                    where: {
-                        pointStart: LessThanOrEqual(point),
-                        pointEnd: MoreThanOrEqual(point),
-                        mentalHealth: {
-                            name: mentalHealth,
-                        },
-                    },
-                });
-                const mentalHealthLog = await this.entityManage.save(MentalHealthLogEntity, {
-                    userId: userId,
-                    questionBankId: dto.questionBankId,
-                })
-                await this.entityManage.save(MentalHealthDegreeLogEntity, {
-                    mentalHealthLog: mentalHealthLog,
-                    mentalHealthId: degree.mentalHealth.id,
-                    mentalHealthDegreeId: degree.id
-                })
-            }
             return percentageMapArray;
         }
         else if (mentalHealthMap.size === 1) {
             const [firstEntry] = mentalHealthMap.entries();
 
             const degree = await this.entityManage.findOne(MentalHealthDegreeEntity, {
-                relations: {
-                    mentalHealth: true
-                },
+                relations: ['mentalHealth'],
                 where: {
                     pointStart: LessThanOrEqual(firstEntry[1]),
                     pointEnd: MoreThanOrEqual(firstEntry[1]),
@@ -187,15 +159,7 @@ export default class ResultService {
                     },
                 },
             });
-            const mentalHealthLog = await this.entityManage.save(MentalHealthLogEntity, {
-                userId: userId,
-                questionBankId: dto.questionBankId,
-            })
-            await this.entityManage.save(MentalHealthDegreeLogEntity, {
-                mentalHealthLog: mentalHealthLog,
-                mentalHealthId: degree.mentalHealth.id,
-                mentalHealthDegreeId: degree.id
-            })
+
             const percentageObject = {
                 mentalHealth: firstEntry[0],
                 point: (firstEntry[1] / 36) * 100,
