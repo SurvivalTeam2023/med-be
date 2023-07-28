@@ -1,12 +1,17 @@
+import { AudioPlaylistEntity } from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
 import { AudioStatus } from '../../../common/enums/audioStatus.enum';
+import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
+import ArtistEntity from 'src/modules/artist/entities/artist.entity';
 
 export interface AudioInterface {
   id: number;
   name: string;
-  image_url: string;
-  audio_status: AudioStatus;
-  length: string;
-  playlist_id?: number;
-  created_at?: Date;
-  last_updated_at?: Date;
+  imageUrl: string;
+  status: AudioStatus;
+  length: number;
+  liked: number;
+  isLiked: boolean
+  audioFile: AudioFileEntity[];
+  artist: ArtistEntity
+  audioPlaylist: AudioPlaylistEntity[];
 }

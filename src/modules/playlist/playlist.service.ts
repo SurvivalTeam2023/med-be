@@ -19,6 +19,7 @@ import GenreService from '../genre/genre.services';
 import { PlaylistType } from 'src/common/enums/playlistType.enum';
 import { PlaylistDTO } from './dto/playlist.dto';
 import AudioDTO from '../audio/dto/audio.dto';
+import UserEntity from '../user/entities/user.entity';
 
 @Injectable()
 export default class PlaylistService {
@@ -36,6 +37,7 @@ export default class PlaylistService {
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist')
+      .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
       .where('playlist.id = :playlistId', { playlistId: playlistId })
       .getOne();
     if (!playList)
@@ -53,7 +55,9 @@ export default class PlaylistService {
       .leftJoinAndSelect('audio_playlist.audio', 'audio')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
-      .leftJoinAndSelect('audio.artist', 'artist');
+      .leftJoinAndSelect('audio.artist', 'artist')
+      .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
+      .select(['playlist', 'user.firstName','user.lastName', 'audio_playlist.id', 'audio', 'file',])
     if (dto.name)
       queryBuilder
         .where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` })
@@ -141,6 +145,7 @@ export default class PlaylistService {
     const playlist = await this.playlistRepository
       .createQueryBuilder('playlist')
       .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
+      .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
       .leftJoinAndSelect('audio_playlist.audio', 'audio')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
