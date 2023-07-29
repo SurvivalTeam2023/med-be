@@ -22,7 +22,6 @@ import ArtistEntity from 'src/modules/artist/entities/artist.entity';
 import { QuestionBankEntity } from 'src/modules/questionBank/entities/questionBank.entity';
 import { QuestionBankQuestionEntity } from 'src/modules/questionBankQuestion/entities/questionBankQuestion.entity';
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
-import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
 import { AccessEntity } from 'src/modules/access/entities/access.entity';
 import { QuestionMentalHealthEntity } from 'src/modules/questionMentalHealth/entities/questionMentalHealth.entity';
@@ -36,6 +35,8 @@ import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/follow
 import { GenreUserEntity } from 'src/modules/favoriteGenre/entities/genreUser.entity';
 import { AgeEntity } from 'src/modules/age/entities/age.entity';
 import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
+import { AudioUserEntity } from 'src/modules/audioUser/entities/audioUser.entity';
+import { PlaylistUserEntity } from 'src/modules/follower/entities/playlist_user.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -52,7 +53,6 @@ const entities = [
   QuestionBankEntity,
   QuestionBankQuestionEntity,
   ResultEntity,
-  FollowerEntity,
   HistoryEntity,
   AccessEntity,
   QuestionMentalHealthEntity,
@@ -66,7 +66,8 @@ const entities = [
   FollowedArtistEntity,
   AgeEntity,
   AudioFileEntity,
-
+  AudioUserEntity,
+  PlaylistUserEntity
 ];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {

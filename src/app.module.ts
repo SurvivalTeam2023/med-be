@@ -25,7 +25,6 @@ import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.modul
 import { FollowedArtistModule } from './modules/followedArtist/followedArtist.module';
 import { WalletModule } from './modules/wallet/wallet.module';
 import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
-import { FavoriteGenreModule } from './modules/favoriteGenre/favoriteGenre.module';
 
 @Module({
   imports: [
@@ -38,7 +37,6 @@ import { FavoriteGenreModule } from './modules/favoriteGenre/favoriteGenre.modul
     GenreModule,
     SubscriptionModule,
     PlanModule,
-    FavoriteGenreModule,
     HistoryModule,
     QuestionModule,
     OptionModule,

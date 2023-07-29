@@ -12,6 +12,8 @@ import { ErrorHelper } from "src/helpers/error.helper";
 import CreatePlaylistDto from "../playlist/dto/createPlaylist.dto";
 import { PlaylistPublic } from "src/common/enums/playlistPublic.enum";
 import PlaylistService from "../playlist/playlist.service";
+import { AudioUserEntity } from "../audioUser/entities/audioUser.entity";
+import UserEntity from "../user/entities/user.entity";
 
 @Injectable()
 export default class AudioPlaylistService {
@@ -84,6 +86,11 @@ export default class AudioPlaylistService {
     async updateIsLiked(audioId: number, isLiked: boolean, token: string): Promise<any> {
 
         const userId = getUserId(token);
+        const user = await this.entityManage.findOne(UserEntity, {
+            where: {
+                id: userId
+            }
+        })
         let playlist = await this.entityManage.findOne(PlaylistEntity, {
             where: {
                 playlistType: PlaylistType.LIKED,
@@ -114,6 +121,10 @@ export default class AudioPlaylistService {
                 playlistId: playlist.id,
                 audio: audio,
                 playlist: playlist
+            })
+            await this.entityManage.save(AudioUserEntity, {
+                audio: audio,
+                user: user
             })
             audio.liked++
             await this.entityManage.save(audio)

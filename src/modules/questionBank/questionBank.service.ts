@@ -62,39 +62,32 @@ export default class QuestionBankService {
         if (!checkQuestionBank)
         //create first questionBank
         {
+            const result: QuestionEntity[] = [];
+            for (let i = 1; i <= 4; i++) {
+                const questions = await this.entityManage
+                    .createQueryBuilder(QuestionEntity, 'question')
+                    .leftJoinAndSelect('question.option', 'option')
+                    .leftJoinAndSelect('question.age', 'age')
+                    .leftJoinAndSelect('question.questionMentalHealth', 'questionMentalHealth')
+                    .where('age.startAge <= :age', { age })
+                    .andWhere('age.endAge >= :age', { age })
+                    .andWhere('question.status = :status', { status: QuestionStatus.ACTIVE })
+                    .andWhere('questionMentalHealth.mentalHealthId = :mentalHealthId', { mentalHealthId: i })
+                    .select(['question.id', 'question.question', 'option.id', 'option.option'])
+                    .orderBy("RAND()")
+                    .take(10)
+                    .getMany();
+                result.push(...questions);
+            }
 
-            const questions = await this.entityManage.find(QuestionEntity, {
-                relations: {
-                    option: true,
-                    age: true
-                },
-                where: {
-                    age: {
-                        startAge: LessThanOrEqual(age),
-                        endAge: MoreThanOrEqual(age),
-                    },
-                    default: true,
-                    status: QuestionStatus.ACTIVE
-                },
-                select: {
-                    id: true,
-                    question: true,
-                    option: {
-                        id: true,
-                        option: true
-                    }
-                },
-                take: 12
-            });
-
-            questionBankQuestions = questions.map((question) => {
+            questionBankQuestions = result.map((question) => {
                 const questionBankQuestion = new QuestionBankQuestionEntity();
                 questionBankQuestion.question = question;
                 return questionBankQuestion;
             });
             const questionBank = await this.questionBankRepo.save({
                 isFinished: false,
-                numberOfQuestion: 12,
+                numberOfQuestion: 40,
                 questionBankQuestion: questionBankQuestions,
                 user: user,
             });
@@ -124,7 +117,7 @@ export default class QuestionBankService {
             });
 
             const mentalHealths = result.mentalHealth.filter(obj => obj.point === highestPoint.point);
-            const count = 12 / mentalHealths.length
+            const count = 40 / mentalHealths.length
             let questionList: QuestionEntity[] = []
             for (const mentalHealth of mentalHealths) {
                 const mentalHealths = await this.entityManage.findOne(MentalHealthEntity, {

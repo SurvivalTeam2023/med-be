@@ -18,6 +18,7 @@ import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/follow
 import { GenreUserEntity } from 'src/modules/favoriteGenre/entities/genreUser.entity';
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
 import { PlaylistUserEntity } from 'src/modules/follower/entities/playlist_user.entity';
+import { AudioUserEntity } from 'src/modules/audioUser/entities/audioUser.entity';
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryColumn()
@@ -121,6 +122,11 @@ export class UserEntity {
     cascade: true,
   })
   result: ResultEntity[];
+
+  @OneToMany(() => AudioUserEntity, (audioUser) => audioUser.user, {
+    cascade: true,
+  })
+  audioUser: AudioUserEntity[];
 
 }
 export default UserEntity;

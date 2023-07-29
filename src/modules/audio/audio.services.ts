@@ -24,6 +24,7 @@ import { FileEntity } from '../files/entities/file.entity';
 import { AudioFileEntity } from '../audioFile/entities/audioFile.entity';
 import UserEntity from '../user/entities/user.entity';
 import AudioDTO from './dto/audio.dto';
+import { AudioUserEntity } from '../audioUser/entities/audioUser.entity';
 
 @Injectable()
 export default class AudioService {
@@ -33,7 +34,7 @@ export default class AudioService {
     private readonly entityManage: EntityManager,
     @InjectRepository(AudioEntity)
     private audioRepository: Repository<AudioEntity>,
-  ) {}
+  ) { }
 
   async findAudioById(
     audioId: number,
@@ -41,13 +42,10 @@ export default class AudioService {
   ): Promise<{ audio: AudioEntity; isLiked: boolean }> {
     let isLiked: boolean = false;
     const userId = getUserId(token);
-    const likedPlaylist = await this.entityManage.findOne(PlaylistEntity, {
-      relations: {
-        audioPlaylist: true,
-      },
+    const audioUser = await this.entityManage.findOne(AudioUserEntity, {
       where: {
-        authorId: userId,
-        playlistType: PlaylistType.LIKED,
+        userId: userId,
+        audioId: audioId
       },
     });
     const audio = await this.audioRepository
@@ -63,9 +61,8 @@ export default class AudioService {
     if (!audio) {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND);
     }
-    for (const audioPlaylist of likedPlaylist.audioPlaylist) {
-      if ((audioPlaylist.audioId = audio.id)) isLiked = true;
-    }
+
+    if (audioUser) isLiked = true;
 
     return { audio: audio, isLiked: isLiked };
   }
