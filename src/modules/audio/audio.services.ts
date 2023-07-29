@@ -13,10 +13,8 @@ import {
   paginate,
 } from 'nestjs-typeorm-paginate';
 import UpdateAudioDTO from './dto/updateAudio.dto';
-import ArtistEntity from '../artist/entities/artist.entity';
 import { AudioPlaylistEntity } from '../audioPlaylist/entities/audioPlaylist.entity';
 import { PlaylistEntity } from '../playlist/entities/playlist.entity';
-import { GenreEntity } from '../genre/entities/genre.entity';
 import { AudioGenreEntity } from '../audioGenre/entities/audioGenre.entities';
 import { getUserId } from 'src/utils/decode.utils';
 import { PlaylistType } from 'src/common/enums/playlistType.enum';
@@ -35,21 +33,23 @@ export default class AudioService {
     private readonly entityManage: EntityManager,
     @InjectRepository(AudioEntity)
     private audioRepository: Repository<AudioEntity>,
-  ) { }
+  ) {}
 
-
-  async findAudioById(audioId: number, token: string): Promise<{ audio: AudioEntity, isLiked: boolean }> {
-    let isLiked: boolean = false
-    const userId = getUserId(token)
+  async findAudioById(
+    audioId: number,
+    token: string,
+  ): Promise<{ audio: AudioEntity; isLiked: boolean }> {
+    let isLiked: boolean = false;
+    const userId = getUserId(token);
     const likedPlaylist = await this.entityManage.findOne(PlaylistEntity, {
       relations: {
-        audioPlaylist: true
+        audioPlaylist: true,
       },
       where: {
         authorId: userId,
-        playlistType: PlaylistType.LIKED
-      }
-    })
+        playlistType: PlaylistType.LIKED,
+      },
+    });
     const audio = await this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
@@ -64,8 +64,7 @@ export default class AudioService {
       ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND);
     }
     for (const audioPlaylist of likedPlaylist.audioPlaylist) {
-      if (audioPlaylist.audioId = audio.id)
-        isLiked = true
+      if ((audioPlaylist.audioId = audio.id)) isLiked = true;
     }
 
     return { audio: audio, isLiked: isLiked };
@@ -73,21 +72,8 @@ export default class AudioService {
   async findAudios(
     dto: SearchAudioDTO,
     option: IPaginationOptions,
-    token: string
+    token: string,
   ): Promise<Pagination<AudioDTO>> {
-
-    const userId = getUserId(token)
-
-    const likedPlaylist = await this.entityManage.findOne(PlaylistEntity, {
-      relations: {
-        audioPlaylist: true
-      },
-      where: {
-        authorId: userId,
-        playlistType: PlaylistType.LIKED
-      }
-    })
-
     const queryBuilder = this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audioPlaylist')
@@ -95,7 +81,7 @@ export default class AudioService {
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist')
-      .where('audioFile.is_primary =  1')
+      .where('audioFile.is_primary =  1');
     if (dto.name)
       queryBuilder
         .where('LOWER(audio.name) like :name', { name: `%${dto.name}%` })
@@ -119,15 +105,8 @@ export default class AudioService {
         .orderBy('audio.created_at', 'DESC');
 
     queryBuilder.orderBy('audio.created_at', 'DESC');
-    const result = await paginate<AudioEntity>(queryBuilder, option)
-    const audios = result.items.map(e => {
-      let isLiked: boolean = false
-      for (const audioPlaylist of likedPlaylist.audioPlaylist) {
-        if (audioPlaylist.audioId === e.id) {
-          isLiked = true
-          break;
-        }
-      }
+    const result = await paginate<AudioEntity>(queryBuilder, option);
+    const audios = result.items.map((e) => {
       const audioDTO: AudioDTO = {
         id: e.id,
         imageUrl: e.imageUrl,
@@ -137,21 +116,16 @@ export default class AudioService {
         artist: e.artist,
         audioFile: e.audioFile,
         audioPlaylist: e.audioPlaylist,
-        isLiked: isLiked,
-
-      }
-      return audioDTO
-    })
+      };
+      return audioDTO;
+    });
 
     return {
       ...result,
       items: audios,
     };
   }
-  async createAudio(
-    dto: CreateAudioDTO,
-    token: string,
-  ): Promise<AudioEntity> {
+  async createAudio(dto: CreateAudioDTO, token: string): Promise<AudioEntity> {
     try {
       let userId = getUserId(token);
       const artist = await this.entityManage.findOne(UserEntity, {
@@ -166,21 +140,17 @@ export default class AudioService {
         return audioGenre;
       });
 
-      const audioFile = await this.entityManage.findOne(FileEntity,
-        {
-          where: {
-            id: dto.audioFileId
-          }
-        }
-      );
+      const audioFile = await this.entityManage.findOne(FileEntity, {
+        where: {
+          id: dto.audioFileId,
+        },
+      });
 
-      const imageFile = await this.entityManage.findOne(FileEntity,
-        {
-          where: {
-            id: dto.imageFileId
-          }
-        }
-      );
+      const imageFile = await this.entityManage.findOne(FileEntity, {
+        where: {
+          id: dto.imageFileId,
+        },
+      });
 
       const file: FileEntity[] = [audioFile];
       const audioFiles = file.map((file) => {
