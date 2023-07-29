@@ -3,10 +3,10 @@ import { PlaylistEntity } from 'src/modules/playlist/entities/playlist.entity';
 import UserEntity from 'src/modules/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
-@Entity('follower')
-export class FollowerEntity extends BaseEntity {
-    @Column({ name: 'subscriber_id', nullable: true })
-    public subscriberId!: string;
+@Entity('playlist_user')
+export class PlaylistUserEntity extends BaseEntity {
+    @Column({ name: 'user_id', nullable: true })
+    public userId!: string;
 
     @Column({ name: 'playlist_id' })
     public playlistId!: string;
@@ -16,6 +16,6 @@ export class FollowerEntity extends BaseEntity {
     public playlist: PlaylistEntity;
 
     @ManyToOne(() => UserEntity, (user) => user.follower, )
-    @JoinColumn({ name: 'subscriber_id' })
+    @JoinColumn({ name: 'user_id' })
     public user: UserEntity;
 }

@@ -1,6 +1,5 @@
 import { GENDER } from 'src/common/enums/userGender.enum';
 import { USER_STATUS } from 'src/common/enums/userStatus.enum';
-import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
 import { QuestionBankEntity } from 'src/modules/questionBank/entities/questionBank.entity';
 import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
@@ -16,8 +15,9 @@ import {
 import { FileEntity } from '../../files/entities/file.entity';
 import { UpdateDateColumn } from 'typeorm/decorator/columns/UpdateDateColumn';
 import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/followedArtist.entity';
-import { FavoriteGenreEntity } from 'src/modules/favoriteGenre/entities/favoriteGenre.entity';
+import { GenreUserEntity } from 'src/modules/favoriteGenre/entities/genreUser.entity';
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
+import { PlaylistUserEntity } from 'src/modules/follower/entities/playlist_user.entity';
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryColumn()
@@ -98,15 +98,15 @@ export class UserEntity {
   })
   history: HistoryEntity[];
 
-  @OneToMany(() => FavoriteGenreEntity, (favorite) => favorite.userId, {
+  @OneToMany(() => GenreUserEntity, (favorite) => favorite.userId, {
     cascade: true,
   })
-  favorite: FavoriteGenreEntity[];
+  favorite: GenreUserEntity[];
 
-  @OneToMany(() => FollowerEntity, (follower) => follower.user, {
+  @OneToMany(() => PlaylistUserEntity, (follower) => follower.user, {
     cascade: true,
   })
-  follower: FollowerEntity[];
+  follower: PlaylistUserEntity[];
 
   @OneToMany(
     () => FollowedArtistEntity,

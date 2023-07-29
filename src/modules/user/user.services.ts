@@ -36,7 +36,7 @@ import { FilesService } from '../files/files.service';
 import { getUserId } from 'src/utils/decode.utils';
 import { FileEntity } from '../files/entities/file.entity';
 import { SubscriptionEntity } from '../subscription/entities/subscription.entity';
-import { FavoriteGenreEntity } from '../favoriteGenre/entities/favoriteGenre.entity';
+import { GenreUserEntity } from '../favoriteGenre/entities/genreUser.entity';
 
 @Injectable()
 export class UserService {
@@ -442,7 +442,7 @@ export class UserService {
     return queryBuilder.getCount();
   }
   async getUserProfile(userId: string): Promise<any> {
-    const countFavorite = await this.entityManager.count(FavoriteGenreEntity, {
+    const countFavorite = await this.entityManager.count(GenreUserEntity, {
       where: {
         userId: userId,
       },

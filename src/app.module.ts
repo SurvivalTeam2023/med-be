@@ -17,7 +17,7 @@ import { MentalHealthDegreeModule } from './modules/mentalHealthDegree/mentalHea
 import { QuestionBankModule } from './modules/questionBank/questionBank.modul';
 import { AudioGenreModule } from './modules/audioGenre/audioGenre.module';
 import { ScheduleModule } from '@nestjs/schedule/dist';
-import { FollowerModule } from './modules/follower/follower.module';
+import { FollowerModule } from './modules/follower/playlist_user.module';
 import { FaceModule } from './modules/face/face.module';
 import { ArtistModule } from './modules/artist/artist.module';
 import { UserLogModule } from './modules/userStatusLog/userStatusLog.module';

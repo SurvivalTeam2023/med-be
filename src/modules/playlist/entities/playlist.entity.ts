@@ -1,11 +1,11 @@
 import { BaseEntity } from 'src/common/base/base.entity';
-import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
 import { AudioPlaylistEntity } from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { PlaylistStatus } from '../../../common/enums/playlistStatus.enum';
 import { PlaylistType } from 'src/common/enums/playlistType.enum';
 import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
 import { GenreEntity } from 'src/modules/genre/entities/genre.entity';
+import { PlaylistUserEntity } from 'src/modules/follower/entities/playlist_user.entity';
 
 @Entity('playlist')
 export class PlaylistEntity extends BaseEntity {
@@ -46,10 +46,10 @@ export class PlaylistEntity extends BaseEntity {
   })
   public playlistType: PlaylistType;
 
-  @OneToMany(() => FollowerEntity, (follower) => follower.playlist, {
+  @OneToMany(() => PlaylistUserEntity, (follower) => follower.playlist, {
     cascade: true,
   })
-  follower: FollowerEntity;
+  follower: PlaylistUserEntity;
 
   @ManyToOne(() => GenreEntity, (genre) => genre.playlist, {
   })

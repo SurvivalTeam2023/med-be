@@ -3,7 +3,7 @@ import { BaseEntity } from '../../../common/base/base.entity';
 import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
 import { GenreStatus } from 'src/common/enums/genreStatus.enum';
 import { EmotionEnum } from 'src/common/enums/emotion.enum';
-import { FavoriteGenreEntity } from 'src/modules/favoriteGenre/entities/favoriteGenre.entity';
+import { GenreUserEntity } from 'src/modules/favoriteGenre/entities/genreUser.entity';
 import { PlaylistEntity } from 'src/modules/playlist/entities/playlist.entity';
 
 @Entity('genre')
@@ -29,10 +29,10 @@ export class GenreEntity extends BaseEntity {
   public audioGenre: AudioGenreEntity[];
 
 
-  @OneToMany(() => FavoriteGenreEntity, (favorite) => favorite.genreId, {
+  @OneToMany(() => GenreUserEntity, (favorite) => favorite.genreId, {
     cascade: true,
   })
-  public favorite: FavoriteGenreEntity[];
+  public favorite: GenreUserEntity[];
 
   @OneToMany(() => PlaylistEntity, (playlist) => playlist.genre, {
     cascade: true,
