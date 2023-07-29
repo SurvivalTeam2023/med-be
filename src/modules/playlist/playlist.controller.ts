@@ -92,13 +92,4 @@ export default class PlaylistController {
   async deletePlaylist(@Param('id') id: number) {
     return await this.playlistService.deletePlaylist(id);
   }
-
-
-  @Get('audio/likedAudio')
-  @Roles({ roles: [USER_CLIENT_ROLE.SUBSCRIBER, USER_CLIENT_ROLE.USER] })
-  @ApiOperation({ summary: 'get liked song list' })
-  async getLikedSong(@RequestPayload() token: string): Promise<PlaylistEntity> {
-    return await this.playlistService.getLikedSong(token);
-  }
-
 }

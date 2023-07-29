@@ -3,7 +3,7 @@ import { BaseEntity } from '../../../common/base/base.entity';
 import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
 import { GenreStatus } from 'src/common/enums/genreStatus.enum';
 import { EmotionEnum } from 'src/common/enums/emotion.enum';
-import { GenreUserEntity } from 'src/modules/favoriteGenre/entities/genreUser.entity';
+import { GenreUserEntity } from 'src/modules/genreUser/entities/genreUser.entity';
 import { PlaylistEntity } from 'src/modules/playlist/entities/playlist.entity';
 
 @Entity('genre')

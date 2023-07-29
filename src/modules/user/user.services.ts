@@ -36,7 +36,7 @@ import { FilesService } from '../files/files.service';
 import { getUserId } from 'src/utils/decode.utils';
 import { FileEntity } from '../files/entities/file.entity';
 import { SubscriptionEntity } from '../subscription/entities/subscription.entity';
-import { GenreUserEntity } from '../favoriteGenre/entities/genreUser.entity';
+import { GenreUserEntity } from 'src/modules/genreUser/entities/genreUser.entity';
 
 @Injectable()
 export class UserService {
@@ -50,7 +50,7 @@ export class UserService {
     private readonly artistRepository: Repository<ArtistEntity>,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-  ) {}
+  ) { }
 
   getAdminAccount = () => {
     let adminAccount: LoginDTO = {
@@ -406,7 +406,7 @@ export class UserService {
       return null;
     }
   };
-  
+
 
   async signInGoogle(
     loginGmailDTO: LoginGmailDTO,

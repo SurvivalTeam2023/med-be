@@ -140,37 +140,5 @@ export default class PlaylistService {
     return playlist;
   }
 
-  async getLikedSong(token: string): Promise<any> {
-    const userId = getUserId(token)
-    const playlist = await this.playlistRepository
-      .createQueryBuilder('playlist')
-      .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
-      .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
-      .leftJoinAndSelect('audio_playlist.audio', 'audio')
-      .leftJoinAndSelect('audio.audioFile', 'audioFile')
-      .leftJoinAndSelect('audioFile.file', 'file')
-      .leftJoinAndSelect('audio.artist', 'artist')
-      .where('playlist.playlist_type = :playlistType', { playlistType: PlaylistType.LIKED })
-      .andWhere('playlist.author_id = :authorId', { authorId: userId })
-      .select(['playlist', 'audio_playlist.id', 'audio', 'artist.artist_name', 'file.url'])
-      .getOne();
-    if (!playlist) { ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAYLIST.NOT_FOUND) }
-
-    const audioPlaylists = playlist.audioPlaylist.map(e => {
-      const audioPlaylist = {
-        id: e.id,
-        audio: {
-          ...e.audio,
-          isLiked: true
-        }
-      }
-      return audioPlaylist
-    })
-    const playlistDTO: PlaylistDTO = {
-      ...playlist,
-      authorId: userId,
-      audioPlaylist: audioPlaylists
-    }
-    return playlistDTO
-  }
+ 
 }

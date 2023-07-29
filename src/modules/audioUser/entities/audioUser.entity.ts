@@ -8,10 +8,10 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 export class AudioUserEntity extends BaseEntity {
 
   @Column({ name: 'audio_id' })
-  public audioId!: number;
+  public audioId?: number;
 
   @Column({ name: 'user_id' })
-  public userId!: string;
+  public userId?: string;
 
   @ManyToOne(() => AudioEntity, (audio) => audio.audioUser)
   @JoinColumn({ name: 'genre_id' })

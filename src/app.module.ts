@@ -25,6 +25,7 @@ import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.modul
 import { FollowedArtistModule } from './modules/followedArtist/followedArtist.module';
 import { WalletModule } from './modules/wallet/wallet.module';
 import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
+import { AudioUserModule } from './modules/audioUser/audioUser.module';
 
 @Module({
   imports: [
@@ -54,8 +55,9 @@ import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
     UserLogModule,
     WalletModule,
     HealthCheckModule,
+    AudioUserModule
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

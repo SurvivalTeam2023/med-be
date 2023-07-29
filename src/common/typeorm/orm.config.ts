@@ -32,7 +32,7 @@ import { SubscriptionEntity } from 'src/modules/subscription/entities/subscripti
 import { PlanEntity } from 'src/modules/plan/entities/plan.entity';
 import { UserStatusLogEntity } from 'src/modules/userStatusLog/entity/userStatusLog.entity';
 import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/followedArtist.entity';
-import { GenreUserEntity } from 'src/modules/favoriteGenre/entities/genreUser.entity';
+import { GenreUserEntity } from 'src/modules/genreUser/entities/genreUser.entity';
 import { AgeEntity } from 'src/modules/age/entities/age.entity';
 import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
 import { AudioUserEntity } from 'src/modules/audioUser/entities/audioUser.entity';
