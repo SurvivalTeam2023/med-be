@@ -11,14 +11,14 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 export default class RecommendationController {
   constructor(private readonly recommendationService: RecommendationService) { }
 
-  @Get('user/:id')
+  @Get('user')
   @ApiOperation({ summary: 'get recommendation by userId' })
   @Unprotected()
   async getResultById(@RequestPayload() token: string): Promise<any> {
     return await this.recommendationService.getRecommendationsService(token);
   }
 
-  @Get('mental/:id')
+  @Get('mental')
   @ApiOperation({ summary: 'get recommendation by mentalId' })
   @Unprotected()
   async getResultByMentalId(@RequestPayload() token: string): Promise<any> {
@@ -26,7 +26,7 @@ export default class RecommendationController {
   }
 
   @Get('audio/:id')
-  @ApiOperation({ summary: 'get recommendation by genreId' })
+  @ApiOperation({ summary: 'get recommendation by audioId' })
   @Unprotected()
   async getResultByAudioId(@Param('id') genreId: number, @RequestPayload() token: string): Promise<any> {
     return await this.recommendationService.getRecommendationsByAudio(genreId);
