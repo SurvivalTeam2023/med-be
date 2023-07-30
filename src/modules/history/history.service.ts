@@ -32,7 +32,6 @@ export default class HistoryService {
 
     const audios = Promise.all(querybuilder.map(async e => {
       let isLiked: boolean = false
-      console.log(e.audio.audioUser);
       const audio = await this.entityManage.findOne(AudioEntity, {
         relations: {
           audioUser: true
