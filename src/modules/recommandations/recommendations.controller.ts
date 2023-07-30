@@ -15,23 +15,20 @@ export default class RecommendationController {
   @ApiOperation({ summary: 'get recommendation by userId' })
   @Unprotected()
   async getResultById(@RequestPayload() token: string): Promise<any> {
-    const userId = "a582937b-f5a4-45cb-be6a-51ee41bcdc84";
-    return await this.recommendationService.getRecommendationsService(userId);
+    return await this.recommendationService.getRecommendationsService(token);
   }
 
-  @Get('genre/:id')
-  @ApiOperation({ summary: 'get recommendation by genreId' })
+  @Get('mental/:id')
+  @ApiOperation({ summary: 'get recommendation by mentalId' })
   @Unprotected()
-  async getResultByGenreId(@Param('id') genreId: number, @RequestPayload() token: string): Promise<any> {
-    const userId = "a582937b-f5a4-45cb-be6a-51ee41bcdc84";
-    return await this.recommendationService.getRecommendationsByGenre(genreId);
+  async getResultByMentalId(@RequestPayload() token: string): Promise<any> {
+    return await this.recommendationService.getRecommendationsByMental(token);
   }
 
   @Get('audio/:id')
   @ApiOperation({ summary: 'get recommendation by genreId' })
   @Unprotected()
   async getResultByAudioId(@Param('id') genreId: number, @RequestPayload() token: string): Promise<any> {
-    const userId = "a582937b-f5a4-45cb-be6a-51ee41bcdc84";
     return await this.recommendationService.getRecommendationsByAudio(genreId);
   }
 }

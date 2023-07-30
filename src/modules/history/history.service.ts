@@ -24,8 +24,9 @@ export default class HistoryService {
       .leftJoinAndSelect('history.audio', 'audio')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
+      .leftJoinAndSelect('audio.artist', 'artist')
       .where('history.user_id = :user_id', { user_id: userId })
-      .select(['history.id', 'audio', 'audioFile.id', 'file.url'])
+      .select(['history.id', 'audio', 'artist', 'audioFile.id', 'file.url'])
       .orderBy('history.last_updated_at', 'DESC')
       .getMany();
 
