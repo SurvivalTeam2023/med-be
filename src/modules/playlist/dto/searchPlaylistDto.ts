@@ -1,6 +1,5 @@
-/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator';
 import { PlaylistStatus } from '../../../common/enums/playlistStatus.enum';
 import { PlaylistType } from 'src/common/enums/playlistType.enum';
 
@@ -17,6 +16,11 @@ export class SearchPlaylistDto {
   @IsString()
   @IsOptional()
   authorId: string;
+
+  @ApiProperty({ required: false })
+  @IsNumberString()
+  @IsOptional()
+  genreId: number;
 
   @ApiProperty({ enum: PlaylistType, required: false })
   playListType: PlaylistType;

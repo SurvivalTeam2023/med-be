@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
@@ -17,6 +16,10 @@ import {
 import { getUserId } from 'src/utils/decode.utils';
 import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
 import GenreService from '../genre/genre.services';
+import { PlaylistType } from 'src/common/enums/playlistType.enum';
+import { PlaylistDTO } from './dto/playlist.dto';
+import AudioDTO from '../audio/dto/audio.dto';
+import UserEntity from '../user/entities/user.entity';
 
 @Injectable()
 export default class PlaylistService {
@@ -34,6 +37,7 @@ export default class PlaylistService {
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist')
+      .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
       .where('playlist.id = :playlistId', { playlistId: playlistId })
       .getOne();
     if (!playList)
@@ -47,9 +51,13 @@ export default class PlaylistService {
     const queryBuilder = this.playlistRepository
       .createQueryBuilder('playlist')
       .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
+      .leftJoin('playlist.genre', 'genre')
       .leftJoinAndSelect('audio_playlist.audio', 'audio')
-      .leftJoinAndSelect('audio.file', 'files')
-      .leftJoinAndSelect('audio.artist', 'artist');
+      .leftJoinAndSelect('audio.audioFile', 'audioFile')
+      .leftJoinAndSelect('audioFile.file', 'file')
+      .leftJoinAndSelect('audio.artist', 'artist')
+      .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
+      .select(['playlist', 'user.firstName','user.lastName', 'audio_playlist.id', 'audio', 'file',])
     if (dto.name)
       queryBuilder
         .where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` })
@@ -69,6 +77,11 @@ export default class PlaylistService {
         .andWhere('playlist.playlist_type = :playlistType', {
           playlistType: dto.playListType,
         })
+    if (dto.genreId)
+      queryBuilder
+        .andWhere('genre.id = :genreId', {
+          genreId: dto.genreId,
+        })
         .orderBy('playlist.created_at', 'DESC');
     queryBuilder.orderBy('playlist.created_at', 'DESC');
     return paginate<PlaylistEntity>(queryBuilder, option);
@@ -78,7 +91,7 @@ export default class PlaylistService {
     dto: CreatePlaylistDto,
     token: string,
   ): Promise<PlaylistEntity> {
-    let authorId = getUserId(token);
+    const authorId = getUserId(token);
     const playlist = await this.playlistRepository.save({
       ...dto,
       status: PlaylistStatus.ACTIVE,
@@ -127,5 +140,37 @@ export default class PlaylistService {
     return playlist;
   }
 
+  async getLikedSong(token: string): Promise<any> {
+    const userId = getUserId(token)
+    const playlist = await this.playlistRepository
+      .createQueryBuilder('playlist')
+      .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
+      .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
+      .leftJoinAndSelect('audio_playlist.audio', 'audio')
+      .leftJoinAndSelect('audio.audioFile', 'audioFile')
+      .leftJoinAndSelect('audioFile.file', 'file')
+      .leftJoinAndSelect('audio.artist', 'artist')
+      .where('playlist.playlist_type = :playlistType', { playlistType: PlaylistType.LIKED })
+      .andWhere('playlist.author_id = :authorId', { authorId: userId })
+      .select(['playlist', 'audio_playlist.id', 'audio', 'artist.artist_name', 'file.url'])
+      .getOne();
+    if (!playlist) { ErrorHelper.NotFoundException(ERROR_MESSAGE.PLAYLIST.NOT_FOUND) }
 
+    const audioPlaylists = playlist.audioPlaylist.map(e => {
+      const audioPlaylist = {
+        id: e.id,
+        audio: {
+          ...e.audio,
+          isLiked: true
+        }
+      }
+      return audioPlaylist
+    })
+    const playlistDTO: PlaylistDTO = {
+      ...playlist,
+      authorId: userId,
+      audioPlaylist: audioPlaylists
+    }
+    return playlistDTO
+  }
 }

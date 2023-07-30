@@ -15,5 +15,5 @@ export class MentalHealthDegreeLogEntity extends BaseEntity {
     @ManyToOne(() => MentalHealthLogEntity, (mentalHealthLog) => mentalHealthLog.mentalHealthDegreeLog, {
         cascade: true,
     })
-    mentalHealthLog: FollowerEntity[];
+    mentalHealthLog: MentalHealthLogEntity;
 }

@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable prefer-const */
-/* eslint-disable prettier/prettier */
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
@@ -52,7 +50,7 @@ export class UserService {
     private readonly artistRepository: Repository<ArtistEntity>,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-  ) { }
+  ) {}
 
   getAdminAccount = () => {
     let adminAccount: LoginDTO = {
@@ -122,26 +120,21 @@ export class UserService {
       );
   }
 
-  async updateUserStatus(
-    username: string,
-    token: string
-  ): Promise<UserEntity> {
+  async updateUserStatus(username: string, token: string): Promise<UserEntity> {
     const user = await this.findUserByName(username, token);
     const userId = user['user_keycloak']['id'];
-    const user_db = await this.userRepository.findOne({ where: { id: userId } })
-    let status: boolean
+    const user_db = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    let status: boolean;
     if (user_db.status == USER_STATUS.ACTIVE) {
-      user_db.status = USER_STATUS.INACTIVE
-      status = false
-      await this.userRepository.save(
-        user_db
-      )
+      user_db.status = USER_STATUS.INACTIVE;
+      status = false;
+      await this.userRepository.save(user_db);
     } else {
-      user_db.status = USER_STATUS.ACTIVE
-      status = true
-      await this.userRepository.save(
-        user_db
-      )
+      user_db.status = USER_STATUS.ACTIVE;
+      status = true;
+      await this.userRepository.save(user_db);
     }
     await firstValueFrom(
       this.httpService
@@ -149,7 +142,7 @@ export class UserService {
           `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}`,
           {
             id: userId,
-            enabled: status
+            enabled: status,
           },
           {
             headers: {
@@ -161,16 +154,13 @@ export class UserService {
         .pipe(map((response) => response.data))
         .pipe(
           catchError((err) =>
-            of(
-              ErrorHelper.BadGatewayException(err.response.data.errorMessage),
-            ),
+            of(ErrorHelper.BadGatewayException(err.response.data.errorMessage)),
           ),
-        )
+        ),
     );
-    if (!username)
-      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
+    if (!username) ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
 
-    return user_db
+    return user_db;
   }
 
   async changeRole(
@@ -233,7 +223,9 @@ export class UserService {
         .pipe(
           catchError((err) =>
             of(
-              ErrorHelper.BadRequestException(ERROR_MESSAGE.KEYCLOAK.SOMETHING_WRONG),
+              ErrorHelper.BadRequestException(
+                ERROR_MESSAGE.KEYCLOAK.SOMETHING_WRONG,
+              ),
             ),
           ),
         ),
@@ -414,6 +406,7 @@ export class UserService {
       return null;
     }
   };
+  
 
   async signInGoogle(
     loginGmailDTO: LoginGmailDTO,
@@ -438,63 +431,133 @@ export class UserService {
         id: userId,
         username: loginGmailDTO.username,
         email: loginGmailDTO.email,
-
       };
       await this.userRepository.save(newUser);
     }
     return access_token;
   }
   async countUser(status: USER_STATUS): Promise<number> {
-
-    const queryBuilder = this.userRepository
-      .createQueryBuilder('user')
-    if (status) queryBuilder.where('user.status = :status', { status: status })
-    return queryBuilder.getCount()
+    const queryBuilder = this.userRepository.createQueryBuilder('user');
+    if (status) queryBuilder.where('user.status = :status', { status: status });
+    return queryBuilder.getCount();
   }
   async getUserProfile(userId: string): Promise<any> {
     const countFavorite = await this.entityManager.count(FavoriteGenreEntity, {
       where: {
-        userId: userId
-      }
-    })
+        userId: userId,
+      },
+    });
     const countPlaylist = await this.entityManager.count(PlaylistEntity, {
       where: {
-        authorId: userId
-      }
-    })
-    const countFollowing = await this.entityManager.count(FollowedArtistEntity, {
-      where: {
-        userId: userId
-      }
-    })
+        authorId: userId,
+      },
+    });
+    const countFollowing = await this.entityManager.count(
+      FollowedArtistEntity,
+      {
+        where: {
+          userId: userId,
+        },
+      },
+    );
     const publicPlaylist = await this.entityManager.find(PlaylistEntity, {
       where: {
         authorId: userId,
-        isPublic: PlaylistPublic.PUBLIC
-      }
-    })
+        isPublic: PlaylistPublic.PUBLIC,
+      },
+    });
     const followingArtist = await this.entityManager.find(ArtistEntity, {
       where: {
         follower: {
-          userId: userId
-        }
+          userId: userId,
+        },
       },
-    })
+    });
     const latestSub = await this.entityManager.findOne(SubscriptionEntity, {
       where: {
         user: {
-          id: userId
-        }
+          id: userId,
+        },
       },
       order: {
-        createdAt: 'DESC'
-      }
-    })
-    return { favorite: countFavorite, playlist: countPlaylist, following: countFollowing, publicPlaylist: publicPlaylist, followingArtist: followingArtist, lastestSub: latestSub }
+        createdAt: 'DESC',
+      },
+    });
+    return {
+      favorite: countFavorite,
+      playlist: countPlaylist,
+      following: countFollowing,
+      publicPlaylist: publicPlaylist,
+      followingArtist: followingArtist,
+      lastestSub: latestSub,
+    };
   }
-  async updateUser(token: string, dto: UpdateUserDTO, file: Express.Multer.File): Promise<UserEntity> {
+  async updateUser(
+    token: string,
+    dto: UpdateUserDTO,
+    file: Express.Multer.File,
+  ): Promise<UserEntity> {
+    let avatar: FileEntity;
+    const userId = getUserId(token);
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (user == null) {
+      ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
+    }
+    if (dto.dob) {
+      this.validateAge(dto.dob);
+    }
+    const response = await lastValueFrom(
+      this.authService.getAcessToken(this.getAdminAccount()),
+    );
+    let adminToken = `Bearer ${response['access_token']}`;
+    await firstValueFrom(
+      this.httpService
+        .put(
+          `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users/${userId}`,
+          {
+            id: userId,
+            ...(dto.firstName && { firstName: dto.firstName }), // Add firstName if not null
+            ...(dto.lastName && { lastName: dto.lastName }), // Add lastName if not null
+            ...(dto.email ? { email: dto.email, emailVerified: false } : {}),
+          },
+          {
+            headers: {
+              Accept: 'application/json',
+              Authorization: adminToken,
+            },
+          },
+        )
+        .pipe(map((response) => response.data))
+        .pipe(
+          catchError((err) =>
+            of(ErrorHelper.BadGatewayException(err.response.data)),
+          ),
+        ),
+    );
+    if (file) {
+      avatar = await this.fileService.uploadPublicFile(
+        file.buffer,
+        file.originalname,
+      );
+    }
+    const updatedUser = await this.userRepository.save({
+      ...dto,
+      id: userId,
+      avatar: avatar,
+    });
+    if (dto.email)
+      await firstValueFrom(await this.authService.verifyEmail(user.username));
+    return updatedUser;
+  }
+
+
+  async updateUserById(userId: string, dto: UpdateUserDTO, file: Express.Multer.File): Promise<UserEntity> {
     let avatar: FileEntity
-    const userId = getUserId(token)
     const user = await this.userRepository.findOne({
       where: {
         id: userId

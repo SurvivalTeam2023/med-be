@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,7 +10,7 @@ const DB_PASSWORD: string = process.env.DB_PASSWORD || '123123';
 const DB_DATABASE: string = process.env.DB_DATABASE || 'med-be';
 const APP_BASE_URL_PREFIX: string = process.env.APP_BASE_URL_PREFIX || 'api';
 //keycloak config
-const KEYCLOAK_HOST: string = process.env.KEYCLOAK_HOST || 'localhost';
+const KEYCLOAK_HOST: string = process.env.KEYCLOAK_HOST || '167.86.69.42';
 const KEYCLOAK_REALM_ClIENT: string =
   process.env.KEYCLOAK_REALM_ClIENT || 'med-app';
 const REALM_PRODUCTION = process.env.REALM_PRODUCTION || 'null';

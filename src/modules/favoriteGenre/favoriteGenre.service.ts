@@ -1,9 +1,6 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable prefer-const */
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FavoriteGenreEntity } from './entities/favoriteGenre.entity';
@@ -21,15 +18,16 @@ export default class FavoriteGenreService {
     @InjectRepository(FavoriteGenreEntity)
     private favoriteRepo: Repository<FavoriteGenreEntity>,
     private readonly entityManage: EntityManager,
-  ) { }
+  ) {}
   async findAllFavorite(token: string): Promise<FavoriteGenreEntity[]> {
-
-    const userId = getUserId(token)
+    const userId = getUserId(token);
     const querybuilder = this.favoriteRepo
       .createQueryBuilder('favorite_genre')
       .leftJoinAndSelect('favorite_genre.genre', 'genre')
       .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
       .leftJoinAndSelect('audioGenre.audio', 'audio')
+      .leftJoinAndSelect('audio.audioFile', 'audioFile')
+      .leftJoinAndSelect('audioFile.file', 'file')
       .select(['favorite_genre', 'genre', 'audioGenre.id', 'audio'])
       .where('favorite_genre.user_id = :userId', { userId: userId })
       .getMany();

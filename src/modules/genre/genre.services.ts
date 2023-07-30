@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Emotion } from '@aws-sdk/client-rekognition';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,6 +16,11 @@ import { QuestionEntity } from '../question/entities/question.entity';
 import { MentalHealthEntity } from '../mentalHealth/entities/mentalHealth.entity';
 import { OptionEntity } from '../option/entities/option.entity';
 import { QuestionMentalHealthEntity } from '../questionMentalHealth/entities/questionMentalHealth.entity';
+import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
+import UserEntity from '../user/entities/user.entity';
+import ArtistEntity from '../artist/entities/artist.entity';
+import PlaylistDto from '../playlist/dto/playlist.dto';
+import GenreDTO from './dto/genre.dto';
 
 @Injectable()
 export default class GenreService {
@@ -34,27 +38,41 @@ export default class GenreService {
   }
 
   async findGenreById(genreId: number): Promise<GenreEntity> {
-    const genre = await this.genreRepo.findOneBy({
-      id: genreId,
-    });
-    return genre;
+
+    const genre = await this.genreRepo
+      .createQueryBuilder('genre')
+      .leftJoinAndSelect('genre.playlist', 'playlist')
+      .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
+      .where('genre.id = :genreId', { genreId: genreId })
+      .andWhere('playlist.is_public = :isPublic', { isPublic: PlaylistPublic.PUBLIC })
+      .getOne()
+
+    return genre
   }
 
   async findGenres(name?: string): Promise<GenreEntity[]> {
-    const queryBuilder = await this.genreRepo.createQueryBuilder('genre')
+    const queryBuilder = await this.genreRepo
+      .createQueryBuilder('genre')
       .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
       .leftJoinAndSelect('audioGenre.audio', 'audio')
-      .select(['genre', 'audioGenre.id', 'audio'])
-    if (name) queryBuilder.where('LOWER(genre.name) like :name', { name: `%${name}%` }).orderBy('genre.name', 'ASC')
+      .leftJoinAndSelect('genre.playlist', 'playlist')
+      .select(['genre', 'audioGenre.id', 'audio']);
+    if (name)
+      queryBuilder
+        .where('LOWER(genre.name) like :name', { name: `%${name}%` })
+        .orderBy('genre.name', 'ASC');
 
-
-    return queryBuilder.orderBy('genre.name', 'ASC').getMany()
+    return queryBuilder.orderBy('genre.name', 'ASC').getMany();
   }
   async updateGenre(
     genreId: number,
     dto: UpdateGenreDTO,
   ): Promise<GenreEntity> {
-    const genre = await this.findGenreById(genreId);
+    const genre = await this.genreRepo.findOne({
+      where: {
+        id: genreId
+      }
+    })
     if (!genre) ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
 
     const updatedGenre = await this.genreRepo.save({
@@ -65,7 +83,11 @@ export default class GenreService {
   }
 
   async deleteGenre(genreId: number): Promise<GenreEntity> {
-    const genre = await this.findGenreById(genreId);
+    const genre = await this.genreRepo.findOne({
+      where: {
+        id: genreId
+      }
+    })
     if (!genre) ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
     const updatedGenre = this.genreRepo.save({
       id: genre.id,
@@ -74,85 +96,16 @@ export default class GenreService {
     return updatedGenre;
   }
   async getGenreByEmotion(emotions: Emotion[]): Promise<GenreEntity[]> {
-    const genre = await this.genreRepo.createQueryBuilder('genre')
+    const genre = await this.genreRepo
+      .createQueryBuilder('genre')
       .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
       .leftJoinAndSelect('audioGenre.audio', 'audio')
       .select(['genre', 'audioGenre.id', 'audio'])
-      .where('genre.emotion like :emotion', { emotion: `%${emotions[0].Type}%` }).orderBy('genre.name', 'ASC').getMany()
-    return genre
-  }
-
-  async getGenreByResult(questionBankId: number): Promise<GenreEntity[]> {
-    const results = await this.entityManage.find(ResultEntity, {
-      where: {
-        questionBankId: questionBankId
-      }
-    });
-
-    const questionMap = new Map<QuestionEntity, number>();
-    const mentalHealthMap = new Map<string, number>();
-
-    await Promise.all(
-      results.map(async (result) => {
-        const option = await this.entityManage.findOne(OptionEntity, {
-          relations: {
-            question: true
-          },
-          where: {
-            id: result.optionId
-          }
-        });
-
-        questionMap.set(option.question, option.points);
+      .where('genre.emotion like :emotion', {
+        emotion: `%${emotions[0].Type}%`,
       })
-    );
-
-    await Promise.all(
-      Array.from(questionMap.entries()).map(async ([key, value]) => {
-        const question = await this.entityManage.findOne(QuestionEntity, {
-          relations: {
-            questionMentalHealth: true
-          },
-          where: {
-            id: key.id
-          }
-        });
-
-        for (const e of question.questionMentalHealth) {
-          const questionMentalHealth = await this.entityManage.findOne(QuestionMentalHealthEntity, {
-            relations: {
-              mentalHealth: true
-            },
-            where: {
-              id: e.id
-            }
-          });
-
-          const mentalHealth = questionMentalHealth.mentalHealth.name;
-          const updateValue = mentalHealthMap.get(mentalHealth) || 0;
-          mentalHealthMap.set(mentalHealth, updateValue + value);
-        }
-      })
-    );
-
-    let highestPoint: [string, number];
-    for (const entry of mentalHealthMap.entries()) {
-      if (!highestPoint || entry[1] > highestPoint[1]) {
-        highestPoint = entry;
-      }
-    }
-
-    const genre = await this.genreRepo.createQueryBuilder('genre')
-      .leftJoin('genre.mentalHealthGenre', 'mentalHealthGenre')
-      .leftJoin('mentalHealthGenre.mentalHealth', 'mentalHealth')
-      .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
-      .leftJoinAndSelect('audioGenre.audio', 'audio')
-      .select(['genre', 'audioGenre.id', 'audio'])
-      .where('mentalHealth.name = :name', { name: highestPoint[0] })
+      .orderBy('genre.name', 'ASC')
       .getMany();
-
     return genre;
-
   }
-
 }

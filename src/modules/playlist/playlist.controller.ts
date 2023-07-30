@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -13,7 +11,12 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import CreatePlaylistDto from './dto/createPlaylist.dto';
 import SearchPlaylistDto from './dto/searchPlaylistDto';
 import UpdatePlaylistDto from './dto/updatePlaylist.dto';
@@ -33,7 +36,6 @@ export default class PlaylistController {
   @Get(':id')
   @Unprotected()
   @ApiOperation({ summary: 'get playlist by id' })
-
   async getPlaylistById(@Param('id') id: number): Promise<PlaylistEntity> {
     return await this.playlistService.findPlaylistById(id);
   }
@@ -49,7 +51,6 @@ export default class PlaylistController {
     required: false,
   })
   @ApiOperation({ summary: 'get playlist list' })
-
   async getPlaylists(
     @Query() playlist: SearchPlaylistDto,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
@@ -69,7 +70,8 @@ export default class PlaylistController {
   @ApiOperation({ summary: 'create playlist' })
   @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.USER] })
   async createPlaylist(
-    @Body() createPlaylistDto: CreatePlaylistDto, @RequestPayload() token: string
+    @Body() createPlaylistDto: CreatePlaylistDto,
+    @RequestPayload() token: string,
   ): Promise<PlaylistEntity> {
     return await this.playlistService.createPlaylist(createPlaylistDto, token);
   }
@@ -90,4 +92,13 @@ export default class PlaylistController {
   async deletePlaylist(@Param('id') id: number) {
     return await this.playlistService.deletePlaylist(id);
   }
+
+
+  @Get('audio/likedAudio')
+  @Roles({ roles: [USER_CLIENT_ROLE.SUBSCRIBER, USER_CLIENT_ROLE.USER] })
+  @ApiOperation({ summary: 'get liked song list' })
+  async getLikedSong(@RequestPayload() token: string): Promise<PlaylistEntity> {
+    return await this.playlistService.getLikedSong(token);
+  }
+
 }

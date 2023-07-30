@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { GENDER } from 'src/common/enums/userGender.enum';
 import { USER_STATUS } from 'src/common/enums/userStatus.enum';
 import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
@@ -18,6 +17,7 @@ import { FileEntity } from '../../files/entities/file.entity';
 import { UpdateDateColumn } from 'typeorm/decorator/columns/UpdateDateColumn';
 import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/followedArtist.entity';
 import { FavoriteGenreEntity } from 'src/modules/favoriteGenre/entities/favoriteGenre.entity';
+import { ResultEntity } from 'src/modules/result/entities/result.entity';
 @Entity({ name: 'users' })
 export class UserEntity {
   @PrimaryColumn()
@@ -83,7 +83,7 @@ export class UserEntity {
   @UpdateDateColumn({ type: 'timestamp', name: 'last_updated_at' })
   public lastUpdatedAt: Date;
 
-  @OneToMany(() => QuestionBankEntity, (questionBank) => questionBank.userId, {
+  @OneToMany(() => QuestionBankEntity, (questionBank) => questionBank.user, {
     cascade: true,
   })
   questionBank: QuestionBankEntity[];
@@ -108,10 +108,19 @@ export class UserEntity {
   })
   follower: FollowerEntity[];
 
-  @OneToMany(() => FollowedArtistEntity, (followedArtist) => followedArtist.user, {
+  @OneToMany(
+    () => FollowedArtistEntity,
+    (followedArtist) => followedArtist.user,
+    {
+      cascade: true,
+    },
+  )
+  followedArtist: FollowedArtistEntity[];
+
+  @OneToMany(() => ResultEntity, (result) => result.user, {
     cascade: true,
   })
-  followedArtist: FollowedArtistEntity[];
+  result: ResultEntity[];
 
 }
 export default UserEntity;

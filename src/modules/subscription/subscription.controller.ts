@@ -1,7 +1,10 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-/* eslint-disable prettier/prettier */
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -28,7 +31,7 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 @Controller('subscriptions')
 @ApiBearerAuth()
 export default class SubscriptionController {
-  constructor(private readonly subscriptionService: SubscriptionService) { }
+  constructor(private readonly subscriptionService: SubscriptionService) {}
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
@@ -64,7 +67,8 @@ export default class SubscriptionController {
   @ApiOperation({ summary: 'create subscription' })
   @Post()
   async createSubscription(
-    @Body() dto: CreateSubscriptionDTO, @RequestPayload() token: string
+    @Body() dto: CreateSubscriptionDTO,
+    @RequestPayload() token: string,
   ): Promise<any> {
     return this.subscriptionService.createSubscription(dto, token);
   }
@@ -72,7 +76,8 @@ export default class SubscriptionController {
   @Roles({ roles: [USER_CLIENT_ROLE.USER] })
   @ApiOperation({ summary: 'activate subscription' })
   async activateSubscription(
-    @Param('id') id: string, @RequestPayload() token: string
+    @Param('id') id: string,
+    @RequestPayload() token: string,
   ) {
     return this.subscriptionService.activateSubscription(id, token);
   }
@@ -96,7 +101,9 @@ export default class SubscriptionController {
   }
   @Get('/user/userID')
   @Roles({ roles: [USER_CLIENT_ROLE.USER] })
-  @ApiOperation({ description: 'get subscription list by userID and update status' })
+  @ApiOperation({
+    description: 'get subscription list by userID and update status',
+  })
   async getSubscriptionByUserId(
     @RequestPayload() token: string,
   ): Promise<SubscriptionEntity[]> {

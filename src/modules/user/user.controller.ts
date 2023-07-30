@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import {
   ApiBearerAuth,
@@ -27,7 +38,7 @@ import Avatar from 'antd/lib/avatar/avatar';
 @Controller('user')
 @ApiBearerAuth()
 export class UserController {
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   @Get('userList')
   @ApiOperation({ summary: 'get user list' })
@@ -90,34 +101,45 @@ export class UserController {
   @Patch(':username')
   async updateUserStatus(
     @Param('username') username: string,
-    @RequestPayload() token: string
+    @RequestPayload() token: string,
   ): Promise<UserEntity> {
-    return await this.userService.updateUserStatus(
-      username,
-      token,
-    );
+    return await this.userService.updateUserStatus(username, token);
   }
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @ApiOperation({ summary: 'get number of user' })
-  @ApiQuery({ name: 'status', enum: USER_STATUS, required: false, })
+  @ApiQuery({ name: 'status', enum: USER_STATUS, required: false })
   @Get()
   async getCountUser(@Query('status') status: USER_STATUS): Promise<number> {
-    return await this.userService.countUser(status)
+    return await this.userService.countUser(status);
   }
-
 
   @Unprotected()
   @Get('getProfile/:userId')
   async getUserProfile(@Param('userId') userId: string): Promise<any> {
-    return await this.userService.getUserProfile(userId)
+    return await this.userService.getUserProfile(userId);
   }
 
   @Roles({ roles: [USER_CLIENT_ROLE.USER, USER_CLIENT_ROLE.SUBSCRIBER] })
   @UseInterceptors(FileInterceptor('avatar'))
   @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'update user' })
   @Put()
-  async updateUser(@Body() dto: UpdateUserDTO, @UploadedFile() avatar: Express.Multer.File, @RequestPayload() token: string): Promise<UserEntity> {
-    return await this.userService.updateUser(token, dto, avatar)
+  async updateUser(
+    @Body() dto: UpdateUserDTO,
+    @UploadedFile() avatar: Express.Multer.File,
+    @RequestPayload() token: string,
+  ): Promise<UserEntity> {
+    return await this.userService.updateUser(token, dto, avatar);
   }
+
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'update user by id' })
+  @Put(':id')
+  async updateUserByUserId(@Body() dto: UpdateUserDTO, @UploadedFile() avatar: Express.Multer.File, @Param('id') id: string): Promise<UserEntity> {
+    return await this.userService.updateUserById(id, dto, avatar)
+  }
+
 
 }

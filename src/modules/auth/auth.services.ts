@@ -1,8 +1,5 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prettier/prettier */
 /* eslint-disable prefer-const */
-/* eslint-disable prettier/prettier */
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
@@ -35,7 +32,7 @@ export class AuthService {
     private readonly httpService: HttpService,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   async logout(
     username: string,

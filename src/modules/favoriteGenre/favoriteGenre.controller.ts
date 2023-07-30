@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Unprotected } from 'nest-keycloak-connect';
@@ -31,13 +30,13 @@ export default class FavoriteGenreController {
     await this.favoriteService.deleteFavorite(id);
   }
 
-  @ApiOperation({ summary: 'get Favorite genres by userId' })
-  @Get(':userId')
+  @ApiOperation({ summary: 'get Favorite genres list by userId' })
+  @Get('/userId')
   @Unprotected()
   async getAllFavorite(
-    @Param('userId') userId: string,
+    @RequestPayload() token: string,
   ): Promise<FavoriteGenreEntity[]> {
-    return this.favoriteService.findAllFavorite(userId);
+    return this.favoriteService.findAllFavorite(token);
   }
 
   @ApiOperation({ summary: 'Is favorite existed?' })
@@ -50,14 +49,4 @@ export default class FavoriteGenreController {
     return { exists: result.exists };
   }
 
-  @ApiOperation({ summary: 'get favorite list' })
-  @Get('user/list')
-  @Unprotected()
-  async getFavorite(
-    @RequestPayload() token: string,
-  ): Promise<FavoriteGenreEntity[]> {
-
-    return await this.favoriteService.findAllFavorite(token);
-
-  }
 }

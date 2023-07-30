@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GenreEntity } from './entities/genre.entity';
@@ -9,6 +8,6 @@ import GenreService from './genre.services';
   imports: [TypeOrmModule.forFeature([GenreEntity])],
   controllers: [GenreController],
   providers: [GenreService],
-  exports: [GenreService]
+  exports: [GenreService],
 })
-export class GenreModule { }
+export class GenreModule {}
