@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class SearchFavoriteDTO {
+export class SearchGenreUserDTO {
   @ApiProperty({ required: false })
   @IsNotEmpty()
   @IsString()

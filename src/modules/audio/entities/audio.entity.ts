@@ -15,6 +15,7 @@ import { AccessEntity } from 'src/modules/access/entities/access.entity';
 import ArtistEntity from 'src/modules/artist/entities/artist.entity';
 import { AudioStatus } from 'src/common/enums/audioStatus.enum';
 import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
+import { AudioUserEntity } from 'src/modules/audioUser/entities/audioUser.entity';
 
 @Entity('audio')
 export class AudioEntity extends BaseEntity {
@@ -57,6 +58,12 @@ export class AudioEntity extends BaseEntity {
     cascade: true,
   })
   audioFile: AudioFileEntity[];
+
+
+  @OneToMany(() => AudioUserEntity, (audioUser) => audioUser.audio, {
+    cascade: true,
+  })
+  audioUser: AudioUserEntity[];
 
   @ManyToOne(() => ArtistEntity, (artist) => artist.audios)
   @JoinColumn({ name: 'artist_id' })
