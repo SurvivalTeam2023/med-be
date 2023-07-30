@@ -97,7 +97,10 @@ export default class QuestionBankService {
             .andWhere('NOW() - question_bank.created_at > 3')
             .getOne();
 
-        return questionBankQueryResult.isFinished
+        if (questionBankQueryResult == null) {
+           return false
+        }
+        return true
     }
     async updateIsFinished(id: number): Promise<QuestionBankEntity> {
         const questionBank = await this.questionBankRepo.findOne({
