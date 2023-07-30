@@ -5,13 +5,14 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 import CreateHistoryDTO from './dto/createHistory.dto';
 import { HistoryEntity } from './entities/history.entity';
 import HistoryService from './history.service';
+import { AudioEntity } from '../audio/entities/audio.entity';
 
 @ApiTags('History')
 @Controller('history')
 @ApiBearerAuth()
 @Controller('rest/history')
 export default class HistoryController {
-  constructor(private readonly historyService: HistoryService) {}
+  constructor(private readonly historyService: HistoryService) { }
   @ApiOperation({ summary: 'create History' })
   @Unprotected()
   @Post('create')
@@ -27,7 +28,7 @@ export default class HistoryController {
   @Unprotected()
   async getAllHistory(
     @RequestPayload() token: string,
-  ): Promise<HistoryEntity[]> {
+  ): Promise<{ audio: AudioEntity, isLiked: boolean }[]> {
     return this.historyService.findHistory(token);
   }
 

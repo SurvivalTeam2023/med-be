@@ -25,10 +25,4 @@ export default class AudioPlaylistController {
     async removeAudioFromPlaylist(@Query('audioId') audioId: number, @Query('playlistId') playlistId: number, @RequestPayload() token: string) {
         return await this.audioPlaylistService.removeAudioFromPlaylist(playlistId, audioId, token)
     }
-    @Roles({ roles: [USER_CLIENT_ROLE.ARTIST, USER_CLIENT_ROLE.USER, USER_CLIENT_ROLE.SUBSCRIBER] })
-    @ApiOperation({ summary: 'update liked audio status' })
-    @Post('likedAudio')
-    async updateIsLiked(@Body() dto: likeSongDTO, @RequestPayload() token: string): Promise<AudioPlaylistEntity> {
-        return await this.audioPlaylistService.updateIsLiked(dto.audioId, dto.isLiked, token)
-    }
 }

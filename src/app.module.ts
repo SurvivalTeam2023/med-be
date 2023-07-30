@@ -17,7 +17,7 @@ import { MentalHealthDegreeModule } from './modules/mentalHealthDegree/mentalHea
 import { QuestionBankModule } from './modules/questionBank/questionBank.modul';
 import { AudioGenreModule } from './modules/audioGenre/audioGenre.module';
 import { ScheduleModule } from '@nestjs/schedule/dist';
-import { FollowerModule } from './modules/follower/follower.module';
+import { FollowerModule } from './modules/follower/playlist_user.module';
 import { FaceModule } from './modules/face/face.module';
 import { ArtistModule } from './modules/artist/artist.module';
 import { UserLogModule } from './modules/userStatusLog/userStatusLog.module';
@@ -25,8 +25,9 @@ import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.modul
 import { FollowedArtistModule } from './modules/followedArtist/followedArtist.module';
 import { WalletModule } from './modules/wallet/wallet.module';
 import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
-import { FavoriteGenreModule } from './modules/favoriteGenre/favoriteGenre.module';
 import { RecommandationModule } from './modules/recommandations/recommendations.module';
+import { AudioUserModule } from './modules/audioUser/audioUser.module';
+import { FavoriteGenreModule } from './modules/genreUser/genreUser.module';
 
 @Module({
   imports: [
@@ -39,7 +40,6 @@ import { RecommandationModule } from './modules/recommandations/recommendations.
     GenreModule,
     SubscriptionModule,
     PlanModule,
-    FavoriteGenreModule,
     HistoryModule,
     QuestionModule,
     OptionModule,
@@ -58,8 +58,10 @@ import { RecommandationModule } from './modules/recommandations/recommendations.
     WalletModule,
     HealthCheckModule,
     RecommandationModule,
+    AudioUserModule,
+    FavoriteGenreModule
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

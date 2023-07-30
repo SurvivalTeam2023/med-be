@@ -25,9 +25,6 @@ export class QuestionEntity extends BaseEntity {
   })
   public option: OptionEntity[];
 
-  @Column()
-  public default: boolean;
-
   @OneToMany(
     () => QuestionBankQuestionEntity,
     (questionBankQuestion) => questionBankQuestion.question,

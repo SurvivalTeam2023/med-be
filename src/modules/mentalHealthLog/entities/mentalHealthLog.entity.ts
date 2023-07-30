@@ -1,5 +1,4 @@
 import { BaseEntity } from 'src/common/base/base.entity';
-import { FollowerEntity } from 'src/modules/follower/entities/follower.entity';
 import { MentalHealthDegreeLogEntity } from 'src/modules/mentalHealthDegreeLog/entities/mentalHealthDegreeLog.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 

@@ -198,7 +198,7 @@ export default class ResultService {
             })
             const percentageObject = {
                 mentalHealth: firstEntry[0],
-                point: (firstEntry[1] / 36) * 100,
+                point: (firstEntry[1] / 30) * 100,
                 degree: degree.title,
             };
 
