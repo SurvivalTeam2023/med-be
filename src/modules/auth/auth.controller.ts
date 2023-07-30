@@ -6,19 +6,19 @@ import { AuthService } from './auth.services';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import { LoginGmailDTO } from './dto/loginGmail.dto';
+import { firstValueFrom, Observable, of } from 'rxjs';
+
 
 @ApiTags('Auth')
 @Controller('auth')
 @ApiBearerAuth()
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Post('/login/token')
   @ApiOperation({ summary: 'api login to med-app' })
   @Unprotected()
   async login(@Body() loginDTO: LoginDTO) {
-    console.log(this.authService.getAcessToken(loginDTO));
-    
     return this.authService.getAcessToken(loginDTO);
   }
 

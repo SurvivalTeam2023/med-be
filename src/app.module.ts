@@ -25,6 +25,7 @@ import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.modul
 import { FollowedArtistModule } from './modules/followedArtist/followedArtist.module';
 import { WalletModule } from './modules/wallet/wallet.module';
 import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
+import { RecommandationModule } from './modules/recommandations/recommendations.module';
 import { AudioUserModule } from './modules/audioUser/audioUser.module';
 import { FavoriteGenreModule } from './modules/genreUser/genreUser.module';
 
@@ -56,6 +57,7 @@ import { FavoriteGenreModule } from './modules/genreUser/genreUser.module';
     UserLogModule,
     WalletModule,
     HealthCheckModule,
+    RecommandationModule,
     AudioUserModule,
     FavoriteGenreModule
   ],

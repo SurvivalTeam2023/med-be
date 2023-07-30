@@ -11,7 +11,7 @@ import { KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRECT, KEYCLOAK_HOST } from 'src/
 @Module({
   imports: [
     KeycloakConnectModule.register({
-      authServerUrl: `${KEYCLOAK_HOST}/auth`,
+      authServerUrl: KEYCLOAK_HOST + "/auth",
       realm: 'med-app',
       clientId: KEYCLOAK_CLIENT_ID,
       secret: KEYCLOAK_CLIENT_SECRECT,
@@ -33,4 +33,4 @@ import { KEYCLOAK_CLIENT_ID, KEYCLOAK_CLIENT_SECRECT, KEYCLOAK_HOST } from 'src/
     },
   ],
 })
-export class KeycloakModule {}
+export class KeycloakModule { }

@@ -54,15 +54,13 @@ export default class QuestionBankService {
                 startAge: LessThanOrEqual(getAge(user.dob)), endAge: MoreThanOrEqual(getAge(user.dob))
             }
         })
-        console.log(age.id);
-
         for (let i = 1; i <= 4; i++) {
             const questions = await this.entityManage
                 .createQueryBuilder(QuestionEntity, 'question')
                 .leftJoinAndSelect('question.option', 'option')
                 .leftJoinAndSelect('question.age', 'age')
                 .leftJoinAndSelect('question.questionMentalHealth', 'questionMentalHealth')
-                .where('age.id <= :ageId', { ageId: age.id })
+                .where('age.id = :ageId', { ageId: age.id })
                 .andWhere('question.status = :status', { status: QuestionStatus.ACTIVE })
                 .andWhere('questionMentalHealth.mentalHealthId = :mentalHealthId', { mentalHealthId: i })
                 .select(['question.id', 'question.question', 'option.id', 'option.option', 'questionMentalHealth.mentalHealthId'])
