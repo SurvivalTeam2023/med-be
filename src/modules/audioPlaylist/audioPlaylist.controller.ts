@@ -6,6 +6,7 @@ import { createAudioPlaylistDTO } from "./dto/createAudioPlaylist.dto";
 import { RequestPayload } from "src/decorator/requestPayload.decorator";
 import { Roles } from "nest-keycloak-connect";
 import { USER_CLIENT_ROLE } from "src/common/enums/userClientRole.enum";
+import { likeSongDTO } from "./dto/likeSong.dto";
 
 @ApiTags('AudioPlaylists')
 @Controller('audioPlaylist')

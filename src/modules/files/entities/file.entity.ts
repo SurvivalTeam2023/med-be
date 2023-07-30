@@ -1,7 +1,13 @@
-/* eslint-disable prettier/prettier */
 import { AudioEntity } from 'src/modules/audio/entities/audio.entity';
 import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('file')
 export class FileEntity {
@@ -14,6 +20,8 @@ export class FileEntity {
   @Column()
   public key: string;
 
-  @OneToMany(() => AudioFileEntity, (audioFile) => audioFile.file, { cascade: true })
+  @OneToMany(() => AudioFileEntity, (audioFile) => audioFile.file, {
+    cascade: true,
+  })
   audioFile: AudioFileEntity[];
 }

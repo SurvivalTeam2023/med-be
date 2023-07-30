@@ -1,8 +1,7 @@
-/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
-export class DeleteFavoriteDTO {
+export class DeleteGenreUserDTO {
   @ApiProperty()
   @IsNotEmpty()
   id: number;
@@ -11,4 +10,4 @@ export class DeleteFavoriteDTO {
   @IsNotEmpty()
   userId: string;
 }
-export default DeleteFavoriteDTO;
+export default DeleteGenreUserDTO;

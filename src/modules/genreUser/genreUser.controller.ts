@@ -1,26 +1,25 @@
-/* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Unprotected } from 'nest-keycloak-connect';
-import CreateFavoriteDTO from './dto/createFavorite.dto';
-import { FavoriteGenreEntity } from './entities/favoriteGenre.entity';
+import CreateGenreUserDTO from './dto/createGenreUser.dto';
+import { GenreUserEntity } from './entities/genreUser.entity';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
-import FavoriteGenreService from './favoriteGenre.service';
+import GenreUserService from './genreUser.service';
 
 @ApiTags('Favorites')
 @Controller('favorite')
 @ApiBearerAuth()
 @Controller('rest/favorite')
-export default class FavoriteGenreController {
-  constructor(private readonly favoriteService: FavoriteGenreService) { }
+export default class GenreUserController {
+  constructor(private readonly favoriteService: GenreUserService) { }
 
   @ApiOperation({ summary: 'create Favorite genre' })
   @Unprotected()
   @Post()
   async create(
-    @Body() dto: CreateFavoriteDTO,
+    @Body() dto: CreateGenreUserDTO,
     @RequestPayload() token: string,
-  ): Promise<FavoriteGenreEntity[]> {
+  ): Promise<GenreUserEntity[]> {
     return this.favoriteService.createFavorite(dto, token);
   }
 
@@ -31,13 +30,13 @@ export default class FavoriteGenreController {
     await this.favoriteService.deleteFavorite(id);
   }
 
-  @ApiOperation({ summary: 'get Favorite genres by userId' })
-  @Get(':userId')
+  @ApiOperation({ summary: 'get Favorite genres list by userId' })
+  @Get('/userId')
   @Unprotected()
   async getAllFavorite(
-    @Param('userId') userId: string,
-  ): Promise<FavoriteGenreEntity[]> {
-    return this.favoriteService.findAllFavorite(userId);
+    @RequestPayload() token: string,
+  ): Promise<GenreUserEntity[]> {
+    return this.favoriteService.findAllFavorite(token);
   }
 
   @ApiOperation({ summary: 'Is favorite existed?' })
@@ -50,14 +49,4 @@ export default class FavoriteGenreController {
     return { exists: result.exists };
   }
 
-  @ApiOperation({ summary: 'get favorite list' })
-  @Get('user/list')
-  @Unprotected()
-  async getFavorite(
-    @RequestPayload() token: string,
-  ): Promise<FavoriteGenreEntity[]> {
-
-    return await this.favoriteService.findAllFavorite(token);
-
-  }
 }

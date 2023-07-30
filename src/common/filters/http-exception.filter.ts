@@ -10,12 +10,14 @@ import { BaseExceptionFilter } from '@nestjs/core';
 @Catch()
 export class HttpExceptionFilter extends BaseExceptionFilter {
   catch(exception: Error, host: ArgumentsHost): void {
+    console.log('Global_Exception: ', Error);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const { message, stack } = exception;
     new Logger('HttpExceptionFilter').error({ message, stack });
     new Logger('Raw-Exception').error(exception);
     if (exception instanceof HttpException) {
+      console.log('HttpException', exception);
       const status = exception.getStatus();
       const exceptionResponse = exception.getResponse() as any;
       const error = Array.isArray(exceptionResponse?.message)

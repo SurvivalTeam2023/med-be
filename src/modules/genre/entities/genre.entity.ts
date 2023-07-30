@@ -1,11 +1,10 @@
-/* eslint-disable prettier/prettier */
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
-import { MentalHealthGenreEntity } from 'src/modules/mentalHealthGenre/entities/mentalHealthGenre.entity';
 import { GenreStatus } from 'src/common/enums/genreStatus.enum';
 import { EmotionEnum } from 'src/common/enums/emotion.enum';
-import { FavoriteGenreEntity } from 'src/modules/favoriteGenre/entities/favoriteGenre.entity';
+import { GenreUserEntity } from 'src/modules/genreUser/entities/genreUser.entity';
+import { PlaylistEntity } from 'src/modules/playlist/entities/playlist.entity';
 
 @Entity('genre')
 export class GenreEntity extends BaseEntity {
@@ -29,19 +28,16 @@ export class GenreEntity extends BaseEntity {
   })
   public audioGenre: AudioGenreEntity[];
 
-  @OneToMany(
-    () => MentalHealthGenreEntity,
-    (mentalHealthGenre) => mentalHealthGenre.genre,
-    {
-      cascade: true,
-    },
-  )
-  public mentalHealthGenre: MentalHealthGenreEntity[];
 
-  @OneToMany(() => FavoriteGenreEntity, (favorite) => favorite.genreId, {
+  @OneToMany(() => GenreUserEntity, (favorite) => favorite.genreId, {
     cascade: true,
   })
-  public favorite: FavoriteGenreEntity[];
+  public favorite: GenreUserEntity[];
+
+  @OneToMany(() => PlaylistEntity, (playlist) => playlist.genre, {
+    cascade: true,
+  })
+  public playlist: PlaylistEntity[];
 
   @Column({
     type: 'enum',

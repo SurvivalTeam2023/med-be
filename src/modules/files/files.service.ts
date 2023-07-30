@@ -7,7 +7,8 @@ import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { FileEntity } from './entities/file.entity';
 import { InjectAws } from 'aws-sdk-v3-nest/dist/index';
-import { getAudioDurationInSeconds } from 'get-audio-duration';
+import { ErrorHelper } from 'src/helpers/error.helper';
+import { ERROR_MESSAGE } from 'src/common/constants/messages.constant';
 @Injectable()
 export class FilesService {
   constructor(
@@ -39,7 +40,7 @@ export class FilesService {
     }
   }
 
-  async uploadAudio(dataBuffer: Buffer, filename: string, folderName: string) {
+  async uploadAudioFiles(dataBuffer: Buffer, filename: string, folderName: string) {
 
     try {
       const uploadResult = await new Upload({
@@ -62,6 +63,25 @@ export class FilesService {
       console.log(error);
 
     }
+  }
+  async uploadAudio(audio?: Express.Multer.File, image?: Express.Multer.File) {
+    if (!audio || audio.mimetype !== 'audio/mpeg') {
+      ErrorHelper.BadRequestException(ERROR_MESSAGE.AUDIO.INVALID_TYPE);
+    }
+
+    if (!image || image.mimetype !== 'image/jpeg') {
+      ErrorHelper.BadRequestException(ERROR_MESSAGE.IMAGE.INVALID_FILE);
+    }
+    const audioFile = await this.uploadAudioFiles(
+      audio.buffer,
+      audio.originalname,
+      'med-audio',)
+
+    const imageFile = await this.uploadAudioFiles(
+      image.buffer,
+      image.originalname,
+      'med-image',)
+    return { audioFile, imageFile }
   }
 
   async getFile(id: any) {

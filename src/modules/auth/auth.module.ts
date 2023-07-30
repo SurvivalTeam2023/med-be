@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { forwardRef, Module } from '@nestjs/common';
 import { KeycloakModule } from 'src/common/config/keycloak.config';
 import { AuthController } from './auth.controller';

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { BaseEntity } from 'src/common/base/base.entity';
 import { QuestionBankQuestionEntity } from 'src/modules/questionBankQuestion/entities/questionBankQuestion.entity';
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
@@ -29,5 +28,5 @@ export class QuestionBankEntity extends BaseEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.questionBank)
   @JoinColumn({ name: 'user_id' })
-  public userId: UserEntity;
+  public user: UserEntity;
 }
