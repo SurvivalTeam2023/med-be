@@ -15,17 +15,38 @@ export default class HistoryService {
     @InjectRepository(HistoryEntity)
     private historyRepo: Repository<HistoryEntity>,
     private readonly entityManage: EntityManager,
-  ) {}
+  ) { }
 
-  async findHistory(token: string): Promise<HistoryEntity[]> {
+  async findHistory(token: string): Promise<{ audio: AudioEntity, isLiked: boolean }[]> {
     const userId = getUserId(token);
     const querybuilder = await this.historyRepo
       .createQueryBuilder('history')
       .leftJoinAndSelect('history.audio', 'audio')
+      .leftJoinAndSelect('audio.audioFile', 'audioFile')
+      .leftJoinAndSelect('audioFile.file', 'file')
       .where('history.user_id = :user_id', { user_id: userId })
+      .select(['history.id', 'audio', 'audioFile.id', 'file.url'])
       .orderBy('history.last_updated_at', 'DESC')
       .getMany();
-    return querybuilder;
+
+    const audios = Promise.all(querybuilder.map(async e => {
+      let isLiked: boolean = false
+      console.log(e.audio.audioUser);
+      const audio = await this.entityManage.findOne(AudioEntity, {
+        relations: {
+          audioUser: true
+        },
+        where: {
+          id: e.audio.id
+        }
+      })
+      for (const a of audio.audioUser) {
+        if (a.userId == userId)
+          isLiked = true;
+      }
+      return { audio: e.audio, isLiked: isLiked }
+    }))
+    return audios;
   }
 
   async createHistory(

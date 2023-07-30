@@ -26,6 +26,7 @@ import { FollowedArtistModule } from './modules/followedArtist/followedArtist.mo
 import { WalletModule } from './modules/wallet/wallet.module';
 import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
 import { AudioUserModule } from './modules/audioUser/audioUser.module';
+import { FavoriteGenreModule } from './modules/genreUser/genreUser.module';
 
 @Module({
   imports: [
@@ -55,7 +56,8 @@ import { AudioUserModule } from './modules/audioUser/audioUser.module';
     UserLogModule,
     WalletModule,
     HealthCheckModule,
-    AudioUserModule
+    AudioUserModule,
+    FavoriteGenreModule
   ],
   controllers: [],
   providers: [],
