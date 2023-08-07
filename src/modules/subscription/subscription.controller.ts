@@ -31,7 +31,7 @@ import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 @Controller('subscriptions')
 @ApiBearerAuth()
 export default class SubscriptionController {
-  constructor(private readonly subscriptionService: SubscriptionService) {}
+  constructor(private readonly subscriptionService: SubscriptionService) { }
 
   @Get(':id')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
@@ -42,7 +42,7 @@ export default class SubscriptionController {
   }
 
   @Get()
-  @Unprotected()
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @ApiQuery({
     name: 'page',
     required: false,

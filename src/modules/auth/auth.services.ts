@@ -74,6 +74,8 @@ export class AuthService {
     form.append('client_id', `${KEYCLOAK_CLIENT_ID}`);
     form.append('client_secret', `${KEYCLOAK_CLIENT_SECRECT}`);
     form.append('scope', 'openid');
+    console.log(form);
+
     return this.httpService
       .post(
         `${KEYCLOAK_HOST}/auth/realms/${KEYCLOAK_REALM_ClIENT}/protocol/openid-connect/token`,

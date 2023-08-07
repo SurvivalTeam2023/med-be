@@ -35,7 +35,11 @@ export default class MentalHealthDegreeService {
     ): Promise<MentalHealthDegreeEntity[]> {
         const queryBuilder = this.mentalHealthDegreeRepo
             .createQueryBuilder('mental_health_degree')
-        if (dto.title) queryBuilder.where('LOWER(mental_health_degree.question) like :title', { title: `%${dto.title}%` }).orderBy('mental_health_degree.created_at', 'DESC')
+            .leftJoin('mental_health_degree.mentalHealth', 'mentalHealth')
+
+        if (dto.mentalHealth) queryBuilder.where('LOWER(mentalHealth.name) like :name', { name: `%${dto.mentalHealth}%` }).orderBy('mental_health_degree.created_at', 'DESC')
+
+        if (dto.title) queryBuilder.where('LOWER(mental_health_degree.title) like :title', { title: `%${dto.title}%` }).orderBy('mental_health_degree.created_at', 'DESC')
 
         if (dto.status) queryBuilder.andWhere('mental_health_degree.status = :status', { status: dto.status }).orderBy('mental_health_degree.created_at', 'DESC')
 
