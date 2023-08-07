@@ -31,7 +31,7 @@ export default class MentalHealthDegreeController {
     }
 
     @Get()
-    @Unprotected()
+    @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
     async findMentalHealthDegree(
         @Query() dto: FindMentalHealthDegreeDTO,
     ): Promise<MentalHealthDegreeEntity[]> {
