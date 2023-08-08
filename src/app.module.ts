@@ -28,6 +28,8 @@ import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
 import { RecommandationModule } from './modules/recommandations/recommendations.module';
 import { AudioUserModule } from './modules/audioUser/audioUser.module';
 import { FavoriteGenreModule } from './modules/genreUser/genreUser.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggingInterceptor } from './intrerceptors/logging.interceptor';
 
 @Module({
   imports: [
@@ -59,9 +61,14 @@ import { FavoriteGenreModule } from './modules/genreUser/genreUser.module';
     HealthCheckModule,
     RecommandationModule,
     AudioUserModule,
-    FavoriteGenreModule
+    FavoriteGenreModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
-export class AppModule { }
+export class AppModule {}
