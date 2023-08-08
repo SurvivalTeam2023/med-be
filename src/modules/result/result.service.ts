@@ -36,14 +36,34 @@ export default class ResultService {
         if (!result) {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.RESULT.NOT_FOUND);
         }
+
+
         const sum = result.mentalHealth.reduce((accumulator, mentalHealth) => accumulator + mentalHealth.point, 0);
 
-        const percentageMapArray = result.mentalHealth.map(m => {
+        const degreeMap = new Map<string, MentalHealthDegreeEntity>();
+        const percentageMapArray = Promise.all(result.mentalHealth.map(async m => {
+            const degree = await this.entityManage.findOne(MentalHealthDegreeEntity, {
+                relations: {
+                    mentalHealth: true
+                },
+                where: {
+                    pointStart: LessThanOrEqual(m.point),
+                    pointEnd: MoreThanOrEqual(m.point),
+                    mentalHealth: {
+                        name: m.mentalHealth,
+                    },
+                },
+            });
+            if (degree) {
+                degreeMap.set(m.mentalHealth, degree);
+            }
             const percentage = m.point / sum * 100
-            return { mentalHealth: m.mentalHealth, percentage: percentage }
+            return { mentalHealth: m.mentalHealth, percentage: percentage, degree: degree.title }
 
-        })
+        }))
         if (result.mentalHealth.length > 1) {
+            console.log(percentageMapArray);
+
             return percentageMapArray;
         } else if (result.mentalHealth.length === 1) {
             const degree = await this.entityManage.findOne(MentalHealthDegreeEntity, {
@@ -66,7 +86,7 @@ export default class ResultService {
         }
     }
 
-    async createResult(dto: CreateResultDTO, token: string): Promise<{ mentalHealth: string, point: number }[] | { mentalHealth: string, point: number, degree: string }> {
+    async createResult(dto: CreateResultDTO, token: string): Promise<{ mentalHealth: string, point: number, degree: string }[] | { mentalHealth: string, point: number, degree: string }> {
 
         const userId = getUserId(token);
         const user = await this.entityManage.findOne(UserEntity, { where: { id: userId } });
@@ -136,7 +156,7 @@ export default class ResultService {
             mentalHealth,
             point,
         }));
-        const percentageMapArray = Array.from(mentalHealthMap.entries()).map(([mentalHealth, point]) => ({
+        const percentageMapArray = Array.from(mentalHealthMap.entries()).map(([mentalHealth, point,]) => ({
             mentalHealth,
             point: point / sum * 100,
         }));
@@ -147,6 +167,7 @@ export default class ResultService {
             await entityManager.save(questionBank)
         })
         if (mentalHealthMap.size > 1) {
+            const degreeMap = new Map<string, MentalHealthDegreeEntity>();
             for (const [mentalHealth, point] of mentalHealthMap) {
                 const degree = await this.entityManage.findOne(MentalHealthDegreeEntity, {
                     relations: {
@@ -160,6 +181,9 @@ export default class ResultService {
                         },
                     },
                 });
+                if (degree) {
+                    degreeMap.set(mentalHealth, degree);
+                }
                 const mentalHealthLog = await this.entityManage.save(MentalHealthLogEntity, {
                     userId: userId,
                     questionBankId: dto.questionBankId,
@@ -170,7 +194,15 @@ export default class ResultService {
                     mentalHealthDegreeId: degree.id
                 })
             }
-            return percentageMapArray;
+            const percentageMapArrayWithDegree = percentageMapArray.map(({ mentalHealth, point }) => {
+                const degree = degreeMap.get(mentalHealth);
+                return {
+                    mentalHealth,
+                    point: point,
+                    degree: degree.title,
+                };
+            });
+            return percentageMapArrayWithDegree;
         }
         else if (mentalHealthMap.size === 1) {
             const [firstEntry] = mentalHealthMap.entries();

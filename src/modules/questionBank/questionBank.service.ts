@@ -96,7 +96,7 @@ export default class QuestionBankService {
             .getOne();
 
         if (questionBankQueryResult == null) {
-           return false
+            return false
         }
         return true
     }
