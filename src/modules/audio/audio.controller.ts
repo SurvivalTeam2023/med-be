@@ -49,8 +49,8 @@ export default class AudioController {
   constructor(private readonly audioService: AudioService) { }
 
   @Get(':id')
-  @Unprotected()
-  @ApiOperation({ summary: 'get audio by audio id' })
+  @Roles({ roles: [USER_CLIENT_ROLE.USER, USER_CLIENT_ROLE.SUBSCRIBER] })
+  @ApiOperation({ operationId: 'getAudioByID', summary: 'get audio by audio id' })
   async getAudioById(@Param('id') id: number, @RequestPayload() token: string): Promise<{ audio: AudioEntity, isLiked: boolean }> {
     return this.audioService.findAudioById(id, token);
   }
@@ -107,7 +107,7 @@ export default class AudioController {
     return await this.audioService.deleteAudio(id);
   }
 
-  @Get()
+  @Get('count/totalAudio')
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @ApiOperation({ operationId: 'getTotalAudio', summary: 'get total audio' })
   async getCountAudio(): Promise<number> {
