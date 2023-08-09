@@ -345,9 +345,9 @@ export default class SubscriptionService {
   async countUserSubscribe(): Promise<number> {
     const total = await this.subscriptionRepo
       .createQueryBuilder('subscription')
-      .distinctOn(['subscription.user_id'])
-      .getCount()
+      .select('DISTINCT  subscription.user_id')
+      .getRawMany()
 
-    return total
+    return total.length
   }
 }
