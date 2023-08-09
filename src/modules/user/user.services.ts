@@ -37,6 +37,7 @@ import { getUserId } from 'src/utils/decode.utils';
 import { FileEntity } from '../files/entities/file.entity';
 import { SubscriptionEntity } from '../subscription/entities/subscription.entity';
 import { GenreUserEntity } from 'src/modules/genreUser/entities/genreUser.entity';
+import { CountUserDTO } from './dto/countUser.dto';
 
 @Injectable()
 export class UserService {
@@ -436,9 +437,10 @@ export class UserService {
     }
     return access_token;
   }
-  async countUser(status: USER_STATUS): Promise<number> {
+  async countUser(dto: CountUserDTO): Promise<number> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');
-    if (status) queryBuilder.where('user.status = :status', { status: status });
+    if (dto.status) queryBuilder.where('user.status = :status', { status: dto.status });
+    if (dto.month) queryBuilder.andWhere(`MONTH(user.created_at) = :month`, { month: dto.month })
     return queryBuilder.getCount();
   }
   async getUserProfile(userId: string): Promise<any> {

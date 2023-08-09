@@ -109,4 +109,14 @@ export default class SubscriptionController {
   ): Promise<SubscriptionEntity[]> {
     return this.subscriptionService.getSubscriptionByUserId(token);
   }
+
+  @Get('user/count')
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @ApiOperation({
+    description: 'get total number of user subscribe',
+  })
+  async countUserSubscribe(
+  ): Promise<number> {
+    return this.subscriptionService.countUserSubscribe();
+  }
 }

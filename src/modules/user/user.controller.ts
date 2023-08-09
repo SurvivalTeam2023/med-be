@@ -33,15 +33,16 @@ import { UpdateUserDTO } from './dto/updateUser.dto';
 import UserEntity from './entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import Avatar from 'antd/lib/avatar/avatar';
+import { CountUserDTO } from './dto/countUser.dto';
 
 @ApiTags('Users')
 @Controller('user')
 @ApiBearerAuth()
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   @Get('userList')
-  @ApiOperation({ summary: 'get user list' })
+  @ApiOperation({ operationId: 'getUserList', summary: 'get user list' })
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   getUserList(@RequestPayload() token: string) {
     return this.userService.getUserList(token);
@@ -107,10 +108,9 @@ export class UserController {
   }
   @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @ApiOperation({ summary: 'get number of user' })
-  @ApiQuery({ name: 'status', enum: USER_STATUS, required: false })
   @Get()
-  async getCountUser(@Query('status') status: USER_STATUS): Promise<number> {
-    return await this.userService.countUser(status);
+  async getCountUser(@Query() dto: CountUserDTO): Promise<number> {
+    return await this.userService.countUser(dto);
   }
 
   @Unprotected()
@@ -140,6 +140,4 @@ export class UserController {
   async updateUserByUserId(@Body() dto: UpdateUserDTO, @UploadedFile() avatar: Express.Multer.File, @Param('id') id: string): Promise<UserEntity> {
     return await this.userService.updateUserById(id, dto, avatar)
   }
-
-
 }
