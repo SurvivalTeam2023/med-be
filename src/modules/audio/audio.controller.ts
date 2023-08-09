@@ -57,7 +57,7 @@ export default class AudioController {
 
   @Get()
   @Unprotected()
-  @ApiOperation({ summary: 'get audio list' })
+  @ApiOperation({ operationId: 'getAudioList', summary: 'get audio list' })
   @ApiQuery({
     name: 'page',
     required: false,
@@ -91,7 +91,7 @@ export default class AudioController {
   }
 
   @Put(':id')
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @ApiOperation({ summary: 'update audio field' })
   async updateAudio(
     @Param('id') id: number,
@@ -101,15 +101,15 @@ export default class AudioController {
   }
 
   @Delete(':id')
-  @Roles({ roles: [USER_CLIENT_ROLE.ARTIST] })
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
   @ApiOperation({ summary: 'delete audio' })
   async deleteAudio(@Param('id') id: number) {
     return await this.audioService.deleteAudio(id);
   }
 
-  @Get('countAudios')
-  @Unprotected()
-  @ApiOperation({ summary: 'get total audio' })
+  @Get()
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  @ApiOperation({ operationId: 'getTotalAudio', summary: 'get total audio' })
   async getCountAudio(): Promise<number> {
     return await this.audioService.countAudio();
   }

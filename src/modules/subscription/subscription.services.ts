@@ -59,7 +59,7 @@ export default class SubscriptionService {
     const queryBuilder = this.subscriptionRepo
       .createQueryBuilder('subscription')
       .leftJoinAndSelect('subscription.user', 'user')
-      .leftJoinAndSelect('subscription.plan','plan')
+      .leftJoinAndSelect('subscription.plan', 'plan')
     if (dto.userId) queryBuilder.where('subscription.user_id like :userId', { userId: dto.userId })
     if (dto.status) queryBuilder.andWhere('subscription.status = :subscriptionStatus', {
       subscriptionStatus: dto.status,
@@ -340,5 +340,14 @@ export default class SubscriptionService {
       return sub
     }))
     return updateSub
+  }
+
+  async countUserSubscribe(): Promise<number> {
+    const total = await this.subscriptionRepo
+      .createQueryBuilder('subscription')
+      .distinctOn(['subscription.user_id'])
+      .getCount()
+
+    return total
   }
 }
