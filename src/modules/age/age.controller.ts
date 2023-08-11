@@ -12,7 +12,7 @@ export default class AgeController {
 
 
     @Get()
-    @Unprotected()
+    @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
     @ApiOperation({ operationId: 'getAgeCount', summary: 'count group of age' })
     async getAudioById(): Promise<any> {
         return this.ageService.getAgeLog();

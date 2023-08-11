@@ -93,4 +93,22 @@ export default class HistoryService {
 
     return history.length;
   }
+
+
+  async getTop10Listened(): Promise<any> {
+    const history = await this.historyRepo
+      .createQueryBuilder('history')
+      .leftJoin('history.audio', 'audio')
+      .leftJoin('audio.artist', 'artist')
+      .select(['audio.name', 'artist.artist_name', 'SUM(history.count) as sumCount'])
+      .groupBy('history.audio_id')
+      .orderBy("sumCount", "DESC")
+      .limit(10)
+      .getRawMany()
+
+    console.log(history, 'haha');
+
+    return history
+
+  }
 }

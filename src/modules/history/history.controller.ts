@@ -1,11 +1,12 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Unprotected } from 'nest-keycloak-connect';
+import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 import CreateHistoryDTO from './dto/createHistory.dto';
 import { HistoryEntity } from './entities/history.entity';
 import HistoryService from './history.service';
 import { AudioEntity } from '../audio/entities/audio.entity';
+import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 
 @ApiTags('History')
 @Controller('history')
@@ -39,5 +40,13 @@ export default class HistoryController {
     @Param('artistId') artistId: string,
   ): Promise<HistoryEntity[]> {
     return this.historyService.countArtistListened(artistId);
+  }
+
+  @ApiOperation({ summary: 'get top 10 listened' })
+  @Get('/top10')
+  @Roles({ roles: [USER_CLIENT_ROLE.ADMIN] })
+  async getTop10(
+  ): Promise<any> {
+    return this.historyService.getTop10Listened();
   }
 }
