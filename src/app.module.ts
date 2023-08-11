@@ -28,6 +28,7 @@ import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
 import { RecommandationModule } from './modules/recommandations/recommendations.module';
 import { AudioUserModule } from './modules/audioUser/audioUser.module';
 import { FavoriteGenreModule } from './modules/genreUser/genreUser.module';
+import { AgeModule } from './modules/age/age.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './intrerceptors/logging.interceptor';
 
@@ -62,6 +63,7 @@ import { LoggingInterceptor } from './intrerceptors/logging.interceptor';
     RecommandationModule,
     AudioUserModule,
     FavoriteGenreModule,
+    AgeModule
   ],
   controllers: [],
   providers: [
