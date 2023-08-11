@@ -46,7 +46,6 @@ export default class AgeService {
             }
         }
 
-        console.log(ageCountMap);
         return ageCountMap;
     }
 }
