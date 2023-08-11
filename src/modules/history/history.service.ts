@@ -99,7 +99,8 @@ export default class HistoryService {
     const history = await this.historyRepo
       .createQueryBuilder('history')
       .leftJoin('history.audio', 'audio')
-      .select(['audio.name', 'audio.artist', 'SUM(history.count) as sumCount'])
+      .leftJoin('audio.artist', 'artist')
+      .select(['audio.name', 'artist.artist_name', 'SUM(history.count) as sumCount'])
       .groupBy('history.audio_id')
       .orderBy("sumCount", "DESC")
       .limit(10)
