@@ -28,6 +28,7 @@ import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
 import { RecommandationModule } from './modules/recommandations/recommendations.module';
 import { AudioUserModule } from './modules/audioUser/audioUser.module';
 import { FavoriteGenreModule } from './modules/genreUser/genreUser.module';
+import { AgeModule } from './modules/age/age.module';
 
 @Module({
   imports: [
@@ -59,7 +60,8 @@ import { FavoriteGenreModule } from './modules/genreUser/genreUser.module';
     HealthCheckModule,
     RecommandationModule,
     AudioUserModule,
-    FavoriteGenreModule
+    FavoriteGenreModule,
+    AgeModule
   ],
   controllers: [],
   providers: [],

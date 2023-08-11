@@ -116,7 +116,7 @@ export default class SubscriptionController {
     description: 'get total number of user subscribe',
   })
   async countUserSubscribe(
-  ): Promise<number> {
+    ): Promise<number> {
     return this.subscriptionService.countUserSubscribe();
   }
 }
