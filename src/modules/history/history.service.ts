@@ -106,7 +106,6 @@ export default class HistoryService {
       .limit(10)
       .getRawMany()
 
-    console.log(history, 'haha');
 
     return history
 
