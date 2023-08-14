@@ -9,6 +9,9 @@ export class MentalHealthEntity extends BaseEntity {
   @Column()
   public name: string;
 
+  @Column()
+  public description: string;
+
   @Column({
     type: 'enum',
     enum: MentalHealthStatus,
