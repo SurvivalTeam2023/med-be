@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { MentalHealthStatus } from 'src/common/enums/mentalHealth.enum';
 
 export class CreateMentalHealthDegreeDTO {
@@ -12,6 +12,11 @@ export class CreateMentalHealthDegreeDTO {
     @IsNotEmpty()
     @IsString()
     title: string;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsString()
+    description: string;
 
     @ApiProperty({ enum: MentalHealthStatus, default: MentalHealthStatus.ACTIVE })
     status: MentalHealthStatus;
