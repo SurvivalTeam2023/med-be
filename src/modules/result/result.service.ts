@@ -42,6 +42,11 @@ export default class ResultService {
 
         const degreeMap = new Map<string, MentalHealthDegreeEntity>();
         const percentageMapArray = Promise.all(result.mentalHealth.map(async m => {
+            const mentalHealths = await this.entityManage.findOne(MentalHealthEntity, {
+                where: {
+                    name: m.mentalHealth
+                }
+            })
             const degree = await this.entityManage.findOne(MentalHealthDegreeEntity, {
                 relations: {
                     mentalHealth: true
@@ -58,35 +63,19 @@ export default class ResultService {
                 degreeMap.set(m.mentalHealth, degree);
             }
             const percentage = m.point / sum * 100
-            return { mentalHealth: m.mentalHealth, percentage: percentage, degree: degree.title }
+            return {
+                mentalHealth: m.mentalHealth,
+                mentalHealthDesc: mentalHealths.description,
+                percentage: percentage,
+                degree: degree.title,
+                degreeDesc: degree.description
+            }
 
         }))
-        if (result.mentalHealth.length > 1) {
-            console.log(percentageMapArray);
-
-            return percentageMapArray;
-        } else if (result.mentalHealth.length === 1) {
-            const degree = await this.entityManage.findOne(MentalHealthDegreeEntity, {
-                relations: ['mentalHealth'],
-                where: {
-                    pointStart: LessThanOrEqual(result.mentalHealth[0].point),
-                    pointEnd: MoreThanOrEqual(result.mentalHealth[0].point),
-                    mentalHealth: {
-                        name: result.mentalHealth[0].mentalHealth,
-                    },
-                },
-            });
-
-            const percentageObject = {
-                mentalHealth: result.mentalHealth[0].mentalHealth,
-                point: result.mentalHealth[0].point / 36 * 100,
-                degree: degree.title,
-            };
-            return percentageObject
-        }
+        return percentageMapArray;
     }
 
-    async createResult(dto: CreateResultDTO, token: string): Promise<{ mentalHealth: string, point: number, degree: string }[] | { mentalHealth: string, point: number, degree: string }> {
+    async createResult(dto: CreateResultDTO, token: string): Promise<any> {
 
         const userId = getUserId(token);
         const user = await this.entityManage.findOne(UserEntity, { where: { id: userId } });
@@ -101,7 +90,9 @@ export default class ResultService {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.QUESTION_BANK.NOT_FOUND);
         }
 
-
+        if (dto.optionId.length < questionBank.numberOfQuestion) {
+            ErrorHelper.NotFoundException(ERROR_MESSAGE.RESULT.NOT_ENOUGH);
+        }
         const firstResult = await this.resultRepo.create({
             optionIds: dto.optionId,
             questionBank: questionBank,
@@ -166,59 +157,23 @@ export default class ResultService {
             questionBank.isFinished = true
             await entityManager.save(questionBank)
         })
-        if (mentalHealthMap.size > 1) {
-            const degreeMap = new Map<string, MentalHealthDegreeEntity>();
-            for (const [mentalHealth, point] of mentalHealthMap) {
-                const degree = await this.entityManage.findOne(MentalHealthDegreeEntity, {
-                    relations: {
-                        mentalHealth: true
-                    },
-                    where: {
-                        pointStart: LessThanOrEqual(point),
-                        pointEnd: MoreThanOrEqual(point),
-                        mentalHealth: {
-                            name: mentalHealth,
-                        },
-                    },
-                });
-                if (degree) {
-                    degreeMap.set(mentalHealth, degree);
-                }
-                const mentalHealthLog = await this.entityManage.save(MentalHealthLogEntity, {
-                    userId: userId,
-                    questionBankId: dto.questionBankId,
-                })
-                await this.entityManage.save(MentalHealthDegreeLogEntity, {
-                    mentalHealthLog: mentalHealthLog,
-                    mentalHealthId: degree.mentalHealth.id,
-                    mentalHealthDegreeId: degree.id
-                })
-            }
-            const percentageMapArrayWithDegree = percentageMapArray.map(({ mentalHealth, point }) => {
-                const degree = degreeMap.get(mentalHealth);
-                return {
-                    mentalHealth,
-                    point: point,
-                    degree: degree.title,
-                };
-            });
-            return percentageMapArrayWithDegree;
-        }
-        else if (mentalHealthMap.size === 1) {
-            const [firstEntry] = mentalHealthMap.entries();
-
+        const degreeMap = new Map<string, MentalHealthDegreeEntity>();
+        for (const [mentalHealth, point] of mentalHealthMap) {
             const degree = await this.entityManage.findOne(MentalHealthDegreeEntity, {
                 relations: {
                     mentalHealth: true
                 },
                 where: {
-                    pointStart: LessThanOrEqual(firstEntry[1]),
-                    pointEnd: MoreThanOrEqual(firstEntry[1]),
+                    pointStart: LessThanOrEqual(point),
+                    pointEnd: MoreThanOrEqual(point),
                     mentalHealth: {
-                        name: firstEntry[0],
+                        name: mentalHealth,
                     },
                 },
             });
+            if (degree) {
+                degreeMap.set(mentalHealth, degree);
+            }
             const mentalHealthLog = await this.entityManage.save(MentalHealthLogEntity, {
                 userId: userId,
                 questionBankId: dto.questionBankId,
@@ -228,14 +183,25 @@ export default class ResultService {
                 mentalHealthId: degree.mentalHealth.id,
                 mentalHealthDegreeId: degree.id
             })
-            const percentageObject = {
-                mentalHealth: firstEntry[0],
-                point: (firstEntry[1] / 30) * 100,
-                degree: degree.title,
-            };
-
-            return percentageObject;
         }
+        const percentageMapArrayWithDegree = Promise.all(percentageMapArray.map(async ({ mentalHealth, point }) => {
+            const mentalHealths = await this.entityManage.findOne(MentalHealthEntity, {
+                where: {
+                    name: mentalHealth
+                }
+            })
+
+            const degree = degreeMap.get(mentalHealth);
+            return {
+                mentalHealth: mentalHealths.name,
+                mentalHealthDesc: mentalHealths.description,
+                point: point,
+                degree: degree.title,
+                degreeDesc: degree.description
+            };
+        }))
+
+        return percentageMapArrayWithDegree;
     }
 
 
