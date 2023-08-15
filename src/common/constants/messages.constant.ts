@@ -36,6 +36,7 @@ export const ERROR_MESSAGE = {
   },
   RESULT: {
     NOT_FOUND: 'Result not found',
+    NOT_ENOUGH: "Please select all the answer"
   },
   QUESTION_BANK: {
     NOT_FOUND: 'Question bank not found',
