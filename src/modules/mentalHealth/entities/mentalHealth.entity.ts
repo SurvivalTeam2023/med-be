@@ -9,6 +9,9 @@ export class MentalHealthEntity extends BaseEntity {
   @Column()
   public name: string;
 
+  @Column({name:"image_url"})
+  public imageUrl: string;
+
   @Column({ type: "varchar",length: 1024 })
   public description: string;
 
