@@ -9,7 +9,7 @@ export class MentalHealthEntity extends BaseEntity {
   @Column()
   public name: string;
 
-  @Column()
+  @Column({ type: "varchar",length: 1024 })
   public description: string;
 
   @Column({
@@ -17,7 +17,7 @@ export class MentalHealthEntity extends BaseEntity {
     enum: MentalHealthStatus,
   })
   public status: MentalHealthStatus;
-  
+
   @OneToMany(
     () => QuestionMentalHealthEntity,
     (questionMentalHealth) => questionMentalHealth.mentalHealth,

@@ -15,7 +15,7 @@ export class MentalHealthDegreeEntity extends BaseEntity {
   @Column()
   public title: string;
 
-   @Column()
+  @Column({ type: "varchar", length: 1024 })
   public description: string;
 
   @Column({
