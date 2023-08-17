@@ -65,6 +65,7 @@ export default class ResultService {
             const percentage = m.point / sum * 100
             return {
                 mentalHealth: m.mentalHealth,
+                mentalHealthImg: mentalHealths.imageUrl,
                 mentalHealthDesc: mentalHealths.description,
                 percentage: percentage,
                 degree: degree.title,
@@ -140,8 +141,6 @@ export default class ResultService {
             const updateValue = mentalHealthMap.get(mentalHealth) || 0;
             mentalHealthMap.set(mentalHealth, updateValue + points);
         }
-        const sum = Array.from(mentalHealthMap.values()).reduce((accumulator, value) => accumulator + value, 0);
-
 
         const resultArray = Array.from(mentalHealthMap.entries()).map(([mentalHealth, point]) => ({
             mentalHealth,
@@ -149,7 +148,7 @@ export default class ResultService {
         }));
         const percentageMapArray = Array.from(mentalHealthMap.entries()).map(([mentalHealth, point,]) => ({
             mentalHealth,
-            point: point / sum * 100,
+            point: point / 30 * 100,
         }));
         await this.entityManage.transaction(async (entityManager) => {
             firstResult.mentalHealth = resultArray;
@@ -194,6 +193,7 @@ export default class ResultService {
             const degree = degreeMap.get(mentalHealth);
             return {
                 mentalHealth: mentalHealths.name,
+                mentalHealthImg: mentalHealths.imageUrl,
                 mentalHealthDesc: mentalHealths.description,
                 point: point,
                 degree: degree.title,
