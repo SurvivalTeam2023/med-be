@@ -38,7 +38,6 @@ export default class ResultService {
         }
 
 
-        const sum = result.mentalHealth.reduce((accumulator, mentalHealth) => accumulator + mentalHealth.point, 0);
 
         const degreeMap = new Map<string, MentalHealthDegreeEntity>();
         const percentageMapArray = Promise.all(result.mentalHealth.map(async m => {
@@ -62,7 +61,7 @@ export default class ResultService {
             if (degree) {
                 degreeMap.set(m.mentalHealth, degree);
             }
-            const percentage = m.point / sum * 100
+            const percentage = m.point / 40 * 100
             return {
                 mentalHealth: m.mentalHealth,
                 mentalHealthImg: mentalHealths.imageUrl,
