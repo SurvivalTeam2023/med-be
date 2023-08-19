@@ -25,11 +25,9 @@ export default class AudioPlaylistService {
     ) { }
 
     async addAudioToPlaylist(dto: createAudioPlaylistDTO, token: string): Promise<AudioPlaylistEntity> {
-        const userId = getUserId(token);
         const playlist = await this.entityManage.findOne(PlaylistEntity, {
             where: {
                 id: dto.playlistId,
-                authorId: userId
             }
         })
         const audio = await this.entityManage.findOne(AudioEntity, {
@@ -50,7 +48,7 @@ export default class AudioPlaylistService {
             audio: audio,
             playlist: playlist
         })
-    
+
         return audioPlaylist
     }
     async removeAudioFromPlaylist(playlistId: number, audioId: number, token: string) {
