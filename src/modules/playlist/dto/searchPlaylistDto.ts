@@ -22,7 +22,17 @@ export class SearchPlaylistDto {
   @IsOptional()
   genreId: number;
 
-  @ApiProperty({ enum: PlaylistType, required: false })
+  @ApiProperty({ enum: PlaylistType, required: false, })
   playListType: PlaylistType;
+
+  @ApiProperty({ required: false, default: 1 })
+  @IsNumberString()
+  @IsOptional()
+  page: number;
+
+  @ApiProperty({ required: false, default: 10 })
+  @IsNumberString()
+  @IsOptional()
+  limit: number;
 }
 export default SearchPlaylistDto;

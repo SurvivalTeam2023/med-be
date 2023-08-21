@@ -106,6 +106,7 @@ export default class AudioService {
 
     queryBuilder.orderBy('audio.created_at', 'DESC');
     const result = await paginate<AudioEntity>(queryBuilder, option);
+    let isLiked: boolean
     const audios = await Promise.all(result.items.map(async (e) => {
       const audioUser = await this.entityManage.findOne(AudioUserEntity, {
         where: {
@@ -121,7 +122,7 @@ export default class AudioService {
           audioId: e.id
         }
       })
-      const isLiked = !!audioUser;
+      isLiked = !!audioUser;
       console.log(isLiked);
 
       const audioDTO: AudioDTO = {

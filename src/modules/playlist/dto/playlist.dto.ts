@@ -2,7 +2,6 @@ import { PlaylistPublic } from "src/common/enums/playlistPublic.enum";
 import { PlaylistStatus } from "src/common/enums/playlistStatus.enum";
 import { PlaylistType } from "src/common/enums/playlistType.enum";
 import AudioDTO from "src/modules/audio/dto/audio.dto";
-import { AudioPlaylistEntity } from "src/modules/audioPlaylist/entities/audioPlaylist.entity";
 
 
 export class PlaylistDTO {
@@ -18,9 +17,12 @@ export class PlaylistDTO {
   public description: string;
 
   public isPublic: PlaylistPublic;
+  public author: {
+    firstName: string,
+    lastName: string
+  }
 
-
-  audioPlaylist: { id: number, audio: AudioDTO }[];
+  public audioPlaylist: { id: number, audio: AudioDTO }[];
 
 
   public playlistType: PlaylistType;

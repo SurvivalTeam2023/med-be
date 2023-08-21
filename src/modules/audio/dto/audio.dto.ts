@@ -9,7 +9,7 @@ export class AudioDTO {
   imageUrl: string;
   status: AudioStatus;
   liked: number;
-  audioPlaylist: AudioPlaylistEntity[];
+  audioPlaylist?: AudioPlaylistEntity[];
   audioFile: AudioFileEntity[];
   artist: ArtistEntity;
   isLiked: boolean
