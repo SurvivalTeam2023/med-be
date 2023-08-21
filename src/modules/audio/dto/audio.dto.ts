@@ -12,5 +12,6 @@ export class AudioDTO {
   audioPlaylist: AudioPlaylistEntity[];
   audioFile: AudioFileEntity[];
   artist: ArtistEntity;
+  isLiked: boolean
 }
 export default AudioDTO;
