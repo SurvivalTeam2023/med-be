@@ -26,6 +26,7 @@ import PlaylistService from './playlist.service';
 import { Roles, Unprotected } from 'nest-keycloak-connect';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
+import PlaylistDTO from './dto/playlist.dto';
 
 @ApiTags('Playlists')
 @Controller('playlist')
@@ -42,26 +43,11 @@ export default class PlaylistController {
 
   @Get()
   @Unprotected()
-  @ApiQuery({
-    name: 'page',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'limit',
-    required: false,
-  })
   @ApiOperation({ summary: 'get playlist list' })
   async getPlaylists(
     @Query() playlist: SearchPlaylistDto,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
-  ): Promise<Pagination<PlaylistEntity>> {
-    limit = limit > 100 ? 100 : limit;
+  ): Promise<Pagination<PlaylistDTO>> {
     return this.playlistService.findPlaylist(
-      {
-        page,
-        limit,
-      },
       playlist,
     );
   }

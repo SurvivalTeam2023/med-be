@@ -20,6 +20,7 @@ import { PlaylistType } from 'src/common/enums/playlistType.enum';
 import { PlaylistDTO } from './dto/playlist.dto';
 import AudioDTO from '../audio/dto/audio.dto';
 import UserEntity from '../user/entities/user.entity';
+import { AudioPlaylistEntity } from '../audioPlaylist/entities/audioPlaylist.entity';
 
 @Injectable()
 export default class PlaylistService {
@@ -45,19 +46,19 @@ export default class PlaylistService {
     return playList;
   }
   async findPlaylist(
-    option: IPaginationOptions,
     dto: SearchPlaylistDto,
-  ): Promise<Pagination<PlaylistEntity>> {
-    const queryBuilder = this.playlistRepository
+  ): Promise<Pagination<PlaylistDTO>> {
+    const queryBuilder = await this.playlistRepository
       .createQueryBuilder('playlist')
-      .leftJoinAndSelect('playlist.audioPlaylist', 'audio_playlist')
+      .leftJoin('playlist.audioPlaylist', 'audio_playlist')
       .leftJoin('playlist.genre', 'genre')
-      .leftJoinAndSelect('audio_playlist.audio', 'audio')
-      .leftJoinAndSelect('audio.audioFile', 'audioFile')
-      .leftJoinAndSelect('audioFile.file', 'file')
-      .leftJoinAndSelect('audio.artist', 'artist')
+      .leftJoin('audio_playlist.audio', 'audio')
+      .leftJoin('audio.audioFile', 'audioFile')
+      .leftJoin('audioFile.file', 'file')
+      .leftJoin('audio.artist', 'artist')
       .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
-      .select(['playlist', 'user.firstName','user.lastName', 'audio_playlist.id', 'audio', 'file',])
+      .groupBy('playlist.id')
+      .select(['playlist', 'user.firstName', 'user.lastName',]);
     if (dto.name)
       queryBuilder
         .where('LOWER(playlist.name) like :name', { name: `%${dto.name}%` })
@@ -83,8 +84,50 @@ export default class PlaylistService {
           genreId: dto.genreId,
         })
         .orderBy('playlist.created_at', 'DESC');
-    queryBuilder.orderBy('playlist.created_at', 'DESC');
-    return paginate<PlaylistEntity>(queryBuilder, option);
+
+    console.log(((await queryBuilder.getMany()).length));
+
+    const results = await paginate(queryBuilder, { page: dto.page, limit: dto.limit });
+    console.log(results);
+
+    const playlist = await Promise.all(results.items.map(async (item) => {
+      // const user = await this.entityManage.findOne(UserEntity, {
+      // })
+      const audioPlaylist = await this.entityManage.find(AudioPlaylistEntity, {
+        relations: {
+          audio: true
+        },
+        where: {
+          playlistId: item.id
+        }
+      })
+      const playListDTO: PlaylistDTO = {
+        ...item,
+        author: item['author'],
+        audioPlaylist: audioPlaylist.map(audio => ({
+          id: audio.id,
+          audio: {
+            id: audio.audio.id,
+            name: audio.audio.name,
+            imageUrl: audio.audio.imageUrl,
+            status: audio.audio.status,
+            liked: audio.audio.liked,
+            audioFile: audio.audio.audioFile,
+            artist: audio.audio.artist,
+            isLiked: false // Set the isLiked field here
+          }
+        }))
+
+
+      }
+      return playListDTO
+    }))
+
+
+    return {
+      ...results,
+      items: playlist
+    }
   }
 
   async createPlaylist(
@@ -140,5 +183,6 @@ export default class PlaylistService {
     return playlist;
   }
 
- 
+
 }
+
