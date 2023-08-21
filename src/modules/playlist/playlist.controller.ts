@@ -37,8 +37,8 @@ export default class PlaylistController {
   @Get(':id')
   @Unprotected()
   @ApiOperation({ summary: 'get playlist by id' })
-  async getPlaylistById(@Param('id') id: number): Promise<PlaylistEntity> {
-    return await this.playlistService.findPlaylistById(id);
+  async getPlaylistById(@Param('id') id: number, @RequestPayload() token: string): Promise<PlaylistDTO> {
+    return await this.playlistService.findPlaylistById(id, token);
   }
 
   @Get()
@@ -46,9 +46,10 @@ export default class PlaylistController {
   @ApiOperation({ summary: 'get playlist list' })
   async getPlaylists(
     @Query() playlist: SearchPlaylistDto,
+    @RequestPayload() token: string
   ): Promise<Pagination<PlaylistDTO>> {
     return this.playlistService.findPlaylist(
-      playlist,
+      playlist, token
     );
   }
 
