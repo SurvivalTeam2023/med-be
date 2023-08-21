@@ -25,6 +25,7 @@ import { AudioFileEntity } from '../audioFile/entities/audioFile.entity';
 import UserEntity from '../user/entities/user.entity';
 import AudioDTO from './dto/audio.dto';
 import { AudioUserEntity } from '../audioUser/entities/audioUser.entity';
+import { async } from 'rxjs';
 
 @Injectable()
 export default class AudioService {
@@ -71,6 +72,8 @@ export default class AudioService {
     option: IPaginationOptions,
     token: string,
   ): Promise<Pagination<AudioDTO>> {
+    const userId = getUserId(token);
+
     const queryBuilder = this.audioRepository
       .createQueryBuilder('audio')
       .leftJoinAndSelect('audio.audioPlaylist', 'audioPlaylist')
@@ -103,7 +106,24 @@ export default class AudioService {
 
     queryBuilder.orderBy('audio.created_at', 'DESC');
     const result = await paginate<AudioEntity>(queryBuilder, option);
-    const audios = result.items.map((e) => {
+    const audios = await Promise.all(result.items.map(async (e) => {
+      const audioUser = await this.entityManage.findOne(AudioUserEntity, {
+        where: {
+          userId: userId,
+          audioId: e.id
+        },
+      });
+      const audioFile = await this.entityManage.find(AudioFileEntity, {
+        relations: {
+          audio: true
+        },
+        where: {
+          audioId: e.id
+        }
+      })
+      const isLiked = !!audioUser;
+      console.log(isLiked);
+
       const audioDTO: AudioDTO = {
         id: e.id,
         imageUrl: e.imageUrl,
@@ -113,9 +133,10 @@ export default class AudioService {
         artist: e.artist,
         audioFile: e.audioFile,
         audioPlaylist: e.audioPlaylist,
+        isLiked: isLiked
       };
       return audioDTO;
-    });
+    }))
 
     return {
       ...result,
