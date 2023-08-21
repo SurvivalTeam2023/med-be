@@ -26,6 +26,7 @@ import UserEntity from '../user/entities/user.entity';
 import AudioDTO from './dto/audio.dto';
 import { AudioUserEntity } from '../audioUser/entities/audioUser.entity';
 import { async } from 'rxjs';
+import ArtistEntity from '../artist/entities/artist.entity';
 
 @Injectable()
 export default class AudioService {
@@ -81,6 +82,8 @@ export default class AudioService {
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
       .leftJoinAndSelect('audio.artist', 'artist')
+      .groupBy('audio.id')
+      .select(['audio'])
       .where('audioFile.is_primary =  1');
     if (dto.name)
       queryBuilder
@@ -114,16 +117,30 @@ export default class AudioService {
           audioId: e.id
         },
       });
+      const artist = await this.entityManage.findOne(ArtistEntity, {
+        where: {
+          audios: {
+            id: e.id
+          }
+        }
+      })
       const audioFile = await this.entityManage.find(AudioFileEntity, {
         relations: {
-          audio: true
+          file: true
+        },
+        where: {
+          audioId: e.id
+        }
+      })
+      const audioPlaylist = await this.entityManage.find(AudioPlaylistEntity, {
+        relations: {
+          playlist: true
         },
         where: {
           audioId: e.id
         }
       })
       isLiked = !!audioUser;
-      console.log(isLiked);
 
       const audioDTO: AudioDTO = {
         id: e.id,
@@ -131,9 +148,9 @@ export default class AudioService {
         liked: e.liked,
         name: e.name,
         status: e.status,
-        artist: e.artist,
-        audioFile: e.audioFile,
-        audioPlaylist: e.audioPlaylist,
+        artist: artist,
+        audioFile: audioFile,
+        audioPlaylist: audioPlaylist,
         isLiked: isLiked
       };
       return audioDTO;

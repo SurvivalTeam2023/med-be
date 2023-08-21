@@ -4,16 +4,18 @@ import { IPaginationOptions, paginate, Pagination } from "nestjs-typeorm-paginat
 import { ERROR_MESSAGE } from "src/common/constants/messages.constant";
 import { QuestionStatus } from "src/common/enums/questionStatus.enum";
 import { ErrorHelper } from "src/helpers/error.helper";
-import { Repository } from "typeorm";
+import { EntityManager, Repository } from "typeorm";
 import { QuestionMentalHealthEntity } from "../questionMentalHealth/entities/questionMentalHealth.entity";
 import CreateQuestionDTO from "./dto/createQuestion.dto";
 import SearchQuestionDTO from "./dto/searchQuestion.dto";
 import UpdateQuestionDTO from "./dto/updateQuestion.dto";
 import { QuestionEntity } from "./entities/question.entity";
+import { OptionEntity } from "../option/entities/option.entity";
 
 @Injectable()
 export default class QuestionService {
     constructor(
+        private readonly entityManage: EntityManager,
         @InjectRepository(QuestionEntity)
         private questionRepo: Repository<QuestionEntity>,
     ) { }
@@ -37,12 +39,36 @@ export default class QuestionService {
         const querybuilder = this.questionRepo
             .createQueryBuilder('question')
             .leftJoinAndSelect('question.option', 'option')
-            .select(['question', 'option.id', 'option.option', 'option.points'])
+            .groupBy('question.id')
+            .select(['question'])
         if (dto.question) querybuilder.where('LOWER(question.question) like :name', { name: `%${dto.question}%` }).orderBy('question.created_at', 'DESC')
 
         if (dto.status) querybuilder.andWhere('question.status = :questionStatus', { questionStatus: dto.status }).orderBy('question.created_at', 'DESC')
+        const result = await paginate<QuestionEntity>(querybuilder, option)
+        const question = await Promise.all(result.items.map(async e => {
+            const option = await this.entityManage.find(OptionEntity, {
+                where: {
+                    question: {
+                        id: e.id
+                    }
+                },
+                select: {
+                    id: true,
+                    option: true,
+                    points: true
+                }
+            })
+            const question = {
+                ...e,
+                option: option
+            }
+            return question
+        }))
 
-        return paginate<QuestionEntity>(querybuilder, option);
+        return {
+            meta: result.meta,
+            items: question
+        }
     }
     async createQuestion(dto: CreateQuestionDTO): Promise<QuestionEntity> {
         const questionMentalHealths = dto.mentalHealthId.map((mentalHealthId) => {
