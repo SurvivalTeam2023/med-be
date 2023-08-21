@@ -8,6 +8,15 @@ export const ERROR_MESSAGE = {
     DUPLICATE_NAME: 'Name already exist!',
     INVALID_TYPE: "Invalid Audio File"
   },
+
+  AUDIO_PLAYLIST: {
+    NOT_FOUND: 'Audio not found!',
+    DUPLICATE: 'Song already exist!',
+    INVALID_TYPE: "Invalid Audio File"
+  },
+  ARTiST: {
+    NOT_FOUND: 'Audio not found!',
+  },
   GENRE: {
     NOT_FOUND: 'Genre not found!',
     DUPLICATE_NAME: 'Name already exist!',

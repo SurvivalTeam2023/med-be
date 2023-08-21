@@ -25,6 +25,15 @@ export default class AudioPlaylistService {
     ) { }
 
     async addAudioToPlaylist(dto: createAudioPlaylistDTO, token: string): Promise<AudioPlaylistEntity> {
+        const existAudio = await this.audioPlaylistRepository.findOne({
+            where: {
+                playlistId: dto.playlistId,
+                audioId: dto.audioId,
+            }
+        })
+        if (existAudio) {
+            ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO_PLAYLIST.DUPLICATE)
+        }
         const playlist = await this.entityManage.findOne(PlaylistEntity, {
             where: {
                 id: dto.playlistId,

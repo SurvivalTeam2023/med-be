@@ -122,8 +122,6 @@ export default class PlaylistService {
         })
         .orderBy('playlist.created_at', 'DESC');
 
-    console.log(((await queryBuilder.getMany()).length));
-
     const results = await paginate(queryBuilder, { page: dto.page, limit: dto.limit });
 
     const playlist = await Promise.all(results.items.map(async (item) => {
