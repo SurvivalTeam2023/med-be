@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsNotEmpty, IsNumber, IsNumberString, IsString } from "class-validator";
 import { QuestionStatus } from "src/common/enums/questionStatus.enum";
 
 export class CreateQuestionDTO {
@@ -14,5 +14,11 @@ export class CreateQuestionDTO {
     @ApiProperty({ type: [Number] })
     @IsArray()
     mentalHealthId: number[];
+
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
+    ageId: number
 }
 export default CreateQuestionDTO;

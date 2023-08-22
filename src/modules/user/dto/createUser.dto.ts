@@ -37,7 +37,6 @@ export class CreateUserDTO {
   firstName: string;
 
   @IsString()
-  @Is
   @ApiProperty()
   @Matches(/^[a-zA-Z\s]*$/, { message: 'Last name must not contain special characters' })
   @IsOptional()
