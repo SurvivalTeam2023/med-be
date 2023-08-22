@@ -18,6 +18,9 @@ export class OptionEntity extends BaseEntity {
     })
     public status: OptionStatus;
 
+    @Column({ name: 'question_id' })
+    public questionId: number
+
     @ManyToOne(() => QuestionEntity, (question) => question.option)
     @JoinColumn({ name: 'question_id' })
     public question: QuestionEntity;
