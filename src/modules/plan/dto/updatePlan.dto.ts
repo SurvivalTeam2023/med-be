@@ -5,7 +5,7 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 export class UpdatePlanDTO {
   @ApiProperty()
   @IsOptional()
-  @IsNumber()
+  @IsString()
   name: string;
 
   @ApiProperty()
