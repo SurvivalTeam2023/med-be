@@ -11,6 +11,7 @@ import SearchQuestionDTO from "./dto/searchQuestion.dto";
 import UpdateQuestionDTO from "./dto/updateQuestion.dto";
 import { QuestionEntity } from "./entities/question.entity";
 import { OptionEntity } from "../option/entities/option.entity";
+import { AgeEntity } from "../age/entities/age.entity";
 
 @Injectable()
 export default class QuestionService {
@@ -79,9 +80,15 @@ export default class QuestionService {
             questionMentalHealth.mentalHealthId = mentalHealthId;
             return questionMentalHealth;
         });
-        const entity = this.questionRepo.save({
+        const age = await this.entityManage.findOne(AgeEntity, {
+            where: {
+                id: dto.ageId
+            }
+        })
+        const entity = await this.questionRepo.save({
             ...dto,
-            questionMentalHealth: questionMentalHealths
+            questionMentalHealth: questionMentalHealths,
+            age: age
         });
         return entity;
     }
