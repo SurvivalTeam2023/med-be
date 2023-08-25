@@ -23,7 +23,6 @@ import { ArtistModule } from './modules/artist/artist.module';
 import { UserLogModule } from './modules/userStatusLog/userStatusLog.module';
 import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.module';
 import { FollowedArtistModule } from './modules/followedArtist/followedArtist.module';
-import { WalletModule } from './modules/wallet/wallet.module';
 import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
 import { RecommandationModule } from './modules/recommandations/recommendations.module';
 import { AudioUserModule } from './modules/audioUser/audioUser.module';
@@ -58,7 +57,6 @@ import { LoggingInterceptor } from './intrerceptors/logging.interceptor';
     ArtistModule,
     FollowedArtistModule,
     UserLogModule,
-    WalletModule,
     HealthCheckModule,
     RecommandationModule,
     AudioUserModule,

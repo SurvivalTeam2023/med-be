@@ -1,6 +1,5 @@
 import { USER_STATUS } from 'src/common/enums/userStatus.enum';
 import { AudioEntity } from 'src/modules/audio/entities/audio.entity';
-import { WalletEntity } from 'src/modules/wallet/entities/wallet.entity';
 import {
   Column,
   CreateDateColumn,
@@ -44,11 +43,6 @@ export class ArtistEntity {
     nullable: true,
   })
   public avatar?: FileEntity;
-
-  @OneToMany(() => WalletEntity, (wallet) => wallet.artist, {
-    cascade: true,
-  })
-  public wallet: WalletEntity[];
 
   @OneToMany(() => FollowedArtistEntity, (follower) => follower.artist, { cascade: true, })
   public follower: FollowedArtistEntity[];

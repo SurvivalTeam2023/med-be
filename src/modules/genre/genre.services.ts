@@ -21,6 +21,7 @@ import UserEntity from '../user/entities/user.entity';
 import ArtistEntity from '../artist/entities/artist.entity';
 import PlaylistDto from '../playlist/dto/playlist.dto';
 import GenreDTO from './dto/genre.dto';
+import FindGenreDTO from './dto/findGenre.dto';
 
 @Injectable()
 export default class GenreService {
@@ -50,17 +51,24 @@ export default class GenreService {
     return genre
   }
 
-  async findGenres(name?: string): Promise<GenreEntity[]> {
+  async findGenres(dto: FindGenreDTO): Promise<GenreEntity[]> {
     const queryBuilder = await this.genreRepo
       .createQueryBuilder('genre')
       .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
       .leftJoinAndSelect('audioGenre.audio', 'audio')
       .leftJoinAndSelect('genre.playlist', 'playlist')
+      .where('audio.status=1')
       .select(['genre', 'audioGenre.id', 'audio']);
-    if (name)
+    if (dto.name)
       queryBuilder
-        .where('LOWER(genre.name) like :name', { name: `%${name}%` })
+        .andWhere('LOWER(genre.name) like :name', { name: `%${dto.name}%` })
         .orderBy('genre.name', 'ASC');
+
+    if (dto.status)
+      queryBuilder
+        .where('genre.status = :status', { status: dto.status })
+        .orderBy('genre.name', 'ASC');
+
 
     return queryBuilder.orderBy('genre.name', 'ASC').getMany();
   }

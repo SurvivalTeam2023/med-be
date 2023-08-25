@@ -13,7 +13,6 @@ import { AudioPlaylistEntity } from 'src/modules/audioPlaylist/entities/audioPla
 import { PlaylistEntity } from 'src/modules/playlist/entities/playlist.entity';
 import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
 import { GenreEntity } from 'src/modules/genre/entities/genre.entity';
-import { WalletEntity } from 'src/modules/wallet/entities/wallet.entity';
 import { MentalHealthEntity } from 'src/modules/mentalHealth/entities/mentalHealth.entity';
 import { QuestionEntity } from 'src/modules/question/entities/question.entity';
 import { OptionEntity } from 'src/modules/option/entities/option.entity';
@@ -46,7 +45,6 @@ const entities = [
   ArtistEntity,
   AudioGenreEntity,
   GenreEntity,
-  WalletEntity,
   MentalHealthEntity,
   QuestionEntity,
   OptionEntity,
