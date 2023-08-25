@@ -80,6 +80,10 @@ export default class QuestionBankService {
                     .orderBy("RAND()")
                     .take(10)
                     .getMany();
+
+                questions.forEach(question => {
+                    question.option = question.option.sort();
+                });
                 result.push(...questions);
             }
 
