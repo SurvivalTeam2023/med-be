@@ -24,6 +24,7 @@ import CreateGenreDTO from './dto/createGenre.dto';
 import UpdateGenreDTO from './dto/updateGenre.dto';
 import { Emotion } from '@aws-sdk/client-rekognition';
 import GenreDTO from './dto/genre.dto';
+import FindGenreDTO from './dto/findGenre.dto';
 
 @ApiTags('Genres')
 @Controller('genres')
@@ -35,19 +36,14 @@ export default class GenreController {
   @Unprotected()
   @ApiOperation({ summary: 'get genre by id' })
   async getGenreById(@Param('id') id: number): Promise<GenreEntity> {
-    return this.genreService.findGenreById(id);
+    return await this.genreService.findGenreById(id);
   }
 
   @Get()
   @Unprotected()
   @ApiOperation({ summary: 'get genre list' })
-  @ApiQuery({
-    name: 'name',
-    type: String,
-    required: false,
-  })
-  async getGenres(@Query('name') name: string): Promise<GenreEntity[]> {
-    return this.genreService.findGenres(name);
+  async getGenres(@Query() dto: FindGenreDTO): Promise<GenreEntity[]> {
+    return this.genreService.findGenres(dto);
   }
 
   @Post('emotion')
