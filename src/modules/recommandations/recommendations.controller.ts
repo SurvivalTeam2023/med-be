@@ -21,7 +21,7 @@ export default class RecommendationController {
   @Get('mental')
   @ApiOperation({ summary: 'get recommendation by mentalId' })
   @Unprotected()
-  async getResultByMentalId(@RequestPayload() token: string): Promise<any> {
+  async getResultByMental(@RequestPayload() token: string): Promise<any> {
     return await this.recommendationService.getRecommendationsByMental(token);
   }
 
@@ -30,5 +30,12 @@ export default class RecommendationController {
   @Unprotected()
   async getResultByAudioId(@Param('id') genreId: number, @RequestPayload() token: string): Promise<any> {
     return await this.recommendationService.getRecommendationsByAudio(genreId);
+  }
+
+  @Get('mental/:id')
+  @ApiOperation({ summary: 'get recommendation by mentalId' })
+  @Unprotected()
+  async getResultByMentalId(@Param('id') mentalId: number, @RequestPayload() token: string): Promise<any> {
+    return await this.recommendationService.getRecommendationsByMentalId(mentalId);
   }
 }

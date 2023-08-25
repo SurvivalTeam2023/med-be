@@ -94,11 +94,33 @@ export default class RecommendationService {
       list = [...audios]
     }
 
-    return list;
+    return { mentalHealths: highestPointObjects, list };
   }
 
   async getRecommendationsByAudio(audioId: number): Promise<AudioEntity[]> {
     const url = AI_SERVICE_URL + '/recommendation/audio/?audio_id=' + audioId;
+
+    const listRecommendAudio = await firstValueFrom(
+      this.httpService.get(url).pipe(
+        map((response) => response.data),
+        catchError((err) => {
+          return err;
+        }),
+      ),
+    )
+    const audios = await this.resultRepo.createQueryBuilder('audio')
+      .leftJoin('audio.audioFile', 'audioFile')
+      .leftJoin('audioFile.file', 'file')
+      .leftJoin('audio.artist', 'artist')
+      .select(['audio', 'artist', 'audioFile.id', 'file.url'])
+      .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
+      .getMany()
+
+    return audios;
+  }
+
+  async getRecommendationsByMentalId(mentalId: number): Promise<AudioEntity[]> {
+    const url = AI_SERVICE_URL + '/recommendation/mental/?mental_id=' + mentalId;
 
     const listRecommendAudio = await firstValueFrom(
       this.httpService.get(url).pipe(
