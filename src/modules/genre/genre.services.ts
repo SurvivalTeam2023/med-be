@@ -57,11 +57,11 @@ export default class GenreService {
       .leftJoinAndSelect('genre.audioGenre', 'audioGenre')
       .leftJoinAndSelect('audioGenre.audio', 'audio')
       .leftJoinAndSelect('genre.playlist', 'playlist')
-      .leftJoin('genre.mentalHealthGenre', 'mentalHealthGenre')
+      .where('audio.status=1')
       .select(['genre', 'audioGenre.id', 'audio']);
     if (dto.name)
       queryBuilder
-        .where('LOWER(genre.name) like :name', { name: `%${dto.name}%` })
+        .andWhere('LOWER(genre.name) like :name', { name: `%${dto.name}%` })
         .orderBy('genre.name', 'ASC');
 
     if (dto.status)
