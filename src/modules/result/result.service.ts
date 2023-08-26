@@ -61,8 +61,9 @@ export default class ResultService {
             if (degree) {
                 degreeMap.set(m.mentalHealth, degree);
             }
-            const percentage = m.point / 40 * 100
+            const percentage = m.point / 30 * 100
             return {
+                id: mentalHealths.id,
                 mentalHealth: m.mentalHealth,
                 mentalHealthImg: mentalHealths.imageUrl,
                 mentalHealthDesc: mentalHealths.description,
