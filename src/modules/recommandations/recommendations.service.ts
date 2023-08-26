@@ -119,7 +119,7 @@ export default class RecommendationService {
     return audios;
   }
 
-  async getRecommendationsByMentalId(mentalId: number): Promise<AudioEntity[]> {
+  async getRecommendationsByMentalId(mentalId: number): Promise<any> {
     const url = AI_SERVICE_URL + '/recommendation/mental/?mental_id=' + mentalId;
 
     const listRecommendAudio = await firstValueFrom(
@@ -130,6 +130,11 @@ export default class RecommendationService {
         }),
       ),
     )
+    const mentalHealth = await this.entityManage.findOne(MentalHealthEntity, {
+      where: {
+        id: mentalId
+      }
+    })
     const audios = await this.resultRepo.createQueryBuilder('audio')
       .leftJoin('audio.audioFile', 'audioFile')
       .leftJoin('audioFile.file', 'file')
@@ -138,6 +143,6 @@ export default class RecommendationService {
       .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
       .getMany()
 
-    return audios;
+    return { mentalHealth: mentalHealth.name, audios };
   }
 }
