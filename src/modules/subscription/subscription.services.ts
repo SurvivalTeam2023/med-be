@@ -141,7 +141,7 @@ export default class SubscriptionService {
     await firstValueFrom(await this.userService.assignRole(user.username, USER_REALM_ROLE.APP_SUBSCRIBER))
     return subscriptionPaypal;
   }
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  @Cron("* * * * *")
   async handlePendingStatusCron() {
     const subList = await this.subscriptionRepo.find(
       { where: { status: SubscriptionStatus.APPROVAL_PENDING } }
