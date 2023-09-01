@@ -15,6 +15,10 @@ export class MentalHealthEntity extends BaseEntity {
   @Column({ type: "varchar", length: 8192 })
   public description: string;
 
+
+  @Column({ nullable: true })
+  public color: string;
+
   @Column({
     type: 'enum',
     enum: MentalHealthStatus,
