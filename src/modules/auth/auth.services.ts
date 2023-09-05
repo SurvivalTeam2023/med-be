@@ -256,24 +256,21 @@ export class AuthService {
       );
   }
 
-  getPayPalAccessToken(): Observable<AxiosResponse<[]>> {
-    const form = new URLSearchParams();
-    form.append('grant_type', 'client_credentials');
-    return this.httpService
-      .post(`${PAYPAL_URL}/v1/oauth2/token`, form, {
-        auth: {
-          username: PAYPAL_CLIENT_ID,
-          password: PAYPAL_CLIENT_SECRET,
-        },
-        headers: {
-          Content_type: 'application/x-www-form-urlencoded',
-        },
-      })
-      .pipe(map((response) => response.data))
+  getPayPalAccessToken(): Observable<AxiosResponse<any>> {
+
+    const data = 'grant_type=client_credentials'
+    return this.httpService.post(`${PAYPAL_URL}/v1/oauth2/token`, data, {
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString('base64')}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+    })
       .pipe(
-        catchError((err) =>
-          of(ErrorHelper.BadGatewayException(err.response.data)),
-        ),
+        map((response) => response.data),
+        catchError((err) => {
+          console.log('PayPal API Error:', err);
+          return of(ErrorHelper.BadGatewayException(err.response?.data || 'Unknown error'));
+        }),
       );
   }
 }

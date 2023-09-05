@@ -180,7 +180,8 @@ export default class ResultService {
             await this.entityManage.save(MentalHealthDegreeLogEntity, {
                 mentalHealthLog: mentalHealthLog,
                 mentalHealthId: degree.mentalHealth.id,
-                mentalHealthDegreeId: degree.id
+                mentalHealthDegreeId: degree.id,
+                userId: userId
             })
         }
         const percentageMapArrayWithDegree = Promise.all(percentageMapArray.map(async ({ mentalHealth, point }) => {
