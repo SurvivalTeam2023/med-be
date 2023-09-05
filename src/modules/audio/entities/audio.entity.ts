@@ -11,7 +11,6 @@ import { FileEntity } from 'src/modules/files/entities/file.entity';
 import { AudioPlaylistEntity } from '../../audioPlaylist/entities/audioPlaylist.entity';
 import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
-import { AccessEntity } from 'src/modules/access/entities/access.entity';
 import ArtistEntity from 'src/modules/artist/entities/artist.entity';
 import { AudioStatus } from 'src/common/enums/audioStatus.enum';
 import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
@@ -51,8 +50,7 @@ export class AudioEntity extends BaseEntity {
   })
   history: HistoryEntity[];
 
-  @OneToMany(() => AccessEntity, (access) => access.audioId, { cascade: true })
-  access: AccessEntity[];
+
 
   @OneToMany(() => AudioFileEntity, (audioFile) => audioFile.audio, {
     cascade: true,

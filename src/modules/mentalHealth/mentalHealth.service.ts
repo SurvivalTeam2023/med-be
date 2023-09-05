@@ -4,16 +4,22 @@ import { ERROR_MESSAGE } from "src/common/constants/messages.constant";
 import { MentalHealthStatus } from "src/common/enums/mentalHealth.enum";
 
 import { ErrorHelper } from "src/helpers/error.helper";
-import { Repository } from "typeorm";
+import { EntityManager, Repository } from "typeorm";
 import CreateMentalHealthDTO from "./dto/createMentalHealth.dto";
 import FindMentalHealthDTO from "./dto/findMentalHealth.dto";
 import UpdateMentalHealthDTO from "./dto/updateMentalHealth.dto";
 import { MentalHealthEntity } from "./entities/mentalHealth.entity";
+import { MentalHealthDegreeLogEntity } from "../mentalHealthDegreeLog/entities/mentalHealthDegreeLog.entity";
+import { getUserId } from "src/utils/decode.utils";
+import UserEntity from "../user/entities/user.entity";
+import ChooseMentalDTO from "./dto/chooseMental.dto";
 
 
 @Injectable()
 export default class MentalHealthService {
     constructor(
+        private readonly entityManage: EntityManager,
+
         @InjectRepository(MentalHealthEntity)
         private mentalHealthRepo: Repository<MentalHealthEntity>,
     ) { }
@@ -60,4 +66,32 @@ export default class MentalHealthService {
         await this.mentalHealthRepo.save(mentalHealth);
         return mentalHealth;
     }
+    async chooseMental(
+        dto: ChooseMentalDTO,
+        token: string,
+    ): Promise<MentalHealthDegreeLogEntity> {
+        let userId = getUserId(token);
+        const user = await this.entityManage.findOne(UserEntity, {
+            where: { id: userId },
+        });
+        if (!user) {
+            ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
+        }
+        const mentalHealth = await this.entityManage.find(MentalHealthEntity, {
+            where: { id: dto.mentalHealthId },
+        });
+        if (!mentalHealth) {
+            ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
+        }
+
+
+        const mentalHealthUser = await this.entityManage.create(MentalHealthDegreeLogEntity, {
+            userId: userId,
+            mentalHealthId: dto.mentalHealthId,
+            mentalHealthDegreeId: dto.degreeId,
+        })
+        await this.entityManage.save(mentalHealthUser)
+        return mentalHealthUser;
+    }
+
 }

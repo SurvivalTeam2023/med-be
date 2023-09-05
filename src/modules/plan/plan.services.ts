@@ -20,7 +20,7 @@ export default class PlanService {
     private readonly httpService: HttpService,
     @InjectRepository(PlanEntity)
     private readonly planRepo: Repository<PlanEntity>,
-  ) {}
+  ) { }
 
   async findPlanById(planId: string): Promise<PlanEntity> {
     const subscription = await this.planRepo
@@ -57,7 +57,10 @@ export default class PlanService {
     const response = await lastValueFrom(
       this.authService.getPayPalAccessToken(),
     );
+
     let token = `Bearer ${response['access_token']}`;
+    console.log(response);
+    
     const planPayPal = await lastValueFrom(
       this.httpService
         .post(
@@ -98,8 +101,12 @@ export default class PlanService {
         )
         .pipe(map((response) => response.data)),
     ).catch((err) => {
+      console.log(err,"error123");
+
       ErrorHelper.BadRequestException(err.response.data.errorMessage);
     });
+    console.log(planPayPal,"haha");
+
     const plan = await this.planRepo.save({
       id: planPayPal.id,
       ...dto,

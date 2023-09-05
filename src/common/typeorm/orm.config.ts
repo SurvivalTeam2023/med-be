@@ -22,7 +22,6 @@ import { QuestionBankEntity } from 'src/modules/questionBank/entities/questionBa
 import { QuestionBankQuestionEntity } from 'src/modules/questionBankQuestion/entities/questionBankQuestion.entity';
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
-import { AccessEntity } from 'src/modules/access/entities/access.entity';
 import { QuestionMentalHealthEntity } from 'src/modules/questionMentalHealth/entities/questionMentalHealth.entity';
 import { MentalHealthDegreeEntity } from 'src/modules/mentalHealthDegree/entities/mentalHealthDegree.entity';
 import { MentalHealthLogEntity } from 'src/modules/mentalHealthLog/entities/mentalHealthLog.entity';
@@ -52,7 +51,6 @@ const entities = [
   QuestionBankQuestionEntity,
   ResultEntity,
   HistoryEntity,
-  AccessEntity,
   QuestionMentalHealthEntity,
   MentalHealthDegreeEntity,
   MentalHealthLogEntity,

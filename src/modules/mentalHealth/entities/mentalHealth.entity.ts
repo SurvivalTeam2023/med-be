@@ -37,4 +37,6 @@ export class MentalHealthEntity extends BaseEntity {
     (mentalHealthDegree) => mentalHealthDegree.mentalHealth,
   )
   public mentalHealthDegree: MentalHealthDegreeEntity[];
+
+
 }

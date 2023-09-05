@@ -1,5 +1,4 @@
 import { SubscriptionStatus } from 'src/common/enums/subscriptionStatus.enum';
-import { AccessEntity } from 'src/modules/access/entities/access.entity';
 import { PlanEntity } from 'src/modules/plan/entities/plan.entity';
 import UserEntity from 'src/modules/user/entities/user.entity';
 import {
@@ -41,8 +40,5 @@ export class SubscriptionEntity {
   @Column({ name: 'end_date', type: 'timestamp' })
   endDate: Date;
 
-  @OneToMany(() => AccessEntity, (access) => access.subscriptionId, {
-    cascade: true,
-  })
-  access: AccessEntity[];
+
 }

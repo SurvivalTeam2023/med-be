@@ -34,7 +34,7 @@ export default class ResultController {
 
   @Get(':id')
   @ApiOperation({ summary: 'get result by id' })
-  @Roles({ roles: [USER_CLIENT_ROLE.USER, USER_CLIENT_ROLE.ADMIN] })
+  @Unprotected()
   async getResultById(@Param('id') id: number): Promise<ResultEntity> {
     return await this.resultService.findResultById(id);
   }

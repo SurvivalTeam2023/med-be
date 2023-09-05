@@ -33,6 +33,9 @@ export default class QuestionBankService {
                     id: userId
                 },
                 isFinished: true
+            },
+            order: {
+                createdAt: "DESC"
             }
         })
 

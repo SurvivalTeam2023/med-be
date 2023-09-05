@@ -128,5 +128,7 @@ export class UserEntity {
   })
   audioUser: AudioUserEntity[];
 
+
+
 }
 export default UserEntity;
