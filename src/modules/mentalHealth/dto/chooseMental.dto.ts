@@ -1,17 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsNumberString, IsOptional } from "class-validator";
+import { IsArray, IsNotEmpty, } from "class-validator";
 
 export class ChooseMentalDTO {
-    @ApiProperty()
+    @ApiProperty({ type: [Number] })
     @IsNotEmpty()
-    @IsNumber()
-    mentalHealthId: number;
-
-    @ApiProperty({ required: false })
-    @IsOptional()
-    @IsNumber()
-    degreeId: number;
-
+    @IsArray()
+    mentalHealthId: number[];
 
 }
 export default ChooseMentalDTO;

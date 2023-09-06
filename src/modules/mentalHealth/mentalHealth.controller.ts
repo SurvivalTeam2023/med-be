@@ -70,11 +70,11 @@ export default class MentalHealthController {
 
     @Unprotected()
     @Post('user')
-    @ApiOperation({ summary: 'create mental health' })
+    @ApiOperation({ summary: 'choose mental health' })
     async chooseMentalHealth(
         @Body() dto: ChooseMentalDTO,
         @RequestPayload() token: string
-    ): Promise<MentalHealthDegreeLogEntity> {
+    ): Promise<MentalHealthDegreeLogEntity[]> {
         return this.mentalHealthService.chooseMental(dto, token);
     }
 }
