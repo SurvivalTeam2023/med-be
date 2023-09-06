@@ -4,7 +4,7 @@ import { ERROR_MESSAGE } from "src/common/constants/messages.constant";
 import { MentalHealthStatus } from "src/common/enums/mentalHealth.enum";
 
 import { ErrorHelper } from "src/helpers/error.helper";
-import { EntityManager, Repository } from "typeorm";
+import { EntityManager, In, Repository } from "typeorm";
 import CreateMentalHealthDTO from "./dto/createMentalHealth.dto";
 import FindMentalHealthDTO from "./dto/findMentalHealth.dto";
 import UpdateMentalHealthDTO from "./dto/updateMentalHealth.dto";
@@ -69,7 +69,7 @@ export default class MentalHealthService {
     async chooseMental(
         dto: ChooseMentalDTO,
         token: string,
-    ): Promise<MentalHealthDegreeLogEntity> {
+    ): Promise<MentalHealthDegreeLogEntity[]> {
         let userId = getUserId(token);
         const user = await this.entityManage.findOne(UserEntity, {
             where: { id: userId },
@@ -78,20 +78,24 @@ export default class MentalHealthService {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
         }
         const mentalHealth = await this.entityManage.find(MentalHealthEntity, {
-            where: { id: dto.mentalHealthId },
+            where: { id: In(dto.mentalHealthId) },
         });
         if (!mentalHealth) {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.GENRE.NOT_FOUND);
         }
 
 
-        const mentalHealthUser = await this.entityManage.create(MentalHealthDegreeLogEntity, {
-            userId: userId,
-            mentalHealthId: dto.mentalHealthId,
-            mentalHealthDegreeId: dto.degreeId,
-        })
-        await this.entityManage.save(mentalHealthUser)
-        return mentalHealthUser;
+
+        const favorites: MentalHealthDegreeLogEntity[] = [];
+        for (const m of mentalHealth) {
+            const mentalHealthUser = await this.entityManage.create(MentalHealthDegreeLogEntity, {
+                userId: userId,
+                mentalHealthId: m.id
+            })
+            await this.entityManage.save(mentalHealthUser)
+            favorites.push(mentalHealthUser);
+        }
+        return favorites;
     }
 
 }
