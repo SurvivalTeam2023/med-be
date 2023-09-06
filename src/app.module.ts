@@ -30,6 +30,8 @@ import { FavoriteGenreModule } from './modules/genreUser/genreUser.module';
 import { AgeModule } from './modules/age/age.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './intrerceptors/logging.interceptor';
+import { PromptModule } from './modules/prompt/prompt.module';
+import { MentalHealthDegreeLogModule } from './modules/mentalHealthDegreeLog/mentalHealthDegreeLog.module';
 
 @Module({
   imports: [
@@ -61,7 +63,9 @@ import { LoggingInterceptor } from './intrerceptors/logging.interceptor';
     RecommandationModule,
     AudioUserModule,
     FavoriteGenreModule,
-    AgeModule
+    AgeModule,
+    PromptModule,
+    MentalHealthDegreeLogModule
   ],
   controllers: [],
   providers: [
@@ -71,4 +75,4 @@ import { LoggingInterceptor } from './intrerceptors/logging.interceptor';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
