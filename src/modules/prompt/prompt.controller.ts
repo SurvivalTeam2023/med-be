@@ -1,0 +1,21 @@
+import { Controller, Get } from "@nestjs/common";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import PromptService from "./prompt.services";
+import { Roles, Unprotected } from "nest-keycloak-connect";
+import { PromptEntity } from "./entities/prompt.entity";
+import { USER_CLIENT_ROLE } from "src/common/enums/userClientRole.enum";
+
+@ApiTags('Prompt')
+@Controller('prompt')
+@ApiBearerAuth()
+export default class PromptController {
+    constructor(private readonly promptService: PromptService) { }
+
+    @Get()
+    @Roles({ roles: [USER_CLIENT_ROLE.SUBSCRIBER] })
+    @ApiOperation({ summary: 'get prompt list ' })
+
+    async findPrompt(): Promise<PromptEntity[]> {
+        return this.promptService.findPrompt();
+    }
+}
