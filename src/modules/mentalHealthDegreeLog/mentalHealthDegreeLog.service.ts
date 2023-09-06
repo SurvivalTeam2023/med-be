@@ -17,17 +17,16 @@ export default class MentalHealthDegreeLogService {
     ) { }
     async findMentalHealthUser(
         token: string
-    ): Promise<MentalHealthDegreeLogEntity[]> {
+    ): Promise<MentalHealthEntity[]> {
         const userId = getUserId(token)
-        const mentalHealth = await this.mentalHealthRepo
-            .createQueryBuilder('mental_health_degree_log')
-            .innerJoinAndMapOne('mental_health_degree_log.mentalHealth', MentalHealthEntity, 'mentalHealth', 'mentalHealth.id=mental_health_degree_log.mental_health_id')
-            .select(['mental_health_degree_log.id', 'mentalHealth'])
-            .where('mental_health_degree_log.user_id = :userId', { userId: userId })
+        const queryBuilder = this.entityManage.createQueryBuilder(MentalHealthEntity, 'mental_health')
+            .innerJoin('mental_health_degree_log', 'degree_log', 'degree_log.mental_health_id = mental_health.id')
+            .select('mental_health.name')
+            .where('degree_log.user_id = :userId', { userId })
             .getMany()
-        if (!mentalHealth) {
+        if (!queryBuilder) {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.MENTAL_HEALTH.NOT_FOUND);
         }
-        return mentalHealth;
+        return queryBuilder;
     }
 }
