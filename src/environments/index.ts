@@ -36,6 +36,9 @@ const AWS_REGION: string = process.env.AWS_REGION || 'ap-southeast-1';
 const BUCKET_NAME: string = process.env.BUCKET_NAME || 'null';
 const AI_SERVICE_URL: string =
   process.env.AI_SERVICE_URL || 'http://167.86.69.42:7005';
+
+const OPENAI_API_KEY: string = process.env.OPENAI_KEY || ""
+
 export {
   KEYCLOAK_ADMIN_ID,
   KEYCLOAK_ADMIN_PASSWORD,
@@ -61,4 +64,5 @@ export {
   PAYPAL_CLIENT_SECRET,
   PAYPAL_URL,
   AI_SERVICE_URL,
+  OPENAI_API_KEY
 };
