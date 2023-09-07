@@ -1,9 +1,10 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param, Post, Body } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import PromptService from "./prompt.services";
 import { Roles, Unprotected } from "nest-keycloak-connect";
 import { PromptEntity } from "./entities/prompt.entity";
 import { USER_CLIENT_ROLE } from "src/common/enums/userClientRole.enum";
+import ChatBoxDto from "./dto/chatBox.dto";
 
 @ApiTags('Prompt')
 @Controller('prompt')
@@ -17,5 +18,12 @@ export default class PromptController {
 
     async findPrompt(): Promise<PromptEntity[]> {
         return this.promptService.findPrompt();
+    }
+
+    @Post()
+    @Unprotected()
+    @ApiOperation({ summary: 'generate text ' })
+    async generateText(@Body() prompt: ChatBoxDto): Promise<string> {
+        return this.promptService.generateText(prompt.input);
     }
 }
