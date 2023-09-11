@@ -1,7 +1,7 @@
 import {
   Column,
   Entity,
-  ManyToOne,
+  OneToOne,
 } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { QuestionStatus } from 'src/common/enums/questionStatus.enum';
@@ -18,7 +18,7 @@ export class PromptDetailEntity extends BaseEntity {
   public status: QuestionStatus;
 
 
-  @ManyToOne(() => PromptEntity, (prompt) => prompt.promptDetail, {
+  @OneToOne(() => PromptEntity, (prompt) => prompt.promptDetail, {
     cascade: true,
   })
   prompt: PromptEntity;

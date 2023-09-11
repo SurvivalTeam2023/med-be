@@ -28,7 +28,9 @@ export default class MentalHealthService {
     ): Promise<MentalHealthEntity> {
         const mentalHealth = await this.mentalHealthRepo
             .createQueryBuilder('mental_health')
+            .leftJoinAndSelect('mental_health.prompt', 'prompt')
             .where('mental_health.id = :mentalHealthId', { mentalHealthId })
+            .select(['mental_health', 'prompt.name'])
             .getOne();
         if (!mentalHealth) {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.MENTAL_HEALTH.NOT_FOUND);
