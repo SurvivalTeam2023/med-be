@@ -35,6 +35,8 @@ import { AgeEntity } from 'src/modules/age/entities/age.entity';
 import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
 import { AudioUserEntity } from 'src/modules/audioUser/entities/audioUser.entity';
 import { PlaylistUserEntity } from 'src/modules/follower/entities/playlist_user.entity';
+import { PromptEntity } from 'src/modules/prompt/entities/prompt.entity';
+import { PromptDetailEntity } from 'src/modules/promptDetail/entities/promptDetail.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -63,7 +65,9 @@ const entities = [
   AgeEntity,
   AudioFileEntity,
   AudioUserEntity,
-  PlaylistUserEntity
+  PlaylistUserEntity,
+  PromptEntity,
+  PromptDetailEntity
 ];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {

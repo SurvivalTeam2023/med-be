@@ -11,7 +11,7 @@ export default class PromptDetailService {
     ) { }
     async findPrompt(): Promise<PromptDetailEntity[]> {
         const promptDetail = await this.entityManage
-            .createQueryBuilder(PromptDetailEntity, 'prompt')
+            .createQueryBuilder(PromptDetailEntity, 'prompt_detail')
             .getMany();
         if (!promptDetail) {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.PROMPT.NOT_FOUND);
