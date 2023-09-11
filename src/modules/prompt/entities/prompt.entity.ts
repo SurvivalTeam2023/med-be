@@ -1,11 +1,13 @@
 import {
     Column,
     Entity,
-    OneToMany,
+    ManyToOne,
+    OneToOne,
 } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
 import { QuestionStatus } from 'src/common/enums/questionStatus.enum';
 import { PromptDetailEntity } from 'src/modules/promptDetail/entities/promptDetail.entity';
+import { MentalHealthEntity } from 'src/modules/mentalHealth/entities/mentalHealth.entity';
 
 @Entity('prompt')
 export class PromptEntity extends BaseEntity {
@@ -18,9 +20,14 @@ export class PromptEntity extends BaseEntity {
     public status: QuestionStatus;
 
 
-    @OneToMany(
+    @OneToOne(
         () => PromptDetailEntity,
         (promptDetail) => promptDetail.prompt,
     )
-    public promptDetail: PromptDetailEntity[];
+    public promptDetail: PromptDetailEntity;
+    @ManyToOne(
+        () => MentalHealthEntity, (mentalHealth) => mentalHealth.prompt
+    )
+    public mentalHealth: MentalHealthEntity
+
 }

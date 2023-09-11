@@ -3,6 +3,7 @@ import { BaseEntity } from '../../../common/base/base.entity';
 import { QuestionMentalHealthEntity } from 'src/modules/questionMentalHealth/entities/questionMentalHealth.entity';
 import { MentalHealthDegreeEntity } from 'src/modules/mentalHealthDegree/entities/mentalHealthDegree.entity';
 import { MentalHealthStatus } from 'src/common/enums/mentalHealth.enum';
+import { PromptEntity } from 'src/modules/prompt/entities/prompt.entity';
 
 @Entity('mental_health')
 export class MentalHealthEntity extends BaseEntity {
@@ -38,5 +39,10 @@ export class MentalHealthEntity extends BaseEntity {
   )
   public mentalHealthDegree: MentalHealthDegreeEntity[];
 
+  @OneToMany(
+    () => PromptEntity,
+    (prompt) => prompt.mentalHealth,
+  )
+  public prompt: PromptEntity[];
 
 }
