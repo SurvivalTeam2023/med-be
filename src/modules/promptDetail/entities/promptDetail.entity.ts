@@ -4,8 +4,8 @@ import {
   OneToOne,
 } from 'typeorm';
 import { BaseEntity } from '../../../common/base/base.entity';
-import { QuestionStatus } from 'src/common/enums/questionStatus.enum';
 import { PromptEntity } from 'src/modules/prompt/entities/prompt.entity';
+import { PromptStatus } from 'src/common/enums/promptStatus.enum';
 
 @Entity('prompt_detail')
 export class PromptDetailEntity extends BaseEntity {
@@ -13,9 +13,9 @@ export class PromptDetailEntity extends BaseEntity {
   public detail: string;
   @Column({
     type: 'enum',
-    enum: QuestionStatus,
+    enum: PromptStatus,
   })
-  public status: QuestionStatus;
+  public status: PromptStatus;
 
 
   @OneToOne(() => PromptEntity, (prompt) => prompt.promptDetail, {
