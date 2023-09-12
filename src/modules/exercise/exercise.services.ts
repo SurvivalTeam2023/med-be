@@ -40,6 +40,8 @@ export default class ExerciseService {
         const queryBuilder = await this.repo
             .createQueryBuilder('exercise')
             .leftJoin('exercise.mentalHealthExercise', 'mentalHealthExercise')
+            .leftJoin('mentalHealthExercise.mentalHealth', 'mentalHealth')
+            .select(['exercise', 'mentalHealthExercise.id', 'mentalHealth.name'])
         if (dto.name)
             queryBuilder
                 .andWhere('LOWER(exercise.name) like :name', { name: `%${dto.name}%` })
