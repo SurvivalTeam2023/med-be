@@ -1,6 +1,7 @@
 import {
     Column,
     Entity,
+    JoinColumn,
     ManyToOne,
     OneToOne,
 } from 'typeorm';
@@ -22,8 +23,8 @@ export class PromptEntity extends BaseEntity {
 
     @OneToOne(
         () => PromptDetailEntity,
-        (promptDetail) => promptDetail.prompt,
     )
+    @JoinColumn()
     public promptDetail: PromptDetailEntity;
     @ManyToOne(
         () => MentalHealthEntity, (mentalHealth) => mentalHealth.prompt

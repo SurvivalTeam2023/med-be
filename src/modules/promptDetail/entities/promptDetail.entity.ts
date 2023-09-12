@@ -16,10 +16,4 @@ export class PromptDetailEntity extends BaseEntity {
     enum: PromptStatus,
   })
   public status: PromptStatus;
-
-
-  @OneToOne(() => PromptEntity, (prompt) => prompt.promptDetail, {
-    cascade: true,
-  })
-  prompt: PromptEntity;
 }
