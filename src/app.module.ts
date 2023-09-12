@@ -32,6 +32,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './intrerceptors/logging.interceptor';
 import { PromptModule } from './modules/prompt/prompt.module';
 import { MentalHealthDegreeLogModule } from './modules/mentalHealthDegreeLog/mentalHealthDegreeLog.module';
+import { MentalHealthExerciseModule } from './modules/mentalHealthExercise/mentalHealthExercise.module';
+import { ExerciseModule } from './modules/exercise/exercise.module';
 
 @Module({
   imports: [
@@ -65,7 +67,9 @@ import { MentalHealthDegreeLogModule } from './modules/mentalHealthDegreeLog/men
     FavoriteGenreModule,
     AgeModule,
     PromptModule,
-    MentalHealthDegreeLogModule
+    MentalHealthDegreeLogModule,
+    MentalHealthExerciseModule,
+    ExerciseModule
   ],
   controllers: [],
   providers: [

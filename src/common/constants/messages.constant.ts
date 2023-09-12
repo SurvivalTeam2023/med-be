@@ -77,7 +77,10 @@ export const ERROR_MESSAGE = {
     INVALID_FILE: "Invalid Image File"
   },
 
-  PROMPT:{
+  PROMPT: {
     NOT_FOUND: 'prompt not found!',
+  },
+  EXERCISE: {
+    NOT_FOUND: 'Exercise not found!',
   }
 };
