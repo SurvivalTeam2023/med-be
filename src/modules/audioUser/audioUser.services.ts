@@ -26,7 +26,6 @@ export default class AudioUserService {
             .leftJoinAndSelect('audio_user.user', 'user')
             .leftJoinAndSelect('audio.audioFile', 'audioFile')
             .leftJoinAndSelect('audioFile.file', 'file')
-            .leftJoinAndSelect('audio.artist', 'artist')
             .leftJoinAndSelect('audio.audioGenre', 'audioGenre')
             .leftJoinAndSelect('audioGenre.genre', 'genre')
             .where('user.id = :userId', { userId: userId })
@@ -34,7 +33,7 @@ export default class AudioUserService {
             audioUser.andWhere('audio.name like :name', { name: dto.name })
         }
 
-        audioUser.select(['audio_user.id', 'audio', 'artist.artist_name', 'audioFile.id', 'file.url', 'audioGenre.id', 'genre.name'])
+        audioUser.select(['audio_user.id', 'audio', 'audioFile.id', 'file.url', 'audioGenre.id', 'genre.name'])
         if (!audioUser) { ErrorHelper.NotFoundException(ERROR_MESSAGE.AUDIO.NOT_FOUND) }
 
         const audios = (await audioUser.getMany()).map(e => {

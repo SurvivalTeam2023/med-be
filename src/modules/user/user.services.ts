@@ -21,16 +21,13 @@ import { AuthService } from '../auth/auth.services';
 import { RequiredAction } from 'src/common/enums/userAction.enum';
 import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
 import { RoleDTO } from '../auth/dto/role.dto';
-import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
 import { USER_STATUS } from 'src/common/enums/userStatus.enum';
 import { CreateUserDTO } from './dto/createUser.dto';
 import UserEntity from './entities/user.entity';
-import ArtistEntity from '../artist/entities/artist.entity';
 import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
 import { TokenDTO } from '../auth/dto/token.dto';
 import { UpdateUserDTO } from './dto/updateUser.dto';
 import { PlaylistEntity } from '../playlist/entities/playlist.entity';
-import { FollowedArtistEntity } from '../followedArtist/entities/followedArtist.entity';
 import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
 import { FilesService } from '../files/files.service';
 import { getUserId } from 'src/utils/decode.utils';
@@ -47,8 +44,6 @@ export class UserService {
     private readonly entityManager: EntityManager,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(ArtistEntity)
-    private readonly artistRepository: Repository<ArtistEntity>,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
   ) { }
@@ -329,75 +324,7 @@ export class UserService {
     return userInfor;
   }
 
-  async createArtist(createArtistDTO: CreateArtistDTO): Promise<ArtistEntity> {
-    if (createArtistDTO.dob) {
-      this.validateAge(createArtistDTO.dob);
-    }
-    const response = await firstValueFrom(
-      this.authService.getAcessToken(this.getAdminAccount()),
-    );
-    let token = `Bearer ${response['access_token']}`;
-    await firstValueFrom(
-      this.httpService
-        .post(
-          `${KEYCLOAK_HOST}/auth/admin/realms/${KEYCLOAK_REALM_ClIENT}/users`,
-          {
-            createdTimestamp: null,
-            username: createArtistDTO.username,
-            enabled: true,
-            totp: false,
-            emailVerified: false,
-            firstName: createArtistDTO.firstName,
-            lastName: createArtistDTO.lastName,
-            email: createArtistDTO.email,
-            credentials: [
-              {
-                type: 'password',
-                value: createArtistDTO.password,
-                temporary: false,
-              },
-            ],
-            requiredActions: [RequiredAction.VERIFY_EMAIL],
-            notBefore: 0,
-            access: {
-              manageGroupMembership: true,
-              view: true,
-              mapRoles: true,
-              impersonate: true,
-              manage: true,
-            },
-            realmRoles: [USER_REALM_ROLE.APP_USER],
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-              Authorization: token,
-            },
-          },
-        )
-        .pipe(map((response) => response.data)),
-    ).catch((err) => {
-      ErrorHelper.BadRequestException(ERROR_MESSAGE.KEYCLOAK.SOMETHING_WRONG);
-    });
-    await firstValueFrom(
-      await this.assignRole(
-        createArtistDTO.username,
-        USER_REALM_ROLE.APP_ARTIST,
-      ),
-    );
-    const artist = await this.findUserByName(createArtistDTO.username, token);
-    await firstValueFrom(
-      await this.authService.verifyEmail(createArtistDTO.username),
-    );
-    const artistId = artist['user_keycloak']['id'];
-    const artistInfo = await this.artistRepository.save({
-      id: artistId,
-      status: USER_STATUS.ACTIVE,
-      ...createArtistDTO,
-    });
-    return artistInfo;
-  }
+ 
 
   validateAge = (ageInput: Date): void => {
     const currentDate = moment();
@@ -454,25 +381,11 @@ export class UserService {
         authorId: userId,
       },
     });
-    const countFollowing = await this.entityManager.count(
-      FollowedArtistEntity,
-      {
-        where: {
-          userId: userId,
-        },
-      },
-    );
+  
     const publicPlaylist = await this.entityManager.find(PlaylistEntity, {
       where: {
         authorId: userId,
         isPublic: PlaylistPublic.PUBLIC,
-      },
-    });
-    const followingArtist = await this.entityManager.find(ArtistEntity, {
-      where: {
-        follower: {
-          userId: userId,
-        },
       },
     });
     const latestSub = await this.entityManager.findOne(SubscriptionEntity, {
@@ -488,9 +401,7 @@ export class UserService {
     return {
       favorite: countFavorite,
       playlist: countPlaylist,
-      following: countFollowing,
       publicPlaylist: publicPlaylist,
-      followingArtist: followingArtist,
       lastestSub: latestSub,
     };
   }

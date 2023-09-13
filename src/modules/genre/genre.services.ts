@@ -18,7 +18,6 @@ import { OptionEntity } from '../option/entities/option.entity';
 import { QuestionMentalHealthEntity } from '../questionMentalHealth/entities/questionMentalHealth.entity';
 import { PlaylistPublic } from 'src/common/enums/playlistPublic.enum';
 import UserEntity from '../user/entities/user.entity';
-import ArtistEntity from '../artist/entities/artist.entity';
 import PlaylistDto from '../playlist/dto/playlist.dto';
 import GenreDTO from './dto/genre.dto';
 import FindGenreDTO from './dto/findGenre.dto';

@@ -8,6 +8,7 @@ import { ERROR_MESSAGE } from "src/common/constants/messages.constant";
 import { ErrorHelper } from "src/helpers/error.helper";
 import { FavoriteStatus } from "src/common/enums/favoriteStatus.enum";
 import UpdateExerciseDTO from "./dto/updateExercise.dto";
+import { ExerciseStatus } from "src/common/enums/exerciseStatus.enum";
 
 @Injectable()
 export default class ExerciseService {
@@ -82,7 +83,7 @@ export default class ExerciseService {
         if (!exercise) ErrorHelper.NotFoundException(ERROR_MESSAGE.EXERCISE.NOT_FOUND);
         const updatedExercise = this.repo.save({
             id: exercise.id,
-            status: FavoriteStatus.INACTIVE,
+            status: ExerciseStatus.INACTIVE,
         });
         return updatedExercise;
     }

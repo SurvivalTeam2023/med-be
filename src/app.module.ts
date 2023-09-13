@@ -19,10 +19,8 @@ import { AudioGenreModule } from './modules/audioGenre/audioGenre.module';
 import { ScheduleModule } from '@nestjs/schedule/dist';
 import { FollowerModule } from './modules/follower/playlist_user.module';
 import { FaceModule } from './modules/face/face.module';
-import { ArtistModule } from './modules/artist/artist.module';
 import { UserLogModule } from './modules/userStatusLog/userStatusLog.module';
 import { AudioPlaylistModule } from './modules/audioPlaylist/audioPlaylist.module';
-import { FollowedArtistModule } from './modules/followedArtist/followedArtist.module';
 import { HealthCheckModule } from './modules/healthCheck/healthCheck.module';
 import { RecommandationModule } from './modules/recommandations/recommendations.module';
 import { AudioUserModule } from './modules/audioUser/audioUser.module';
@@ -58,8 +56,6 @@ import { ExerciseModule } from './modules/exercise/exercise.module';
     ScheduleModule.forRoot(),
     FaceModule,
     AudioPlaylistModule,
-    ArtistModule,
-    FollowedArtistModule,
     UserLogModule,
     HealthCheckModule,
     RecommandationModule,

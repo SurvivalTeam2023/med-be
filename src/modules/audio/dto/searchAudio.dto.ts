@@ -20,10 +20,5 @@ export class SearchAudioDTO {
   @IsOptional()
   @IsNumberString()
   playlistId: number;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  artistId: string;
 }
 export default SearchAudioDTO;

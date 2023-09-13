@@ -17,7 +17,6 @@ import { MentalHealthEntity } from 'src/modules/mentalHealth/entities/mentalHeal
 import { QuestionEntity } from 'src/modules/question/entities/question.entity';
 import { OptionEntity } from 'src/modules/option/entities/option.entity';
 import UserEntity from 'src/modules/user/entities/user.entity';
-import ArtistEntity from 'src/modules/artist/entities/artist.entity';
 import { QuestionBankEntity } from 'src/modules/questionBank/entities/questionBank.entity';
 import { QuestionBankQuestionEntity } from 'src/modules/questionBankQuestion/entities/questionBankQuestion.entity';
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
@@ -29,7 +28,6 @@ import { MentalHealthDegreeLogEntity } from 'src/modules/mentalHealthDegreeLog/e
 import { SubscriptionEntity } from 'src/modules/subscription/entities/subscription.entity';
 import { PlanEntity } from 'src/modules/plan/entities/plan.entity';
 import { UserStatusLogEntity } from 'src/modules/userStatusLog/entity/userStatusLog.entity';
-import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/followedArtist.entity';
 import { GenreUserEntity } from 'src/modules/genreUser/entities/genreUser.entity';
 import { AgeEntity } from 'src/modules/age/entities/age.entity';
 import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
@@ -45,7 +43,6 @@ const entities = [
   AudioPlaylistEntity,
   UserEntity,
   FileEntity,
-  ArtistEntity,
   AudioGenreEntity,
   GenreEntity,
   MentalHealthEntity,
@@ -63,7 +60,6 @@ const entities = [
   PlanEntity,
   GenreUserEntity,
   UserStatusLogEntity,
-  FollowedArtistEntity,
   AgeEntity,
   AudioFileEntity,
   AudioUserEntity,

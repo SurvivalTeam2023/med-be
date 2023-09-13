@@ -1,7 +1,6 @@
 import { AudioPlaylistEntity } from 'src/modules/audioPlaylist/entities/audioPlaylist.entity';
 import { AudioStatus } from '../../../common/enums/audioStatus.enum';
 import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
-import ArtistEntity from 'src/modules/artist/entities/artist.entity';
 
 export interface AudioInterface {
   id: number;
@@ -12,6 +11,5 @@ export interface AudioInterface {
   liked: number;
   isLiked: boolean
   audioFile: AudioFileEntity[];
-  artist: ArtistEntity
   audioPlaylist: AudioPlaylistEntity[];
 }

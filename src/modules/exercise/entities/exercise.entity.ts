@@ -1,4 +1,5 @@
 import { BaseEntity } from "src/common/base/base.entity";
+import { ExerciseStatus } from "src/common/enums/exerciseStatus.enum";
 import { MentalHealthExerciseEntity } from "src/modules/mentalHealthExercise/entities/mentalHealthExercise.entity";
 import { Column, Entity, OneToMany } from "typeorm";
 
@@ -9,6 +10,10 @@ export class ExerciseEntity extends BaseEntity {
 
     @Column()
     public content: string;
+
+    @Column()
+    public status: ExerciseStatus;
+    
 
     @OneToMany(
         () => MentalHealthExerciseEntity,
