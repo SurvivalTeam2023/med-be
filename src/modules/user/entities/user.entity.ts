@@ -14,7 +14,6 @@ import {
 } from 'typeorm';
 import { FileEntity } from '../../files/entities/file.entity';
 import { UpdateDateColumn } from 'typeorm/decorator/columns/UpdateDateColumn';
-import { FollowedArtistEntity } from 'src/modules/followedArtist/entities/followedArtist.entity';
 import { GenreUserEntity } from 'src/modules/genreUser/entities/genreUser.entity';
 import { ResultEntity } from 'src/modules/result/entities/result.entity';
 import { PlaylistUserEntity } from 'src/modules/follower/entities/playlist_user.entity';
@@ -109,14 +108,6 @@ export class UserEntity {
   })
   follower: PlaylistUserEntity[];
 
-  @OneToMany(
-    () => FollowedArtistEntity,
-    (followedArtist) => followedArtist.user,
-    {
-      cascade: true,
-    },
-  )
-  followedArtist: FollowedArtistEntity[];
 
   @OneToMany(() => ResultEntity, (result) => result.user, {
     cascade: true,

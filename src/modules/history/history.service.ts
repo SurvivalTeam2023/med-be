@@ -23,10 +23,8 @@ export default class HistoryService {
       .createQueryBuilder('history')
       .leftJoinAndSelect('history.audio', 'audio')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
-      .leftJoinAndSelect('audioFile.file', 'file')
-      .leftJoinAndSelect('audio.artist', 'artist')
       .where('history.user_id = :user_id', { user_id: userId })
-      .select(['history.id', 'audio', 'artist', 'audioFile.id', 'file.url'])
+      .select(['history.id', 'audio', 'audioFile.id', 'file.url'])
       .orderBy('history.last_updated_at', 'DESC')
       .getMany();
 
@@ -99,8 +97,7 @@ export default class HistoryService {
     const history = await this.historyRepo
       .createQueryBuilder('history')
       .leftJoin('history.audio', 'audio')
-      .leftJoin('audio.artist', 'artist')
-      .select(['audio.name', 'artist.artist_name', 'SUM(history.count) as sumCount'])
+      .select(['audio.name', 'SUM(history.count) as sumCount'])
       .groupBy('history.audio_id')
       .orderBy("sumCount", "DESC")
       .limit(10)

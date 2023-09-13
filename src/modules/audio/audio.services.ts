@@ -26,7 +26,6 @@ import UserEntity from '../user/entities/user.entity';
 import AudioDTO from './dto/audio.dto';
 import { AudioUserEntity } from '../audioUser/entities/audioUser.entity';
 import { async } from 'rxjs';
-import ArtistEntity from '../artist/entities/artist.entity';
 
 @Injectable()
 export default class AudioService {
@@ -55,7 +54,6 @@ export default class AudioService {
       .leftJoinAndSelect('audio.audioPlaylist', 'audio_playlist')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
-      .leftJoinAndSelect('audio.artist', 'artist')
       .where('audio.id = :audioId', { audioId })
       .andWhere('audioFile.is_primary =  1')
       .getOne();
@@ -81,7 +79,6 @@ export default class AudioService {
       .leftJoinAndSelect('audioPlaylist.playlist', 'playlist')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
-      .leftJoinAndSelect('audio.artist', 'artist')
       .groupBy('audio.id')
       .select(['audio'])
       .where('audioFile.is_primary =  1');
@@ -102,11 +99,6 @@ export default class AudioService {
         })
         .orderBy('audio.created_at', 'DESC');
 
-    if (dto.artistId)
-      queryBuilder
-        .andWhere('artist.id = :artistId', { artistId: dto.artistId })
-        .orderBy('audio.created_at', 'DESC');
-
     queryBuilder.orderBy('audio.created_at', 'DESC');
     const result = await paginate<AudioEntity>(queryBuilder, option);
     let isLiked: boolean
@@ -117,13 +109,7 @@ export default class AudioService {
           audioId: e.id
         },
       });
-      const artist = await this.entityManage.findOne(ArtistEntity, {
-        where: {
-          audios: {
-            id: e.id
-          }
-        }
-      })
+     
       const audioFile = await this.entityManage.find(AudioFileEntity, {
         relations: {
           file: true
@@ -148,7 +134,6 @@ export default class AudioService {
         liked: e.liked,
         name: e.name,
         status: e.status,
-        artist: artist,
         audioFile: audioFile,
         audioPlaylist: audioPlaylist,
         isLiked: isLiked
@@ -163,13 +148,6 @@ export default class AudioService {
   }
   async createAudio(dto: CreateAudioDTO, token: string): Promise<AudioEntity> {
     try {
-      let userId = getUserId(token);
-      const artist = await this.entityManage.findOne(UserEntity, {
-        where: { id: userId },
-      });
-      if (!artist) {
-        ErrorHelper.NotFoundException(ERROR_MESSAGE.USER.NOT_FOUND);
-      }
       const audioGenres = dto.genreId.map((genreId) => {
         const audioGenre = new AudioGenreEntity();
         audioGenre.genreId = genreId;
@@ -198,7 +176,6 @@ export default class AudioService {
 
       const entityData = this.audioRepository.create({
         ...dto,
-        artist: artist,
         status: AudioStatus.ACTIVE,
         audioGenre: audioGenres,
         audioFile: audioFiles,

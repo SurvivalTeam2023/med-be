@@ -11,7 +11,6 @@ import { FileEntity } from 'src/modules/files/entities/file.entity';
 import { AudioPlaylistEntity } from '../../audioPlaylist/entities/audioPlaylist.entity';
 import { AudioGenreEntity } from 'src/modules/audioGenre/entities/audioGenre.entities';
 import { HistoryEntity } from 'src/modules/history/entities/history.entity';
-import ArtistEntity from 'src/modules/artist/entities/artist.entity';
 import { AudioStatus } from 'src/common/enums/audioStatus.enum';
 import { AudioFileEntity } from 'src/modules/audioFile/entities/audioFile.entity';
 import { AudioUserEntity } from 'src/modules/audioUser/entities/audioUser.entity';
@@ -63,7 +62,4 @@ export class AudioEntity extends BaseEntity {
   })
   audioUser: AudioUserEntity[];
 
-  @ManyToOne(() => ArtistEntity, (artist) => artist.audios)
-  @JoinColumn({ name: 'artist_id' })
-  public artist: ArtistEntity;
 }

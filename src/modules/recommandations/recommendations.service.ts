@@ -35,8 +35,7 @@ export default class RecommendationService {
     const audios = await this.resultRepo.createQueryBuilder('audio')
       .leftJoin('audio.audioFile', 'audioFile')
       .leftJoin('audioFile.file', 'file')
-      .leftJoin('audio.artist', 'artist')
-      .select(['audio', 'artist', 'audioFile.id', 'file.url'])
+      .select(['audio', 'audioFile.id', 'file.url'])
       .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
       .getMany()
     return audios;
@@ -86,8 +85,7 @@ export default class RecommendationService {
       const audios = await this.resultRepo.createQueryBuilder('audio')
         .leftJoin('audio.audioFile', 'audioFile')
         .leftJoin('audioFile.file', 'file')
-        .leftJoin('audio.artist', 'artist')
-        .select(['audio', 'artist', 'audioFile.id', 'file.url'])
+        .select(['audio',  'audioFile.id', 'file.url'])
         .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
         .getMany()
 
@@ -111,8 +109,7 @@ export default class RecommendationService {
     const audios = await this.resultRepo.createQueryBuilder('audio')
       .leftJoin('audio.audioFile', 'audioFile')
       .leftJoin('audioFile.file', 'file')
-      .leftJoin('audio.artist', 'artist')
-      .select(['audio', 'artist', 'audioFile.id', 'file.url'])
+      .select(['audio','audioFile.id', 'file.url'])
       .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
       .getMany()
 
@@ -138,8 +135,7 @@ export default class RecommendationService {
     const audios = await this.resultRepo.createQueryBuilder('audio')
       .leftJoin('audio.audioFile', 'audioFile')
       .leftJoin('audioFile.file', 'file')
-      .leftJoin('audio.artist', 'artist')
-      .select(['audio', 'artist', 'audioFile.id', 'file.url'])
+      .select(['audio','audioFile.id', 'file.url'])
       .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
       .getMany()
 

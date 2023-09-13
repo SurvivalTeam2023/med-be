@@ -23,7 +23,6 @@ import { CreateUserDTO } from './dto/createUser.dto';
 import { UserService } from './user.services';
 import { RequestPayload } from 'src/decorator/requestPayload.decorator';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
-import { CreateArtistDTO } from '../artist/dto/createArtist.dto';
 import { LoginGmailDTO } from '../auth/dto/loginGmail.dto';
 import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
 import { USER_STATUS } from 'src/common/enums/userStatus.enum';
@@ -66,13 +65,6 @@ export class UserController {
     return this.userService.createUser(createUserDTO);
   }
 
-  @Unprotected()
-  @ApiOperation({ summary: 'create artist' })
-  @ApiBody({ type: CreateArtistDTO })
-  @Post('artist')
-  createArtist(@Body() createArtistDTO: CreateArtistDTO) {
-    return this.userService.createArtist(createArtistDTO);
-  }
 
   @Unprotected()
   @ApiOperation({ summary: 'sign in with Google' })

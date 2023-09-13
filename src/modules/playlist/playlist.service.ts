@@ -39,7 +39,6 @@ export default class PlaylistService {
       .leftJoinAndSelect('audio_playlist.audio', 'audio')
       .leftJoinAndSelect('audio.audioFile', 'audioFile')
       .leftJoinAndSelect('audioFile.file', 'file')
-      .leftJoinAndSelect('audio.artist', 'artist')
       .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
       .where('playlist.id = :playlistId', { playlistId: playlistId })
       .getOne();
@@ -63,7 +62,6 @@ export default class PlaylistService {
           status: e.audio.status,
           liked: e.audio.liked,
           audioFile: e.audio.audioFile,
-          artist: e.audio.artist,
           isLiked: isLiked
         }
       }
@@ -92,7 +90,6 @@ export default class PlaylistService {
       .leftJoin('audio_playlist.audio', 'audio')
       .leftJoin('audio.audioFile', 'audioFile')
       .leftJoin('audioFile.file', 'file')
-      .leftJoin('audio.artist', 'artist')
       .innerJoinAndMapOne('playlist.author', UserEntity, 'user', 'user.id=playlist.author_id')
       .groupBy('playlist.id')
       .select(['playlist', 'user.firstName', 'user.lastName',]);
@@ -151,7 +148,6 @@ export default class PlaylistService {
             status: e.audio.status,
             liked: e.audio.liked,
             audioFile: e.audio.audioFile,
-            artist: e.audio.artist,
             isLiked: isLiked
           }
         }
