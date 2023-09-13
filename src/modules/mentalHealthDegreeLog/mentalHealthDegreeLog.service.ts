@@ -21,7 +21,7 @@ export default class MentalHealthDegreeLogService {
         const userId = getUserId(token)
         const queryBuilder = this.entityManage.createQueryBuilder(MentalHealthEntity, 'mental_health')
             .innerJoin('mental_health_degree_log', 'degree_log', 'degree_log.mental_health_id = mental_health.id')
-            .select('mental_health.name')
+            .select(['mental_health.id','mental_health.name'])
             .where('degree_log.user_id = :userId', { userId })
             .getMany()
         if (!queryBuilder) {
