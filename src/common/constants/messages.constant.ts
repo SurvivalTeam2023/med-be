@@ -79,5 +79,6 @@ export const ERROR_MESSAGE = {
   },
   EXERCISE: {
     NOT_FOUND: 'Exercise not found!',
+    DEFAULT:'Can not delete default type'
   }
 };

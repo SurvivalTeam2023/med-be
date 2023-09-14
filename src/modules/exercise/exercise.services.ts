@@ -9,6 +9,7 @@ import { ErrorHelper } from "src/helpers/error.helper";
 import { FavoriteStatus } from "src/common/enums/favoriteStatus.enum";
 import UpdateExerciseDTO from "./dto/updateExercise.dto";
 import { ExerciseStatus } from "src/common/enums/exerciseStatus.enum";
+import { ExerciseType } from "src/common/enums/exerciseType.enum";
 
 @Injectable()
 export default class ExerciseService {
@@ -76,11 +77,18 @@ export default class ExerciseService {
 
     async deleteExercise(exerciseId: number): Promise<ExerciseEntity> {
         const exercise = await this.repo.findOne({
+            relations: {
+                exerciseType: true
+            },
             where: {
                 id: exerciseId
             }
         })
-        if (!exercise) ErrorHelper.NotFoundException(ERROR_MESSAGE.EXERCISE.NOT_FOUND);
+        if (!exercise) {
+            ErrorHelper.NotFoundException(ERROR_MESSAGE.EXERCISE.NOT_FOUND);
+        } else if (exercise.exerciseType.type === ExerciseType.DEFAULT) {
+            ErrorHelper.BadRequestException(ERROR_MESSAGE.EXERCISE.DEFAULT);
+        }
         const updatedExercise = this.repo.save({
             id: exercise.id,
             status: ExerciseStatus.INACTIVE,
