@@ -31,5 +31,9 @@ export class CreatePlaylistDto {
 
   @ApiProperty({ enum: PlaylistPublic })
   isPublic: PlaylistPublic;
+
+
+  @ApiProperty()
+  isDefault: boolean;
 }
 export default CreatePlaylistDto;
