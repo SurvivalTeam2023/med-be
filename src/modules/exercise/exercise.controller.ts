@@ -14,6 +14,7 @@ import {
     Put,
     Patch,
     Query,
+    ParseArrayPipe,
 } from '@nestjs/common';
 
 import { Roles, Unprotected } from 'nest-keycloak-connect';
@@ -23,6 +24,7 @@ import { ExerciseEntity } from './entities/exercise.entity';
 import findExerciseDTO from './dto/findExercise.dto';
 import CreateExerciseDTO from './dto/createExercise.dto';
 import UpdateExerciseDTO from './dto/updateExercise.dto';
+import { MentalHealthEntity } from '../mentalHealth/entities/mentalHealth.entity';
 
 
 @ApiTags('Exercise')
@@ -36,6 +38,17 @@ export default class ExerciseController {
     @ApiOperation({ summary: 'get exercise by id' })
     async findExerciseById(@Param('id') id: number): Promise<ExerciseEntity> {
         return await this.exerciseService.findExerciseById(id);
+    }
+
+    @Get('/mental/id')
+    @Unprotected()
+    @ApiOperation({ summary: 'get exercise by mental health id' })
+    async findExerciseByMentalIds(@Query('ids', new ParseArrayPipe({ items: Number, separator: ',' }))
+    ids: number[],
+    ): Promise<MentalHealthEntity[]> {
+        console.log(typeof ids);
+
+        return await this.exerciseService.findExerciseByMentalIds(ids);
     }
 
     @Get()

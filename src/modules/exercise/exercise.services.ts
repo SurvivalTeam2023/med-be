@@ -10,6 +10,7 @@ import { FavoriteStatus } from "src/common/enums/favoriteStatus.enum";
 import UpdateExerciseDTO from "./dto/updateExercise.dto";
 import { ExerciseStatus } from "src/common/enums/exerciseStatus.enum";
 import { ExerciseType } from "src/common/enums/exerciseType.enum";
+import { MentalHealthEntity } from "../mentalHealth/entities/mentalHealth.entity";
 
 @Injectable()
 export default class ExerciseService {
@@ -36,6 +37,19 @@ export default class ExerciseService {
 
 
         return exercise
+    }
+
+    async findExerciseByMentalIds(mentalId: number[]): Promise<MentalHealthEntity[]> {
+        const mentalIdsArray = Array.isArray(mentalId) ? mentalId : [mentalId];
+        const mentalHealth = await this.entityManage.createQueryBuilder(MentalHealthEntity, 'mental_health')
+            .leftJoin('mental_health.mentalHealthExercise', 'mentalHealthExercise')
+            .leftJoin('mentalHealthExercise.exercise', 'exercise')
+            .where('mental_health.id IN (:...ids) ', { ids: mentalIdsArray })
+            .select(['mental_health', 'mentalHealthExercise.id', 'exercise'])
+            .getMany()
+
+
+        return mentalHealth
     }
 
     async findExercise(dto: findExerciseDTO): Promise<ExerciseEntity[]> {
