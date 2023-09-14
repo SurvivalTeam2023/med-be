@@ -26,6 +26,9 @@ export class PlaylistEntity extends BaseEntity {
   @Column()
   public description: string;
 
+  @Column()
+  public isDefault: boolean;
+
   @Column({
     type: 'enum',
     enum: PlaylistPublic,
