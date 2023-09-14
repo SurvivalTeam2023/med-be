@@ -1,6 +1,5 @@
 import { ClassConstructor } from "class-transformer";
 import { registerDecorator, ValidationArguments, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
-
 export const MatchPassword = <T>(
   type: ClassConstructor<T>,
   property: (o: T) => any,
@@ -28,4 +27,8 @@ export class MatchConstraint implements ValidatorConstraintInterface {
     const [constraintProperty]: (() => any)[] = args.constraints;
     return `${constraintProperty} and ${args.property} does not match`;
   }
+
+
+
 }
+
