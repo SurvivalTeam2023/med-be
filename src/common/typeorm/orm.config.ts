@@ -37,6 +37,7 @@ import { PromptEntity } from 'src/modules/prompt/entities/prompt.entity';
 import { PromptDetailEntity } from 'src/modules/promptDetail/entities/promptDetail.entity';
 import { ExerciseEntity } from 'src/modules/exercise/entities/exercise.entity';
 import { MentalHealthExerciseEntity } from 'src/modules/mentalHealthExercise/entities/mentalHealthExercise.entity';
+import { ExerciseTypeEntity } from 'src/modules/exerciseType/entities/exerciseType.entity';
 const entities = [
   AudioEntity,
   PlaylistEntity,
@@ -67,7 +68,8 @@ const entities = [
   PromptEntity,
   PromptDetailEntity,
   ExerciseEntity,
-  MentalHealthExerciseEntity
+  MentalHealthExerciseEntity,
+  ExerciseTypeEntity
 ];
 @Injectable()
 export class OrmConfig implements TypeOrmOptionsFactory {
