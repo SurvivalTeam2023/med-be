@@ -77,16 +77,13 @@ export default class ExerciseService {
 
     async deleteExercise(exerciseId: number): Promise<ExerciseEntity> {
         const exercise = await this.repo.findOne({
-            relations: {
-                exerciseType: true
-            },
             where: {
                 id: exerciseId
             }
         })
         if (!exercise) {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.EXERCISE.NOT_FOUND);
-        } else if (exercise.exerciseType.type === ExerciseType.DEFAULT) {
+        } else if (exercise.type === ExerciseType.DEFAULT) {
             ErrorHelper.BadRequestException(ERROR_MESSAGE.EXERCISE.DEFAULT);
         }
         const updatedExercise = this.repo.save({

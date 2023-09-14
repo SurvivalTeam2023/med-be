@@ -1,6 +1,5 @@
 import { BaseEntity } from "src/common/base/base.entity";
 import { ExerciseStatus } from "src/common/enums/exerciseStatus.enum";
-import { ExerciseTypeEntity } from "src/modules/exerciseType/entities/exerciseType.entity";
 import { MentalHealthExerciseEntity } from "src/modules/mentalHealthExercise/entities/mentalHealthExercise.entity";
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 
@@ -25,9 +24,6 @@ export class ExerciseEntity extends BaseEntity {
     )
     public mentalHealthExercise: MentalHealthExerciseEntity[];
 
-    @ManyToOne(
-        () => ExerciseTypeEntity,
-        (exerciseType) => exerciseType.exercise,
-    )
-    public exerciseType: ExerciseTypeEntity;
+    @Column()
+    public type: string;
 }
