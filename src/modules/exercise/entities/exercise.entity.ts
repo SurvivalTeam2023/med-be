@@ -24,7 +24,8 @@ export class ExerciseEntity extends BaseEntity {
     @JoinColumn()
     image: FileEntity
 
-
+    @Column({ nullable: true })
+    public time: string;
 
     @OneToMany(
         () => MentalHealthExerciseEntity,
@@ -38,4 +39,3 @@ export class ExerciseEntity extends BaseEntity {
     })
     public type: ExerciseType;
 }
-    
