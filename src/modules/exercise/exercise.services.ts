@@ -11,6 +11,7 @@ import UpdateExerciseDTO from "./dto/updateExercise.dto";
 import { ExerciseStatus } from "src/common/enums/exerciseStatus.enum";
 import { ExerciseType } from "src/common/enums/exerciseType.enum";
 import { MentalHealthEntity } from "../mentalHealth/entities/mentalHealth.entity";
+import { FileEntity } from "../files/entities/file.entity";
 
 @Injectable()
 export default class ExerciseService {
@@ -21,8 +22,12 @@ export default class ExerciseService {
     ) { }
 
     async createExercise(dto: CreateExerciseDTO): Promise<ExerciseEntity> {
+        const image = await this.entityManage.findOne(FileEntity, {
+            where: { id: dto.imageId }
+        })
         const exercise = this.repo.save({
             ...dto,
+            image: image
         });
         return exercise;
     }
@@ -30,6 +35,9 @@ export default class ExerciseService {
     async findExerciseById(exerciseId: number): Promise<ExerciseEntity> {
 
         const exercise = await this.repo.findOne({
+            relations: {
+                image: true
+            },
             where: {
                 id: exerciseId
             }
@@ -44,8 +52,9 @@ export default class ExerciseService {
         const mentalHealth = await this.entityManage.createQueryBuilder(MentalHealthEntity, 'mental_health')
             .leftJoin('mental_health.mentalHealthExercise', 'mentalHealthExercise')
             .leftJoin('mentalHealthExercise.exercise', 'exercise')
+            .leftJoin('exercise.image', 'image')
             .where('mental_health.id IN (:...ids) ', { ids: mentalIdsArray })
-            .select(['mental_health', 'mentalHealthExercise.id', 'exercise'])
+            .select(['mental_health', 'mentalHealthExercise.id', 'exercise', 'image.url'])
             .getMany()
 
 
@@ -57,7 +66,8 @@ export default class ExerciseService {
             .createQueryBuilder('exercise')
             .leftJoin('exercise.mentalHealthExercise', 'mentalHealthExercise')
             .leftJoin('mentalHealthExercise.mentalHealth', 'mentalHealth')
-            .select(['exercise', 'mentalHealthExercise.id', 'mentalHealth.name'])
+            .leftJoin('exercise.image', 'image')
+            .select(['exercise', 'image.url', 'mentalHealthExercise.id', 'mentalHealth.name'])
         if (dto.name)
             queryBuilder
                 .andWhere('LOWER(exercise.name) like :name', { name: `%${dto.name}%` })
