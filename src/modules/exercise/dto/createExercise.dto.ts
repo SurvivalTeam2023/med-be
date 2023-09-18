@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsNumberString, IsString } from "class-validator";
 import { ExerciseStatus } from "src/common/enums/exerciseStatus.enum";
+import { ExerciseType } from "src/common/enums/exerciseType.enum";
 
 export class CreateExerciseDTO {
     @ApiProperty()
@@ -12,6 +13,16 @@ export class CreateExerciseDTO {
     @IsString()
     @IsNotEmpty()
     content: string;
+
+
+    @ApiProperty({ enum: ExerciseType })
+    @IsString()
+    type: ExerciseType;
+
+    @ApiProperty()
+    @IsNumber()
+    @IsNotEmpty()
+    imageId: number;
 
 
     @ApiProperty({ enum: ExerciseStatus, default: ExerciseStatus.ACTIVE })
