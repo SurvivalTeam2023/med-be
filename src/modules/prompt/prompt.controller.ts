@@ -13,7 +13,7 @@ export default class PromptController {
     constructor(private readonly promptService: PromptService) { }
 
     @Get()
-    @Roles({ roles: [USER_CLIENT_ROLE.SUBSCRIBER] })
+    @Unprotected()
     @ApiOperation({ summary: 'get prompt list ' })
 
     async findPrompt(): Promise<PromptEntity[]> {

@@ -14,11 +14,11 @@ export default class QuestionBankController {
     constructor(private readonly questionBankService: QuestionBankService) { }
 
     @Unprotected()
-    @Post()
+    @Post(':mentalHealthId')
     @ApiOperation({ summary: 'create questionBank for user ' })
-    async createQuestionBank(@RequestPayload() token: string,
+    async createQuestionBank(@RequestPayload() token: string, @Param('mentalHealthId') mentalHealthId: number
     ): Promise<QuestionBankEntity> {
-        return this.questionBankService.createQuestionBank(token);
+        return this.questionBankService.createQuestionBank(token, mentalHealthId);
     }
 
     @ApiOperation({ summary: 'Is question bank valid ?' })

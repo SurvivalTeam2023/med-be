@@ -12,9 +12,8 @@ export default class PromptDetailController {
     constructor(private readonly promptService: PromptDetailService) { }
 
     @Get()
-    @Roles({ roles: [USER_CLIENT_ROLE.SUBSCRIBER] })
+    @Unprotected()
     @ApiOperation({ summary: 'get prompt detail ' })
-
     async findPrompt(): Promise<PromptDetailEntity[]> {
         return this.promptService.findPrompt();
     }

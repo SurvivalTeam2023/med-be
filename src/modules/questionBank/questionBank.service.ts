@@ -40,7 +40,7 @@ export default class QuestionBankService {
         })
 
     }
-    async createQuestionBank(token: string): Promise<QuestionBankEntity> {
+    async createQuestionBank(token: string, mentalHealthId: number): Promise<QuestionBankEntity> {
         const userId = getUserId(token);
 
         const user = await this.entityManage.findOne(UserEntity, {
@@ -55,8 +55,10 @@ export default class QuestionBankService {
             .leftJoin('questionBank.questionBankQuestion', 'questionBankQuestion')
             .leftJoin('questionBankQuestion.question', 'question')
             .leftJoin('question.option', 'option')
+            .leftJoin('question.questionMentalHealth', 'questionMentalHealth')
             .where('user.id = :userId', { userId: userId })
             .andWhere('questionBank.is_finished = 0')
+            .andWhere('questionMentalHealth.mentalHealthId = :mentalHealthId', { mentalHealthId: mentalHealthId })
             .select(['questionBank.id', 'questionBankQuestion.id', 'question.id', 'question.question', 'option.id', 'option.option'])
             .orderBy('questionBank.created_at', "DESC")
             .getOne()
@@ -64,40 +66,38 @@ export default class QuestionBankService {
             return existQuestionBank
         } else {
             let questionBankQuestions: QuestionBankQuestionEntity[] = [];
-            const result: QuestionEntity[] = [];
             const age = await this.entityManage.findOne(AgeEntity, {
                 where: {
                     startAge: LessThanOrEqual(getAge(user.dob)), endAge: MoreThanOrEqual(getAge(user.dob))
                 }
             })
-            for (let i = 1; i <= 4; i++) {
-                const questions = await this.entityManage
-                    .createQueryBuilder(QuestionEntity, 'question')
-                    .leftJoinAndSelect('question.option', 'option')
-                    .leftJoinAndSelect('question.age', 'age')
-                    .leftJoinAndSelect('question.questionMentalHealth', 'questionMentalHealth')
-                    .where('age.id = :ageId', { ageId: age.id })
-                    .andWhere('question.status = :status', { status: QuestionStatus.ACTIVE })
-                    .andWhere('questionMentalHealth.mentalHealthId = :mentalHealthId', { mentalHealthId: i })
-                    .select(['question.id', 'question.question', 'option.id', 'option.option', 'questionMentalHealth.mentalHealthId'])
-                    .orderBy("RAND()")
-                    .take(10)
-                    .getMany();
 
-                questions.forEach(question => {
-                    question.option = question.option.sort();
-                });
-                result.push(...questions);
-            }
+            const questions = await this.entityManage
+                .createQueryBuilder(QuestionEntity, 'question')
+                .leftJoinAndSelect('question.option', 'option')
+                .leftJoinAndSelect('question.age', 'age')
+                .leftJoinAndSelect('question.questionMentalHealth', 'questionMentalHealth')
+                .where('age.id = :ageId', { ageId: age.id })
+                .andWhere('question.status = :status', { status: QuestionStatus.ACTIVE })
+                .andWhere('questionMentalHealth.mentalHealthId = :mentalHealthId', { mentalHealthId: mentalHealthId })
+                .select(['question.id', 'question.question', 'option.id', 'option.option', 'questionMentalHealth.mentalHealthId'])
+                .orderBy("RAND()")
+                .take(10)
+                .getMany();
 
-            questionBankQuestions = result.map((question) => {
+            questions.forEach(question => {
+                question.option = question.option.sort();
+            });
+
+
+            questionBankQuestions = questions.map((question) => {
                 const questionBankQuestion = new QuestionBankQuestionEntity();
                 questionBankQuestion.question = question;
                 return questionBankQuestion;
             });
             const questionBank = await this.questionBankRepo.save({
                 isFinished: false,
-                numberOfQuestion: result.length,
+                numberOfQuestion: questions.length,
                 questionBankQuestion: questionBankQuestions,
                 user: user,
             });
