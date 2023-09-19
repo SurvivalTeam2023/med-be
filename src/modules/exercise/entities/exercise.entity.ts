@@ -20,9 +20,9 @@ export class ExerciseEntity extends BaseEntity {
     public status: ExerciseStatus;
 
 
-    @OneToOne(() => FileEntity)
-    @JoinColumn()
-    image: FileEntity
+    @Column()
+    public image: string;
+
 
     @Column({ nullable: true })
     public time: string;
