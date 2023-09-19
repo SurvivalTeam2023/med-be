@@ -20,9 +20,9 @@ export class CreateExerciseDTO {
     type: ExerciseType;
 
     @ApiProperty()
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    imageId: number;
+    imageId: string;
 
 
     @ApiProperty({ enum: ExerciseStatus, default: ExerciseStatus.ACTIVE })
