@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Roles, Unprotected } from "nest-keycloak-connect";
 import { USER_CLIENT_ROLE } from "src/common/enums/userClientRole.enum";
@@ -6,6 +6,7 @@ import { USER_REALM_ROLE } from "src/common/enums/userRealmRole.enum";
 import { RequestPayload } from "src/decorator/requestPayload.decorator";
 import { QuestionBankEntity } from "./entities/questionBank.entity";
 import QuestionBankService from "./questionBank.service";
+import CreateQuestionBankDto from "./dto/createQuestionBank.dto";
 
 @ApiTags('Question Banks')
 @Controller('questionBank')
@@ -14,11 +15,19 @@ export default class QuestionBankController {
     constructor(private readonly questionBankService: QuestionBankService) { }
 
     @Unprotected()
-    @Post(':mentalHealthId')
+    @Post()
     @ApiOperation({ summary: 'create questionBank for user ' })
-    async createQuestionBank(@RequestPayload() token: string, @Param('mentalHealthId') mentalHealthId: number
+    async createQuestionBank(@RequestPayload() token: string,
     ): Promise<QuestionBankEntity> {
-        return this.questionBankService.createQuestionBank(token, mentalHealthId);
+        return this.questionBankService.createQuestionBank(token);
+    }
+
+    @Post('mentalHealth')
+    @Unprotected()
+    @ApiOperation({ summary: 'create questionBank for user by mental health ' })
+    async createQuestionBankByMentalHealth(@RequestPayload() token: string, @Body() dto: CreateQuestionBankDto
+    ): Promise<QuestionBankEntity> {
+        return this.questionBankService.createQuestionBankByMentalHealth(token, dto);
     }
 
     @ApiOperation({ summary: 'Is question bank valid ?' })
