@@ -29,8 +29,10 @@ export default class MentalHealthService {
         const mentalHealth = await this.mentalHealthRepo
             .createQueryBuilder('mental_health')
             .leftJoinAndSelect('mental_health.prompt', 'prompt')
+            .leftJoinAndSelect('mental_health.mentalHealthExercise', 'mentalHealthExercise')
+            .leftJoinAndSelect('mentalHealthExercise.exercise', 'exercise')
             .where('mental_health.id = :mentalHealthId', { mentalHealthId })
-            .select(['mental_health', 'prompt.name'])
+            .select(['mental_health', 'prompt.name', 'mentalHealthExercise.id', 'exercise'])
             .getOne();
         if (!mentalHealth) {
             ErrorHelper.NotFoundException(ERROR_MESSAGE.MENTAL_HEALTH.NOT_FOUND);

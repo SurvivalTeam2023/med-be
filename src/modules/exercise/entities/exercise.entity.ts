@@ -13,6 +13,9 @@ export class ExerciseEntity extends BaseEntity {
     @Column()
     public content: string;
 
+    @Column()
+    ext_fields: string
+
     @Column({
         type: 'enum',
         enum: ExerciseStatus,
