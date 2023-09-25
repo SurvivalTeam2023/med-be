@@ -20,6 +20,12 @@ export class AudioEntity extends BaseEntity {
   @Column()
   public name: string;
 
+
+
+  @Column()
+  public artist: string;
+
+
   @Column({ name: 'image_url' })
   public imageUrl: string;
 
