@@ -19,10 +19,9 @@ export default class RecommendationService {
     @InjectRepository(AudioEntity)
     private resultRepo: Repository<AudioEntity>,
     private readonly httpService: HttpService,
-
-  ) { }
+  ) {}
   async getRecommendationsService(token: string): Promise<AudioEntity[]> {
-    const user_id = getUserId(token)
+    const user_id = getUserId(token);
     const url = AI_SERVICE_URL + '/recommendation/user/?user_id=' + user_id;
     const listRecommendAudio = await firstValueFrom(
       this.httpService.get(url).pipe(
@@ -31,47 +30,52 @@ export default class RecommendationService {
           return err;
         }),
       ),
-    )
-    const audios = await this.resultRepo.createQueryBuilder('audio')
+    );
+    const audios = await this.resultRepo
+      .createQueryBuilder('audio')
       .leftJoin('audio.audioFile', 'audioFile')
       .leftJoin('audioFile.file', 'file')
       .select(['audio', 'audioFile.id', 'file.url'])
-      .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
-      .getMany()
+      .where('audio.id IN (:...ids)', { ids: listRecommendAudio[0] })
+      .getMany();
     return audios;
   }
   async getRecommendationsByMental(token: string): Promise<any> {
-    const user_id = getUserId(token)
+    const user_id = getUserId(token);
     const result = await this.entityManage.findOne(ResultEntity, {
       relations: {
-        user: true
+        user: true,
       },
       where: {
         user: {
           id: user_id,
-        }
+        },
       },
       order: {
-        createdAt: "DESC"
-      }
-    })
+        createdAt: 'DESC',
+      },
+    });
     const highestPoint = result.mentalHealth.reduce((maxPoint, currentObj) => {
       return currentObj.point > maxPoint ? currentObj.point : maxPoint;
     }, 0);
-    const highestPointObjects = result.mentalHealth.filter((obj) => obj.point === highestPoint);
-    const mentalHealthIds = await Promise.all(highestPointObjects.map(async e => {
-      const mentalHealth = await this.entityManage.findOne(MentalHealthEntity, {
-        where: {
-          name: e.mentalHealth
-        }
-      });
-      return mentalHealth.id;
-    }));
+    const highestPointObjects = result.mentalHealth.filter(
+      (obj) => obj.point === highestPoint,
+    );
+    const mentalHealthIds = await Promise.all(
+      highestPointObjects.map(async (e) => {
+        const mentalHealth = await this.entityManage.findOne(
+          MentalHealthEntity,
+          {
+            where: {
+              name: e.mentalHealth,
+            },
+          },
+        );
+        return mentalHealth.id;
+      }),
+    );
 
-
-
-
-    let list = []
+    let list = [];
     for (const id of await mentalHealthIds) {
       const url = AI_SERVICE_URL + '/recommendation/mental/?mental_id=' + id;
       const listRecommendAudio = await firstValueFrom(
@@ -81,15 +85,16 @@ export default class RecommendationService {
             return err;
           }),
         ),
-      )
-      const audios = await this.resultRepo.createQueryBuilder('audio')
+      );
+      const audios = await this.resultRepo
+        .createQueryBuilder('audio')
         .leftJoin('audio.audioFile', 'audioFile')
         .leftJoin('audioFile.file', 'file')
-        .select(['audio',  'audioFile.id', 'file.url'])
-        .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
-        .getMany()
+        .select(['audio', 'audioFile.id', 'file.url'])
+        .where('audio.id IN (:...ids)', { ids: listRecommendAudio[0] })
+        .getMany();
 
-      list = [...audios]
+      list = [...audios];
     }
 
     return { mentalHealths: highestPointObjects, list };
@@ -105,19 +110,21 @@ export default class RecommendationService {
           return err;
         }),
       ),
-    )
-    const audios = await this.resultRepo.createQueryBuilder('audio')
+    );
+    const audios = await this.resultRepo
+      .createQueryBuilder('audio')
       .leftJoin('audio.audioFile', 'audioFile')
       .leftJoin('audioFile.file', 'file')
-      .select(['audio','audioFile.id', 'file.url'])
-      .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
-      .getMany()
+      .select(['audio', 'audioFile.id', 'file.url'])
+      .where('audio.id IN (:...ids)', { ids: listRecommendAudio[0] })
+      .getMany();
 
     return audios;
   }
 
   async getRecommendationsByMentalId(mentalId: number): Promise<any> {
-    const url = AI_SERVICE_URL + '/recommendation/mental/?mental_id=' + mentalId;
+    const url =
+      AI_SERVICE_URL + '/recommendation/mental/?mental_id=' + mentalId;
 
     const listRecommendAudio = await firstValueFrom(
       this.httpService.get(url).pipe(
@@ -126,18 +133,19 @@ export default class RecommendationService {
           return err;
         }),
       ),
-    )
+    );
     const mentalHealth = await this.entityManage.findOne(MentalHealthEntity, {
       where: {
-        id: mentalId
-      }
-    })
-    const audios = await this.resultRepo.createQueryBuilder('audio')
+        id: mentalId,
+      },
+    });
+    const audios = await this.resultRepo
+      .createQueryBuilder('audio')
       .leftJoin('audio.audioFile', 'audioFile')
       .leftJoin('audioFile.file', 'file')
-      .select(['audio','audioFile.id', 'file.url'])
-      .where('audio.id IN (:...ids)', { ids: listRecommendAudio })
-      .getMany()
+      .select(['audio', 'audioFile.id', 'file.url'])
+      .where('audio.id IN (:...ids)', { ids: listRecommendAudio[0] })
+      .getMany();
 
     return { mentalHealth: mentalHealth.name, audios };
   }
