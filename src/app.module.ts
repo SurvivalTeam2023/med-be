@@ -32,6 +32,7 @@ import { PromptModule } from './modules/prompt/prompt.module';
 import { MentalHealthDegreeLogModule } from './modules/mentalHealthDegreeLog/mentalHealthDegreeLog.module';
 import { MentalHealthExerciseModule } from './modules/mentalHealthExercise/mentalHealthExercise.module';
 import { ExerciseModule } from './modules/exercise/exercise.module';
+import { FMCModule } from './modules/fmc/fmc.module';
 
 @Module({
   imports: [
@@ -65,7 +66,8 @@ import { ExerciseModule } from './modules/exercise/exercise.module';
     PromptModule,
     MentalHealthDegreeLogModule,
     MentalHealthExerciseModule,
-    ExerciseModule
+    ExerciseModule,
+    FMCModule
   ],
   controllers: [],
   providers: [

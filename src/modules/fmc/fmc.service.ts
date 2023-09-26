@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin';
+import SendChatDTO from './dto/sendChat.dto';
 
 export class FirebaseAdminService {
     private readonly admin: admin.app.App;
@@ -12,13 +13,14 @@ export class FirebaseAdminService {
         });
     }
 
-    async sendNotification(deviceToken: string, title: string, body: string): Promise<void> {
+    async sendNotification(dto: SendChatDTO): Promise<void> {
         const message = {
             notification: {
-                title,
-                body,
+                title: dto.title,
+                body: dto.body,
             },
-            token: deviceToken,
+
+            token: dto.registrationToken,
         };
 
         try {
