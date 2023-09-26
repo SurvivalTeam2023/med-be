@@ -22,7 +22,7 @@ export default class RecommendationService {
     @InjectRepository(AudioEntity)
     private resultRepo: Repository<AudioEntity>,
     private readonly httpService: HttpService,
-  ) {}
+  ) { }
   async getRecommendationsService(token: string): Promise<AudioEntity[]> {
     const user_id = getUserId(token);
     const url = AI_SERVICE_URL + '/recommendation/user/?user_id=' + user_id;
@@ -173,8 +173,8 @@ export default class RecommendationService {
         }),
       ),
     )
-  
-    
+
+
     const mentalHealth = await this.entityManage.findOne(MentalHealthEntity, {
       where: {
         id: mentalHealthDegreeLog.mentalHealthId
@@ -192,6 +192,6 @@ export default class RecommendationService {
       .where('audio.id IN (:...ids)', { ids: listRecommendAudio[0] })
       .getMany()
 
-    return { mentalHealth: mentalHealth.name, degree: mentalHealthDegree, audios };
+    return { mentalHealth: mentalHealth.name, degree: mentalHealthDegree.title, audios };
   }
 }
