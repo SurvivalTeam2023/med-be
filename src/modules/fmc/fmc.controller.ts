@@ -23,8 +23,8 @@ import { FirebaseAdminService } from './fmc.service';
 import SendChatDTO from './dto/sendChat.dto';
 
 
-@ApiTags('Exercise')
-@Controller('exercise')
+@ApiTags('FMC')
+@Controller('fmc')
 @ApiBearerAuth()
 export default class FMCController {
     constructor(private readonly fmcService: FirebaseAdminService) { }
