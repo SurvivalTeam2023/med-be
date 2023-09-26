@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin';
 import SendChatDTO from './dto/sendChat.dto';
+import { PRIVATE_KEY } from 'src/environments';
 
 export class FirebaseAdminService {
     private readonly admin: admin.app.App;
@@ -8,7 +9,7 @@ export class FirebaseAdminService {
             credential: admin.credential.cert({
                 projectId: process.env.FCM_PROJECT_ID,
                 clientEmail: process.env.CLIENT_EMAIL,
-                privateKey: process.env.PRIVATE_KEY,
+                privateKey: PRIVATE_KEY
             }),
         });
     }
