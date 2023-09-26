@@ -38,4 +38,11 @@ export default class RecommendationController {
   async getResultByMentalId(@Param('id') mentalId: number, @RequestPayload() token: string): Promise<any> {
     return await this.recommendationService.getRecommendationsByMentalId(mentalId);
   }
+
+  @Get('mental/degree/degreelog')
+  @ApiOperation({ summary: 'get recommendation by mentalId and mental degree' })
+  @Unprotected()
+  async getRecommendationsByMentalDegreeLoglId(@RequestPayload() token: string): Promise<any> {
+    return await this.recommendationService.getRecommendationsByMentalDegreeLoglId(token);
+  }
 }

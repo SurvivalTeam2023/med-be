@@ -10,6 +10,9 @@ import { AI_SERVICE_URL } from 'src/environments';
 import { getUserId } from 'src/utils/decode.utils';
 import { ResultEntity } from '../result/entities/result.entity';
 import { MentalHealthEntity } from '../mentalHealth/entities/mentalHealth.entity';
+import UserEntity from '../user/entities/user.entity';
+import { MentalHealthDegreeLogEntity } from '../mentalHealthDegreeLog/entities/mentalHealthDegreeLog.entity';
+import { MentalHealthDegreeEntity } from '../mentalHealthDegree/entities/mentalHealthDegree.entity';
 
 @Injectable()
 export default class RecommendationService {
@@ -19,7 +22,7 @@ export default class RecommendationService {
     @InjectRepository(AudioEntity)
     private resultRepo: Repository<AudioEntity>,
     private readonly httpService: HttpService,
-  ) {}
+  ) { }
   async getRecommendationsService(token: string): Promise<AudioEntity[]> {
     const user_id = getUserId(token);
     const url = AI_SERVICE_URL + '/recommendation/user/?user_id=' + user_id;
@@ -148,5 +151,47 @@ export default class RecommendationService {
       .getMany();
 
     return { mentalHealth: mentalHealth.name, audios };
+  }
+
+  async getRecommendationsByMentalDegreeLoglId(token: string): Promise<any> {
+    const userId = getUserId(token)
+    const mentalHealthDegreeLog = await this.entityManage.findOne(MentalHealthDegreeLogEntity, {
+      where: {
+        userId: userId
+      },
+      order: {
+        createdAt: 'DESC'
+      }
+    })
+
+    const url = AI_SERVICE_URL + '/recommendation/mentaldegree/?mental_health_degree_id=' + mentalHealthDegreeLog.mentalHealthDegreeId + '&mental_id=' + mentalHealthDegreeLog.mentalHealthId
+    const listRecommendAudio = await firstValueFrom(
+      this.httpService.get(url).pipe(
+        map((response) => response.data),
+        catchError((err) => {
+          return err;
+        }),
+      ),
+    )
+
+
+    const mentalHealth = await this.entityManage.findOne(MentalHealthEntity, {
+      where: {
+        id: mentalHealthDegreeLog.mentalHealthId
+      }
+    })
+    const mentalHealthDegree = await this.entityManage.findOne(MentalHealthDegreeEntity, {
+      where: {
+        id: mentalHealthDegreeLog.mentalHealthDegreeId
+      }
+    })
+    const audios = await this.resultRepo.createQueryBuilder('audio')
+      .leftJoin('audio.audioFile', 'audioFile')
+      .leftJoin('audioFile.file', 'file')
+      .select(['audio', 'audioFile.id', 'file.url'])
+      .where('audio.id IN (:...ids)', { ids: listRecommendAudio[0] })
+      .getMany()
+
+    return { mentalHealth: mentalHealth.name, degree: mentalHealthDegree.title, audios };
   }
 }
