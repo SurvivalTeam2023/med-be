@@ -165,7 +165,7 @@ export default class SubscriptionService {
 
       }
       else if (subPayPal['status'] == SubscriptionStatus.APPROVAL_PENDING || !subPayPal) {
-        sub.status = SubscriptionStatus.EXPIRED
+        sub.status = SubscriptionStatus.ACTIVE
         await this.subscriptionRepo.save(sub)
       }
     })
