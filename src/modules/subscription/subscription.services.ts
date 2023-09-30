@@ -22,8 +22,7 @@ import { AuthService } from '../auth/auth.services';
 import { PAYPAL_URL } from 'src/environments';
 import { AxiosResponse } from 'axios';
 import { getUserId } from 'src/utils/decode.utils';
-import { Cron } from '@nestjs/schedule';
-import { CronExpression } from '@nestjs/schedule/dist';
+import { Cron,CronExpression } from '@nestjs/schedule';
 import { UserService } from '../user/user.services';
 import { USER_CLIENT_ROLE } from 'src/common/enums/userClientRole.enum';
 import { USER_REALM_ROLE } from 'src/common/enums/userRealmRole.enum';
@@ -134,7 +133,7 @@ export default class SubscriptionService {
     await this.subscriptionRepo.save({
       id: subscriptionPaypal['id'],
       user: user,
-      status: SubscriptionStatus.APPROVAL_PENDING,
+      status: SubscriptionStatus.ACTIVE,
       plan: plan,
       endDate: endDate
     })
