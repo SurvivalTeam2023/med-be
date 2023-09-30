@@ -31,6 +31,7 @@ export default class ResultService {
     ): Promise<any> {
         const result = await this.resultRepo
             .createQueryBuilder('result')
+            .leftJoinAndSelect('result.questionBank', 'questionBank')
             .where('result.id = :resultId', { resultId })
             .getOne();
         if (!result) {
@@ -61,7 +62,8 @@ export default class ResultService {
             if (degree) {
                 degreeMap.set(m.mentalHealth, degree);
             }
-            const percentage = m.point / 30 * 100
+            const percentage = m.point / 21 * 100
+
             return {
                 id: mentalHealths.id,
                 mentalHealth: m.mentalHealth,
@@ -69,7 +71,7 @@ export default class ResultService {
                 mentalHealthDesc: mentalHealths.description,
                 percentage: percentage,
                 degree: degree.title,
-                degreeDesc: degree.description
+                degreeDesc: degree.description,
             }
 
         }))
@@ -148,7 +150,7 @@ export default class ResultService {
         }));
         const percentageMapArray = Array.from(mentalHealthMap.entries()).map(([mentalHealth, point,]) => ({
             mentalHealth,
-            point: point / 30 * 100,
+            point: point / 21 * 100,
         }));
         await this.entityManage.transaction(async (entityManager) => {
             firstResult.mentalHealth = resultArray;
@@ -198,11 +200,13 @@ export default class ResultService {
                 mentalHealthDesc: mentalHealths.description,
                 point: point,
                 degree: degree.title,
-                degreeDesc: degree.description
+                degreeDesc: degree.description,
             };
         }))
 
-        return percentageMapArrayWithDegree;
+        const filteredResult = (await percentageMapArrayWithDegree).filter((item) => item.degree !== 'None');
+
+        return filteredResult;
     }
 
 
@@ -223,6 +227,7 @@ export default class ResultService {
         const result = await this.resultRepo
             .createQueryBuilder('result')
             .leftJoin('result.user', 'user')
+            .leftJoinAndSelect('result.questionBank', 'questionBank')
             .where('user.id = :userId', { userId })
             .getMany()
         if (!result) {

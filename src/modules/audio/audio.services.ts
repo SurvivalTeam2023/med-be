@@ -109,7 +109,7 @@ export default class AudioService {
           audioId: e.id
         },
       });
-     
+
       const audioFile = await this.entityManage.find(AudioFileEntity, {
         relations: {
           file: true
@@ -147,6 +147,14 @@ export default class AudioService {
     };
   }
   async createAudio(dto: CreateAudioDTO, token: string): Promise<AudioEntity> {
+    const userId = getUserId(token)
+
+    const user = await this.entityManage.findOne(UserEntity, {
+      where: {
+        id: userId
+      }
+    })
+
     try {
       const audioGenres = dto.genreId.map((genreId) => {
         const audioGenre = new AudioGenreEntity();
@@ -180,6 +188,7 @@ export default class AudioService {
         audioGenre: audioGenres,
         audioFile: audioFiles,
         imageUrl: imageFile.url,
+        artist: user.firstName
       });
       if (dto.playlistId) {
         const audioPlaylists = dto.playlistId.map((playlistId) => {
