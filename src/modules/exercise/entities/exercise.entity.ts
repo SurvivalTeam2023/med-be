@@ -7,10 +7,10 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from "type
 
 @Entity('exercise')
 export class ExerciseEntity extends BaseEntity {
-    @Column()
+    @Column({ length: '4096' })
     public name: string;
 
-    @Column()
+    @Column({ length: '4096' })
     public content: string;
 
     @Column()
