@@ -133,7 +133,7 @@ export default class SubscriptionService {
     await this.subscriptionRepo.save({
       id: subscriptionPaypal['id'],
       user: user,
-      status: SubscriptionStatus.ACTIVE,
+      status: SubscriptionStatus.APPROVAL_PENDING,
       plan: plan,
       endDate: endDate
     })
@@ -142,7 +142,9 @@ export default class SubscriptionService {
   }
   @Cron("* * * * *")
   async handlePendingStatusCron() {
-    const subList = await this.subscriptionRepo.find()
+    const subList = await this.subscriptionRepo.find(
+      { where: { status: SubscriptionStatus.APPROVAL_PENDING } }
+    )
     const response = await lastValueFrom(
       this.authService.getPayPalAccessToken(),
     );
