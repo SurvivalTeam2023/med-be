@@ -235,7 +235,8 @@ export default class ResultService {
         }
         const resultArray = result.map(r => {
             const mentalHealthValueArray = r.mentalHealth.map((item) => item.mentalHealth);
-            const resultDto: ResultDTO = { id: r.id, questionBankId: r.questionBankId, createdAt: r.createdAt, mentalHealth: mentalHealthValueArray
+            const resultDto: ResultDTO = { id: r.id, questionBankId: r.questionBankId, createdAt: r.createdAt, mentalHealth: mentalHealthValueArray }
+            return resultDto
         })
 
         return resultArray;
